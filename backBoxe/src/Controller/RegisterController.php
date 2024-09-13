@@ -61,15 +61,15 @@ class RegisterController extends AbstractController
         // Décoder le contenu JSON de la requête
         $data = json_decode($request->getContent(), true);
 
-        // Vérifiez que l'ID de l'école est présent
-        if (!isset($data['messagerieId'])) {
-            return new JsonResponse(['message' => "L'id de l'Ecole est requis"], Response::HTTP_BAD_REQUEST);
-        }
+        // // Vérifiez que l'ID de messagerie est présent
+        // if (!isset($data['messagerieId'])) {
+        //     return new JsonResponse(['message' => "L'id de messagerie est requis"], Response::HTTP_BAD_REQUEST);
+        // }
 
-        $messagerie = $messagerieRepository->find($data['messagerieId']);
-        if (!$ecole) {
-            return new JsonResponse(['message' => 'Ecole non trouvée'], Response::HTTP_NOT_FOUND);
-        }
+        // $messagerie = $messagerieRepository->find($data['messagerieId']);
+        // if (!$messagerie) {
+        //     return new JsonResponse(['message' => 'messagerie non trouvée'], Response::HTTP_NOT_FOUND);
+        // }
 
         // Créer un nouvel utilisateur et définir ses propriétés
         $user = new User();

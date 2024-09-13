@@ -3,8 +3,10 @@
 namespace App\Entity;
 
 use App\Repository\MessageRepository;
-use Doctrine\DBAL\Types\Types;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: MessageRepository::class)]
 class Message
@@ -23,8 +25,8 @@ class Message
     #[ORM\Column(length: 150)]
     private ?string $destinataire = null;
 
-    #[group(['getMessages'])]
-    #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['getMessages'])]
+    #[ORM\Column(length: 500)]
     private ?string $contenu = null;
 
     #[group(['getMessages'])]
