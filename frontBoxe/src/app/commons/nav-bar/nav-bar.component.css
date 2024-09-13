@@ -1,0 +1,10 @@
+.logo {
+  height: 3rem;
+  width: auto;
+  border-radius: 25%;
+}
+
+.navAccueil {
+  width: 100%;
+  background-color: #d84141;
+}

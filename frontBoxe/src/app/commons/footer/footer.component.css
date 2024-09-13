@@ -1,0 +1,77 @@
+.imgLogo {
+  width: 30px;
+  height: 30px;
+  opacity: 30%;
+}
+
+.imgFooter img {
+  background-image: url("/frontBoxe/public/img/logo.jpg");
+  width: 500%;
+  height: auto;
+
+  opacity: 50%;
+}
+
+.ecarter {
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: column;
+  text-align: center;
+}
+
+hr {
+  text-align: center;
+  width: 80%;
+}
+
+.marge {
+  margin: 2rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.espace {
+  width: 100%;
+  justify-content: space-evenly;
+  padding: 1rem 0;
+}
+
+h2 {
+  color: rgb(41, 79, 127, 0.7);
+}
+
+.textColor {
+  text-decoration: none;
+  color: rgb(41, 79, 127, 0.5);
+}
+
+.linkInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+@media only screen and (min-width: 600px) {
+  .ecarter {
+    flex-direction: row;
+  }
+
+  hr {
+    width: 50%;
+  }
+
+  .espace {
+    width: 50%;
+  }
+}
+
+@media only screen and (min-width: 769px) {
+  hr {
+    width: 40%;
+  }
+
+  .espace {
+    width: 40%;
+  }
+}

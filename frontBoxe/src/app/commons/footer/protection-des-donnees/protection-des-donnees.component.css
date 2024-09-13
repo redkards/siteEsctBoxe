@@ -1,0 +1,48 @@
+.bulle{
+  background-color: white;
+  color: #294F7F;
+  width: 92%;
+  height: auto;
+  margin: 4%;
+  border-radius: 2rem;
+  font-family: 'nunito';
+  font-size: 150%;
+}
+
+h3{
+  text-align: center;
+  font-weight: bold;
+  margin: 3%;
+}
+
+h4{
+  font-weight: 600;
+  margin: 5% 2% 1% 2%;
+}
+
+li{
+  margin: 1% 5% 1% 3%;
+}
+
+p{
+  margin: 3%;
+  text-align: left;
+}
+
+@media screen and (min-width: 1440px){
+
+  .bulle{
+    background-color: white;
+    color: #294F7F;
+    width: 60%;
+    height: auto;
+    margin: 2%;
+    border-radius: 2rem;
+  }
+
+  p{
+    margin: 1% 2%;
+    text-align: left;
+  }
+
+}
