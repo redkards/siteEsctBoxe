@@ -12,7 +12,7 @@ import { RegisterComponent } from './pages/register/register.component';
 
 export const routes: Routes = [
   // chemins navBar
-  { path: '', redirectTo: 'Accueil', pathMatch: 'full' },
+  { path: '', redirectTo: 'accueil', pathMatch: 'full' },
 
   { path: 'accueil', component: AccueilComponent },
 
