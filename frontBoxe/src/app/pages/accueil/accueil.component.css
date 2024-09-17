@@ -11,3 +11,33 @@
   margin: 10px;
   border-radius: 10%;
 }
+
+p {
+  margin: 1% 2%;
+  text-align: center;
+  font-size: 2.5rem;
+}
+
+.text {
+  border-radius: 15%;
+  background: linear-gradient(
+    90deg,
+    rgba(254, 225, 138, 1) 4%,
+    rgba(244, 192, 40, 1) 50%,
+    rgba(173, 126, 0, 1) 100%
+  );
+  padding: 20px;
+  margin: 20px;
+}
+.text1 {
+  border-radius: 50%;
+  background: linear-gradient(
+    90deg,
+    rgb(62, 103, 216) 4%,
+    rgb(41, 51, 204) 50%,
+    rgb(7, 9, 136) 100%
+  );
+  padding: 20px;
+  margin: 20px;
+  color: gold;
+}
