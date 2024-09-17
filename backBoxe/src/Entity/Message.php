@@ -13,15 +13,15 @@ class Message
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[group(['getMessages'])]
+    #[groups(['getMessages'])]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[group(['getMessages'])]
+    #[groups(['getMessages'])]
     #[ORM\Column(length: 150)]
     private ?string $expediteur = null;
 
-    #[group(['getMessages'])]
+    #[groups(['getMessages'])]
     #[ORM\Column(length: 150)]
     private ?string $destinataire = null;
 
@@ -29,11 +29,11 @@ class Message
     #[ORM\Column(length: 500)]
     private ?string $contenu = null;
 
-    #[group(['getMessages'])]
+    #[groups(['getMessages'])]
     #[ORM\Column]
     private ?\DateTimeImmutable $msgDate = null;
 
-    #[group(['getMessages'])]
+    #[groups(['getMessages'])]
     #[ORM\ManyToOne(inversedBy: 'messagerieMsg')]
     private ?Messagerie $messagerie = null;
 

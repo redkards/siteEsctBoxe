@@ -6,5 +6,10 @@
 
 .navAccueil {
   width: 100%;
-  background-color: #d84141;
+  background: linear-gradient(
+    90deg,
+    rgba(254, 225, 138, 1) 4%,
+    rgba(244, 192, 40, 1) 50%,
+    rgba(173, 126, 0, 1) 100%
+  );
 }

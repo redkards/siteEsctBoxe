@@ -12,22 +12,22 @@ class Messagerie
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[group(['getMessagerie'])]
+    #[groups(['getMessageries'])]
     #[ORM\Column]
     private ?int $id = null;
 
     /**
      * @var Collection<int, message>
      */
-    #[group(['getMessagerie'])]
-    #[ORM\OneToMany(targetEntity: message::class, mappedBy: 'messagerie')]
+    #[groups(['getMessageries'])]
+    #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'messagerie')]
     private Collection $messagerieMsg;
 
     /**
      * @var Collection<int, user>
      */
-    #[group(['getMessagerie'])]
-    #[ORM\OneToMany(targetEntity: user::class, mappedBy: 'messagerie', orphanRemoval: true)]
+    #[groups(['getMessageries'])]
+    #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'messagerie', orphanRemoval: true)]
     private Collection $messagerieUser;
 
     public function __construct()
@@ -49,7 +49,7 @@ class Messagerie
         return $this->messagerieMsg;
     }
 
-    public function addMessagerieMsg(message $messagerieMsg): static
+    public function addMessagerieMsg(Message $messagerieMsg): static
     {
         if (!$this->messagerieMsg->contains($messagerieMsg)) {
             $this->messagerieMsg->add($messagerieMsg);
@@ -59,7 +59,7 @@ class Messagerie
         return $this;
     }
 
-    public function removeMessagerieMsg(message $messagerieMsg): static
+    public function removeMessagerieMsg(Message $messagerieMsg): static
     {
         if ($this->messagerieMsg->removeElement($messagerieMsg)) {
             // set the owning side to null (unless already changed)
@@ -79,7 +79,7 @@ class Messagerie
         return $this->messagerieUser;
     }
 
-    public function addMessagerieUser(user $messagerieUser): static
+    public function addMessagerieUser(User $messagerieUser): static
     {
         if (!$this->messagerieUser->contains($messagerieUser)) {
             $this->messagerieUser->add($messagerieUser);
@@ -89,7 +89,7 @@ class Messagerie
         return $this;
     }
 
-    public function removeMessagerieUser(user $messagerieUser): static
+    public function removeMessagerieUser(User $messagerieUser): static
     {
         if ($this->messagerieUser->removeElement($messagerieUser)) {
             // set the owning side to null (unless already changed)

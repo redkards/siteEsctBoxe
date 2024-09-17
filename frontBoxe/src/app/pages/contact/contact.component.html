@@ -1,1 +1,25 @@
-<p>contact works!</p>
+<h2>nouveau message</h2>
+
+<form [formGroup]="createMsg" (ngSubmit)="createMessage()">
+  <div class="mt-4 centre colonne">
+    <div class="text">
+      <label for="destinataire">destinataire :</label>
+      <input type="text" id="destinataire" formControlName="destinataire" />
+      <!-- @if (submitted && form['destinataire'].invalid) {
+    <span>nom invalid</span>
+    }@else if (form['destinataire'].hasError('minlength')) {
+    <span>le nom doit contenir au moins 3 caractères</span>
+    } -->
+
+      <label for="content">contenu :</label>
+      <textarea type="text" id="content" formControlName="content"></textarea>
+      <!-- @if (submitted && form['content'].invalid) {
+    <span>prenom invalid</span>
+    }@else if (form['content'].hasError('minlength')) {
+    <span>le prenom doit contenir au moins 3 caractères</span>
+    } -->
+
+      <button type="submit">envoyer</button>
+    </div>
+  </div>
+</form>

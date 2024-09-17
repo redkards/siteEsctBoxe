@@ -28,7 +28,7 @@ class Salle
     private Collection $salleAdresse;
 
     #[ORM\ManyToOne(inversedBy: 'galaSalle')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?Gala $gala = null;
 
     /**

@@ -8,6 +8,7 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\SerializerInterface;
 use JMS\Serializer\SerializationContext;
+use JMS\Serializer\Annotation\groups;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -45,7 +46,7 @@ class UserController extends AbstractController
         $jsonUserList = $cache->get($idCache, function (ItemInterface $item) use ($userRepository, $serializer) {
             $item->tag("usersCache");
             $userList = $userRepository->findAll();
-            $context = SerializationContext::create()->setGroups(['getUser']);
+            $context = SerializationContext::create()->setGroups(['getUsers']);
             return $serializer->serialize($userList, 'json', $context);
         });
 
@@ -61,7 +62,7 @@ class UserController extends AbstractController
     #[OA\Tag(name: "Users")]
     public function getUserDetails(User $user, SerializerInterface $serializer): JsonResponse
     {
-        $context = SerializationContext::create()->setGroups(['getUser']);
+        $context = SerializationContext::create()->setGroups(['getUsers']);
         // Sérialisation de l'utilisateur spécifié en JSON.
         $jsonUser = $serializer->serialize($user, 'json', $context);
         // Retour d'une réponse JSON avec les détails de l'utilisateur.
@@ -207,7 +208,7 @@ class UserController extends AbstractController
         }
 
         // Sérialisation de l'utilisateur en JSON
-        $context = SerializationContext::create()->setGroups(['getUser']);
+        $context = SerializationContext::create()->setGroups(['getUsers']);
         $jsonUser = $serializer->serialize($user, 'json', $context);
 
         // Retourne les détails de l'utilisateur en JSON

@@ -15,18 +15,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[group(['getUser'])]
+    #[groups(['getUsers'])]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[group(['getUser'])]
+    #[groups(['getUsers'])]
     #[ORM\Column(length: 180)]
     private ?string $email = null;
 
     /**
      * @var list<string> The user roles
      */
-    #[group(['getUser'])]
+    #[groups(['getUsers'])]
     #[ORM\Column]
     private array $roles = [];
 
@@ -35,35 +35,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var string The hashed password
      */
-    #[group(['getUser'])]
+    #[groups(['getUsers'])]
     #[ORM\Column]
     private ?string $password = null;
 
-    #[group(['getUser'])]
+    #[groups(['getUser'])]
     #[ORM\Column(length: 120)]
     private ?string $nom = null;
 
-    #[group(['getUser'])]
+    #[groups(['getUsers'])]
     #[ORM\Column(length: 120)]
     private ?string $prenom = null;
 
-    #[group(['getUser'])]
+    #[groups(['getUsers'])]
     #[ORM\Column(length: 50)]
     private ?string $tel = null;
 
-    #[group(['getUser'])]
+    #[groups(['getUsers'])]
     #[ORM\Column]
     private ?\DateTimeImmutable $dateNaissance = null;
 
     /**
      * @var Collection<int, adresse>
      */
-    #[ORM\OneToMany(targetEntity: adresse::class, mappedBy: 'user', orphanRemoval: true)]
-    #[group(['getUser'])]
+    #[ORM\OneToMany(targetEntity: Adresse::class, mappedBy: 'user', orphanRemoval: true)]
+    #[groups(['getUsers'])]
     private Collection $userAdresse;
 
     #[ORM\ManyToOne(inversedBy: 'messagerieUser')]
-    #[group(['getUser'])]
+    #[groups(['getUsers'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Messagerie $messagerie = null;
 
@@ -203,17 +203,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->userAdresse;
     }
 
-    public function addUserAdresse(adresse $userAdresse): static
+    public function addUserAdresse(Adresse $userAdresse): static
     {
         if (!$this->userAdresse->contains($userAdresse)) {
             $this->userAdresse->add($userAdresse);
             $userAdresse->setUser($this);
         }
 
-        return $this;
     }
 
-    public function removeUserAdresse(adresse $userAdresse): static
+    public function removeUserAdresse(Adresse $userAdresse): static
     {
         if ($this->userAdresse->removeElement($userAdresse)) {
             // set the owning side to null (unless already changed)

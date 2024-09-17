@@ -17,6 +17,7 @@ use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Contracts\Cache\TagAwareCacheInterface;
 use JMS\Serializer\SerializerInterface;
 use JMS\Serializer\SerializationContext;
+use JMS\Serializer\Annotation\groups;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Attributes as OA;
 
@@ -37,21 +38,14 @@ class MessagerieController extends AbstractController
         )
     )]
     #[OA\Tag(name: "messageries")]
-    public function getAllMessageries(MessagerieRepository $messagerieRepository, SerializerInterface $serializer, TagAwareCacheInterface $cache): JsonResponse
+    public function getAllMessageries(Messagerie $messagerie, MessagerieRepository $messagerieRepository, SerializerInterface $serializer, TagAwareCacheInterface $cache): JsonResponse
     {
-        // Identifiant de cache pour cette requête
-        $idCache = "getAllmessageries";
 
-        // Récupération des données depuis le cache ou exécution de la requête si le cache est vide
-        $jsonmessagerieList = $cache->get($idCache, function (ItemInterface $item) use ($messagerieRepository, $serializer) {
-            $item->tag("messagerieCache");
-            $messagerieList = $messagerieRepository->findAll();
-            $context = SerializationContext::create()->setGroups(['getMessageries']);
-            return $serializer->serialize($messagerieList, 'json', $context);
-        });
+$context = SerializationContext::create()->setGroups(["getMessageries"]);
+$jsonmessagerie = $serializer->serialize($messagerie,"json", $context);
 
         // Retourne la liste des messageries en JSON
-        return new JsonResponse($jsonmessagerieList, Response::HTTP_OK, [], true);
+        return new JsonResponse($jsonmessagerie, Response::HTTP_OK, [], true);
     }
 
     /**
@@ -76,7 +70,7 @@ class MessagerieController extends AbstractController
     // Définition d'une route pour supprimer une messagerie spécifique via une requête DELETE
     #[Route('/api/messageries/{id}', name: 'deleteMessagerie', methods: ['DELETE'])]
     #[OA\Tag(name: "messageries")]
-    public function deleteMessagerie(Messagerie $messagerie, EntityManagerInterface $entityManager, MessageRepository $messageRepository, TagAwareCacheInterface $cachePool): JsonResponse
+    public function deleteMessagerie(Messagerie $messagerie, EntityManagerInterface $entityManager, MessagerieRepository $messagerieRepository, TagAwareCacheInterface $cachePool): JsonResponse
     {
         $cachePool->invalidateTags(["messageriesCache"]);
         // Récupération des messages de la messagerie

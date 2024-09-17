@@ -31,7 +31,7 @@ class MessageController extends AbstractController
         description: "Retourne la liste des messages",
         content: new OA\JsonContent(
             type: "array",
-            items: new OA\Items(ref: new Model(type: Message::class, groups: ["getmessages"]))
+            items: new OA\Items(ref: new Model(type: Message::class, groups: ["getMessages"]))
         )
     )]
     #[OA\Tag(name: "messages")]
