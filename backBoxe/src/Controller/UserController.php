@@ -46,7 +46,7 @@ class UserController extends AbstractController
         $jsonUserList = $cache->get($idCache, function (ItemInterface $item) use ($userRepository, $serializer) {
             $item->tag("usersCache");
             $userList = $userRepository->findAll();
-            $context = SerializationContext::create()->setGroups(['getUsers']);
+            $context = SerializationContext::create()->setGroups(['getUsers','getMessageries','getAdresses']);
             return $serializer->serialize($userList, 'json', $context);
         });
 

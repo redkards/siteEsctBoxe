@@ -12,16 +12,20 @@ class Boxeur
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
+    #[groups(['getBoxeurs'])]
     #[ORM\Column]
     private ?int $id = null;
 
     #[ORM\Column]
+    #[groups(['getBoxeurs'])]
     private ?float $poids = null;
 
     #[ORM\Column(length: 100)]
+    #[groups(['getBoxeurs'])]
     private ?string $boxeurNom = null;
 
     #[ORM\Column(length: 100)]
+    #[groups(['getBoxeurs'])]
     private ?string $boxeurPrenom = null;
 
     /**

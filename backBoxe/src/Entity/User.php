@@ -6,6 +6,7 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -19,15 +20,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
-    #[groups(['getUsers'])]
     #[ORM\Column(length: 180)]
+    #[groups(['getUsers'])]
     private ?string $email = null;
 
     /**
      * @var list<string> The user roles
      */
-    #[groups(['getUsers'])]
     #[ORM\Column]
+    #[groups(['getUsers'])]
     private array $roles = [];
 
     private ?string $plainPassword = null;
@@ -35,35 +36,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var string The hashed password
      */
-    #[groups(['getUsers'])]
     #[ORM\Column]
+    #[groups(['getUsers'])]
     private ?string $password = null;
 
-    #[groups(['getUser'])]
     #[ORM\Column(length: 120)]
+    #[groups(['getUsers'])]
     private ?string $nom = null;
 
-    #[groups(['getUsers'])]
     #[ORM\Column(length: 120)]
+    #[groups(['getUsers'])]
     private ?string $prenom = null;
 
-    #[groups(['getUsers'])]
     #[ORM\Column(length: 50)]
+    #[groups(['getUsers'])]
     private ?string $tel = null;
 
-    #[groups(['getUsers'])]
     #[ORM\Column]
+    #[groups(['getUsers'])]
     private ?\DateTimeImmutable $dateNaissance = null;
 
     /**
      * @var Collection<int, adresse>
      */
     #[ORM\OneToMany(targetEntity: Adresse::class, mappedBy: 'user', orphanRemoval: true)]
-    #[groups(['getUsers'])]
+    #[groups(['getAdresses'])]
     private Collection $userAdresse;
 
     #[ORM\ManyToOne(inversedBy: 'messagerieUser')]
-    #[groups(['getUsers'])]
+    #[groups(['getMessageries'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Messagerie $messagerie = null;
 

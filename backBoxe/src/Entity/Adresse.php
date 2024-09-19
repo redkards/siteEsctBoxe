@@ -4,41 +4,52 @@ namespace App\Entity;
 
 use App\Repository\AdresseRepository;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: AdresseRepository::class)]
 class Adresse
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
+    #[groups(['getAdresses'])]
     #[ORM\Column]
     private ?int $id = null;
 
     #[ORM\Column(nullable: true)]
+    #[groups(['getAdresses'])]
     private ?int $numero = null;
 
     #[ORM\Column(length: 100)]
+    #[groups(['getAdresses'])]
     private ?string $typeVoie = null;
 
     #[ORM\Column(length: 100)]
+    #[groups(['getAdresses'])]
     private ?string $nomVoie = null;
 
     #[ORM\Column(length: 150, nullable: true)]
+    #[groups(['getAdresses'])]
     private ?string $complementAdresse = null;
 
     #[ORM\Column(length: 100)]
+    #[groups(['getAdresses'])]
     private ?string $ville = null;
 
     #[ORM\Column(length: 50)]
+    #[groups(['getAdresses'])]
     private ?string $codePostal = null;
 
     #[ORM\Column(length: 100)]
+    #[groups(['getAdresses'])]
     private ?string $pays = null;
 
     #[ORM\ManyToOne(inversedBy: 'userAdresse')]
+    #[groups(['getAdresses'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'salleAdresse')]
+    #[groups(['getAdresses'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Salle $salle = null;
 
