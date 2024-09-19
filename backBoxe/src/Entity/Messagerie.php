@@ -27,7 +27,7 @@ class Messagerie
     /**
      * @var Collection<int, user>
      */
-    #[groups(['getMessageries'])]
+    #[groups(['getUsers'])]
     #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'messagerie', orphanRemoval: true)]
     private Collection $messagerieUser;
 

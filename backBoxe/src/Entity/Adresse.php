@@ -44,12 +44,12 @@ class Adresse
     private ?string $pays = null;
 
     #[ORM\ManyToOne(inversedBy: 'userAdresse')]
-    #[groups(['getAdresses'])]
+    #[groups(['getUsers'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'salleAdresse')]
-    #[groups(['getAdresses'])]
+    #[groups(['getSalles'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Salle $salle = null;
 

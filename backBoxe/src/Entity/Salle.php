@@ -6,25 +6,30 @@ use App\Repository\SalleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: SalleRepository::class)]
 class Salle
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
+    #[groups(['getSalles'])]
     #[ORM\Column]
     private ?int $id = null;
 
     #[ORM\Column(length: 150)]
+    #[groups(['getSalles'])]
     private ?string $nom = null;
 
     #[ORM\Column(nullable: true)]
+    #[groups(['getSalles'])]
     private ?int $capacité = null;
 
     /**
      * @var Collection<int, adresse>
      */
     #[ORM\OneToMany(targetEntity: adresse::class, mappedBy: 'salle', orphanRemoval: true)]
+    #[groups(['getAdresses'])]
     private Collection $salleAdresse;
 
     #[ORM\ManyToOne(inversedBy: 'galaSalle')]
@@ -35,6 +40,7 @@ class Salle
      * @var Collection<int, Entrainement>
      */
     #[ORM\ManyToMany(targetEntity: Entrainement::class, mappedBy: 'trainingSalle')]
+    #[Groups(['getTrainings'])]
     private Collection $entrainements;
 
     public function __construct()

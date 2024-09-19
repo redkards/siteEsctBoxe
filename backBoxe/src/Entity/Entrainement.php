@@ -7,37 +7,45 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: EntrainementRepository::class)]
 class Entrainement
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
+    #[groups(['getTrainings'])]
     #[ORM\Column]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
+    #[groups(['getTrainings'])]
     private ?\DateTimeImmutable $trainingDate = null;
 
     #[ORM\Column(type: Types::TIME_IMMUTABLE)]
+    #[groups(['getTrainings'])]
     private ?\DateTimeImmutable $startTime = null;
 
     #[ORM\Column(type: Types::TIME_IMMUTABLE)]
+    #[groups(['getTrainings'])]
     private ?\DateTimeImmutable $endTime = null;
 
     #[ORM\Column(length: 255)]
+    #[groups(['getTrainings'])]
     private ?string $lieu = null;
 
     /**
      * @var Collection<int, Entraineur>
      */
     #[ORM\ManyToMany(targetEntity: Entraineur::class, mappedBy: 'entraineurTraining')]
+    #[groups(['getEntraineurs'])]
     private Collection $entraineurs;
 
     /**
      * @var Collection<int, salle>
      */
     #[ORM\ManyToMany(targetEntity: salle::class, inversedBy: 'entrainements')]
+    #[groups(['getSalles'])]
     private Collection $trainingSalle;
 
     public function __construct()

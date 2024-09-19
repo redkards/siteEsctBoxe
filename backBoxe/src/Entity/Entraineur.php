@@ -6,19 +6,24 @@ use App\Repository\EntraineurRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
+
 
 #[ORM\Entity(repositoryClass: EntraineurRepository::class)]
 class Entraineur
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
+    #[groups(['getEntraineurs'])]
     #[ORM\Column]
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
+    #[groups(['getEntraineurs'])]
     private ?string $trainerNom = null;
 
     #[ORM\Column(length: 100)]
+    #[groups(['getEntraineurs'])]
     private ?string $trainerPrenom = null;
 
     /**
@@ -31,6 +36,7 @@ class Entraineur
      * @var Collection<int, boxeur>
      */
     #[ORM\ManyToMany(targetEntity: boxeur::class, inversedBy: 'entraineurs')]
+    #[groups(['getBoxeurs'])]
     private Collection $entraineurBoxeur;
 
     public function __construct()

@@ -7,31 +7,38 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: GalaRepository::class)]
 class Gala
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
+    #[groups(['getGalas'])]
     #[ORM\Column]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[groups(['getGalas'])]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255)]
+    #[groups(['getGalas'])]
     private ?string $lieu = null;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
+    #[groups(['getGalas'])]
     private ?\DateTimeImmutable $galaDate = null;
 
     #[ORM\Column(type: Types::TIME_IMMUTABLE)]
+    #[groups(['getGalas'])]
     private ?\DateTimeImmutable $galaTime = null;
 
     /**
      * @var Collection<int, salle>
      */
     #[ORM\OneToMany(targetEntity: salle::class, mappedBy: 'gala', orphanRemoval: true)]
+    #[groups(['getSalles'])]
     private Collection $galaSalle;
 
     public function __construct()

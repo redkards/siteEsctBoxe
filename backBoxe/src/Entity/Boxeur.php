@@ -6,6 +6,8 @@ use App\Repository\BoxeurRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
+
 
 #[ORM\Entity(repositoryClass: BoxeurRepository::class)]
 class Boxeur

@@ -4,19 +4,24 @@ namespace App\Entity;
 
 use App\Repository\CategorieRepository;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
+
 
 #[ORM\Entity(repositoryClass: CategorieRepository::class)]
 class Categorie
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
+    #[groups(['getCategories'])]
     #[ORM\Column]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[groups(['getCategories'])]
     private ?string $categorieNom = null;
 
     #[ORM\ManyToOne(inversedBy: 'boxeurCategorie')]
+    #[groups(['getBoxeurs'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Boxeur $boxeur = null;
 
