@@ -31,7 +31,7 @@ class AppFixtures extends Fixture
 
           // Création des messages
         $listMessages = [];
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 5; $i++) {
             $message = new Message();
             $message->setExpediteur('expediteur' . $i);
             $message->setDestinataire('destinataire' . $i);
@@ -44,7 +44,7 @@ class AppFixtures extends Fixture
 
         // Création des messageries
         $listMessagerie = [];
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 5; $i++) {
             $messagerie = new Messagerie();
 
             // Associer une messagerie à un utilisateur
@@ -89,7 +89,7 @@ class AppFixtures extends Fixture
             $user->setEmail($email);
             $user->setTel('0123456789');
             $user->setPassword($this->userPasswordHasher->hashPassword($user, 'password'));
-            $user->setDateNaissance(new \DateTimeImmutable());
+            $user->setDateNaissance(new \DateTimeImmutable('1990-01-01'));
             $user->setRoles([$roles[$i % count($roles)]]);
             $user->setMessagerie($listMessagerie[array_rand($listMessagerie)]);
             $manager->persist($user);
@@ -99,7 +99,7 @@ class AppFixtures extends Fixture
 
             // Création des galas
         $listGalas = [];
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 5; $i++) {
             $gala = new Gala();
             $gala->setNom('gala' . $i);
             $gala->setLieu('lieu' . $i);
@@ -134,7 +134,7 @@ class AppFixtures extends Fixture
         $listAdresse = [];
         $listVoies = ['chemin', 'rue', 'boulevard', 'avenue'];
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 5; $i++) {
             $adresse = new Adresse();
             $adresse->setNumero(sprintf('%03d', $i));
             $adresse->setTypeVoie($listVoies[$i % count($listVoies)]);
@@ -154,7 +154,7 @@ class AppFixtures extends Fixture
 
             //Création des boxeurs
         $listBoxeurs = [];
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 5; $i++) {
             $boxeur = new Boxeur();
             $boxeur->setBoxeurNom('nom' . $i);
             $boxeur->setBoxeurPrenom('prenom' . $i);
@@ -182,7 +182,7 @@ class AppFixtures extends Fixture
         $typesOfBoxes = ['amateur', 'pro', 'educatif'];
         $listBoxeType = [];
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 5; $i++) {
             $boxeType = new BoxeType();
             $boxeTypeName = $typesOfBoxes[$i % count($typesOfBoxes)];
             $boxeType->setTypeBoxeNom($boxeTypeName);
@@ -195,7 +195,7 @@ class AppFixtures extends Fixture
         $listCategories = [];
         $categories = ['amateur', 'pro', 'educatif'];
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 5; $i++) {
             $categorie = new Categorie();
             $categorieName = $categories[$i % count($categories)];
             $categorie->setCategorieNom($categorieName);
@@ -209,7 +209,7 @@ class AppFixtures extends Fixture
 
         // Création des entraîneurs
         $listEntraineurs = [];
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 5; $i++) {
             $entraineur = new Entraineur();
             $entraineur->setTrainerNom('nom' . $i);
             $entraineur->setTrainerPrenom('prenom' . $i);
@@ -234,7 +234,7 @@ class AppFixtures extends Fixture
 
         // Création des entraînements
         $listEntrainements = [];
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 5; $i++) {
             $entrainement = new Entrainement();
             $entrainement->setTrainingDate(new \DateTimeImmutable());
             $entrainement->setStartTime(new \DateTimeImmutable());

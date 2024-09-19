@@ -15,6 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\Cache\TagAwareCacheInterface;
@@ -47,6 +48,7 @@ class AdresseController extends AbstractController
             $item->tag("adresseCache");
             $adresseList = $adresseRepository->findAll();
             $context = SerializationContext::create()->setGroups(['getAdresses','getUsers']);
+
             return $serializer->serialize($adresseList, 'json', $context);
         });
 
@@ -63,15 +65,15 @@ class AdresseController extends AbstractController
     public function getAdresseDetails(Adresse $adresse, SerializerInterface $serializer): JsonResponse
     {
         $context = SerializationContext::create()->setGroups(['getAdresses']);
-        // Sérialisation de l'utilisateur spécifié en JSON.
+        // Sérialisation de l'adresse spécifié en JSON.
         $jsonAdresse = $serializer->serialize($adresse, 'json', $context);
-        // Retour d'une réponse JSON avec les détails de l'utilisateur.
+        // Retour d'une réponse JSON avec les détails de l'adresse.
         return new JsonResponse($jsonAdresse, Response::HTTP_OK, [], true);
     }
      /**
-     * Cette méthode permet de supprimer un utilisateur en fonction de son id
+     * Cette méthode permet de supprimer une adresse en fonction de son id
      */
-    // Définition d'une route pour supprimer un utilisateur spécifique via une requête DELETE
+    // Définition d'une route pour supprimer une adresse spécifique via une requête DELETE
     #[Route('/api/adresses/{id}', name: 'deleteAdresse', methods: ['DELETE'])]
     #[OA\Tag(name: "Adresses")]
     public function deleteAdresse(Adresse $adresse, EntityManagerInterface $em, TagAwareCacheInterface $cachePool, ): JsonResponse
@@ -88,6 +90,89 @@ class AdresseController extends AbstractController
         // Retourne une réponse indiquant que le contenu n'existe plus
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
+
+ /**
+     * Cette méthodde permet de créer une nouvelle adresse
+     */
+    // Définition d'une route pour créer une nouvelle adresse. La méthode HTTP autorisée est POST.
+    #[Route('/api/adresses', name: 'createAdresse', methods: ['POST'])]
+    #[OA\Post(
+        path: "/api/adresses",
+        summary: "Crée une nouvelle adresse",
+        tags: ["adresses"],
+        requestBody: new OA\RequestBody(
+            description: "Les informations d'une adresse à créer",
+            required: true,
+            content: new OA\JsonContent(
+                ref: new Model(type: Adresse::class, groups: ["create"])
+            )
+        ),
+        responses: [
+            new OA\Response(
+                response: 201,
+                description: "adresse créée avec succès",
+                content: new OA\JsonContent(
+                    type: "object",
+                    properties: [
+                        new OA\Property(property: "id", type: "integer"),
+                        new OA\Property(property: "userId", type: "integer"),
+                        new OA\Property(property: "salleId", type: "integer"),
+                        new OA\Property(property: "numero", type: "integer"),
+                        new OA\Property(property: "typeVoie", type: "string"),
+                        new OA\Property(property: "nomVoie", type: "string"),
+                        new OA\Property(property: "complementAdresse", type: "string"),
+                        new OA\Property(property: "ville", type: "string"),
+                        new OA\Property(property: "codePostal", type: "string"),
+                        new OA\Property(property: "pays", type: "string"),
+
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 400,
+                description: "Erreur de validation",
+            )
+        ]
+    )]
+    #[OA\Tag(name: "adresses")]
+    public function createAdresse(Request $request, SerializerInterface $serializer, EntityManagerInterface $em, UrlGeneratorInterface $urlGenerator, ValidatorInterface $validator, TagAwareCacheInterface $cachePool): JsonResponse
+    {
+        // Invalide le cache associé aux adresses
+        $cachePool->invalidateTags(["adressesCache"]);
+
+        // Désérialisation du contenu de la requête pour créer une instance d' adresse
+        $data = json_decode($request->getContent(), true);
+
+
+
+        // Désérialisation des données en objet adresse
+        $adresse = $serializer->deserialize(json_encode($data), Adresse::class, 'json');
+
+        // Récupération des données envoyées avec la requête
+        $content = $request->toArray();
+
+
+        // Vérification des erreurs
+        $errors = $validator->validate($adresse);
+        if ($errors->count() > 0) {
+            return new JsonResponse($serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
+        }
+
+        // Persistance de la nouvelle message en base de données
+        $em->persist($adresse);
+        $em->flush();
+
+        // Sérialisation de la message créée pour la réponse
+        $context = SerializationContext::create()->setGroups(['getAdresses']);
+        $jsonAdresse = $serializer->serialize($adresse, 'json', $context);
+
+        // Génération de l'URL de la nouvelle ressource
+        $location = $urlGenerator->generate('detailAdresse', ['id' => $adresse->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        // Retourne la message créée avec l'URL de la nouvelle ressource
+        return new JsonResponse($jsonAdresse, Response::HTTP_CREATED, ['Location' => $location], true);
+    }
+
      /**
      * Cette méthode permet de mettre à jour une adresse
      */

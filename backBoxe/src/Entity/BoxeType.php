@@ -21,7 +21,7 @@ class BoxeType
 
     #[ORM\ManyToOne(inversedBy: 'boxeurTypeBoxe')]
     #[groups(['getBoxeurs'])]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?Boxeur $boxeur = null;
 
     public function getId(): ?int

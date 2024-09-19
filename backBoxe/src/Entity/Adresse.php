@@ -45,12 +45,12 @@ class Adresse
 
     #[ORM\ManyToOne(inversedBy: 'userAdresse')]
     #[groups(['getUsers'])]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'salleAdresse')]
     #[groups(['getSalles'])]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?Salle $salle = null;
 
     public function getId(): ?int
