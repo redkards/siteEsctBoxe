@@ -28,7 +28,7 @@ class Salle
     /**
      * @var Collection<int, adresse>
      */
-    #[ORM\OneToMany(targetEntity: adresse::class, mappedBy: 'salle', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Adresse::class, mappedBy: 'salle', orphanRemoval: true)]
     #[groups(['getAdresses'])]
     private Collection $salleAdresse;
 
@@ -86,7 +86,7 @@ class Salle
         return $this->salleAdresse;
     }
 
-    public function addSalleAdresse(adresse $salleAdresse): static
+    public function addSalleAdresse(Adresse $salleAdresse): static
     {
         if (!$this->salleAdresse->contains($salleAdresse)) {
             $this->salleAdresse->add($salleAdresse);
@@ -96,7 +96,7 @@ class Salle
         return $this;
     }
 
-    public function removeSalleAdresse(adresse $salleAdresse): static
+    public function removeSalleAdresse(Adresse $salleAdresse): static
     {
         if ($this->salleAdresse->removeElement($salleAdresse)) {
             // set the owning side to null (unless already changed)

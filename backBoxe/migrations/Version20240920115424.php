@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20240919171741 extends AbstractMigration
+final class Version20240920115424 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -22,7 +22,7 @@ final class Version20240919171741 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('CREATE TABLE adresse (id INT AUTO_INCREMENT NOT NULL, user_id INT DEFAULT NULL, salle_id INT DEFAULT NULL, numero INT DEFAULT NULL, type_voie VARCHAR(100) NOT NULL, nom_voie VARCHAR(100) NOT NULL, complement_adresse VARCHAR(150) DEFAULT NULL, ville VARCHAR(100) NOT NULL, code_postal VARCHAR(50) NOT NULL, pays VARCHAR(100) NOT NULL, INDEX IDX_C35F0816A76ED395 (user_id), INDEX IDX_C35F0816DC304035 (salle_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE boxe_type (id INT AUTO_INCREMENT NOT NULL, boxeur_id INT DEFAULT NULL, type_boxe_nom VARCHAR(150) NOT NULL, INDEX IDX_D30DF1173ED14B4 (boxeur_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('CREATE TABLE boxeur (id INT AUTO_INCREMENT NOT NULL, poids DOUBLE PRECISION NOT NULL, boxeur_nom VARCHAR(100) NOT NULL, boxeur_prenom VARCHAR(100) NOT NULL, boxeur_date_naissance DATETIME NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE boxeur (id INT AUTO_INCREMENT NOT NULL, poids DOUBLE PRECISION NOT NULL, boxeur_nom VARCHAR(100) NOT NULL, boxeur_prenom VARCHAR(100) NOT NULL, boxeur_date_naissance DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE categorie (id INT AUTO_INCREMENT NOT NULL, boxeur_id INT DEFAULT NULL, categorie_nom VARCHAR(255) NOT NULL, INDEX IDX_497DD63473ED14B4 (boxeur_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE entrainement (id INT AUTO_INCREMENT NOT NULL, training_date DATE NOT NULL COMMENT \'(DC2Type:date_immutable)\', start_time TIME NOT NULL COMMENT \'(DC2Type:time_immutable)\', end_time TIME NOT NULL COMMENT \'(DC2Type:time_immutable)\', lieu VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE entrainement_salle (entrainement_id INT NOT NULL, salle_id INT NOT NULL, INDEX IDX_11F458BDA15E8FD (entrainement_id), INDEX IDX_11F458BDDC304035 (salle_id), PRIMARY KEY(entrainement_id, salle_id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');

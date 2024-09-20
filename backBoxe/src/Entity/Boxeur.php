@@ -6,7 +6,9 @@ use App\Repository\BoxeurRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\DBAL\Types\Types;
 use JMS\Serializer\Annotation\Groups;
+
 
 
 #[ORM\Entity(repositoryClass: BoxeurRepository::class)]
@@ -30,16 +32,20 @@ class Boxeur
     #[groups(['getBoxeurs'])]
     private ?string $boxeurPrenom = null;
 
+    #[ORM\Column]  
+    #[groups(['getBoxeurs'])]
+    private ?\DateTimeImmutable $boxeurDateNaissance = null;
+
     /**
      * @var Collection<int, categorie>
      */
-    #[ORM\OneToMany(targetEntity: categorie::class, mappedBy: 'boxeur', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Categorie::class, mappedBy: 'boxeur', orphanRemoval: true)]
     private Collection $boxeurCategorie;
 
     /**
      * @var Collection<int, boxeType>
      */
-    #[ORM\OneToMany(targetEntity: boxeType::class, mappedBy: 'boxeur', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: BoxeType::class, mappedBy: 'boxeur', orphanRemoval: true)]
     private Collection $boxeurTypeBoxe;
 
     /**
@@ -48,8 +54,6 @@ class Boxeur
     #[ORM\ManyToMany(targetEntity: Entraineur::class, mappedBy: 'entraineurBoxeur')]
     private Collection $entraineurs;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $boxeurDateNaissance = null;
 
     public function __construct()
     {
@@ -107,7 +111,7 @@ class Boxeur
         return $this->boxeurCategorie;
     }
 
-    public function addBoxeurCategorie(categorie $boxeurCategorie): static
+    public function addBoxeurCategorie(Categorie $boxeurCategorie): static
     {
         if (!$this->boxeurCategorie->contains($boxeurCategorie)) {
             $this->boxeurCategorie->add($boxeurCategorie);
@@ -117,7 +121,7 @@ class Boxeur
         return $this;
     }
 
-    public function removeBoxeurCategorie(categorie $boxeurCategorie): static
+    public function removeBoxeurCategorie(Categorie $boxeurCategorie): static
     {
         if ($this->boxeurCategorie->removeElement($boxeurCategorie)) {
             // set the owning side to null (unless already changed)
@@ -137,7 +141,7 @@ class Boxeur
         return $this->boxeurTypeBoxe;
     }
 
-    public function addBoxeurTypeBoxe(boxeType $boxeurTypeBoxe): static
+    public function addBoxeurTypeBoxe(BoxeType $boxeurTypeBoxe): static
     {
         if (!$this->boxeurTypeBoxe->contains($boxeurTypeBoxe)) {
             $this->boxeurTypeBoxe->add($boxeurTypeBoxe);
@@ -147,7 +151,7 @@ class Boxeur
         return $this;
     }
 
-    public function removeBoxeurTypeBoxe(boxeType $boxeurTypeBoxe): static
+    public function removeBoxeurTypeBoxe(BoxeType $boxeurTypeBoxe): static
     {
         if ($this->boxeurTypeBoxe->removeElement($boxeurTypeBoxe)) {
             // set the owning side to null (unless already changed)

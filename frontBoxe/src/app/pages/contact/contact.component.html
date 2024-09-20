@@ -3,11 +3,11 @@
 <form [formGroup]="createMsg" (ngSubmit)="createMessage()">
   <div class="mt-4 centre colonne">
     <div class="text">
-      <label for="destinataire">destinataire :</label>
-      <input type="text" id="destinataire" formControlName="destinataire" />
-      <!-- @if (submitted && form['destinataire'].invalid) {
+      <label for="expediteur">votre email :</label>
+      <input type="text" id="expediteur" formControlName="expediteur" />
+      <!-- @if (submitted && form['expediteur'].invalid) {
     <span>nom invalid</span>
-    }@else if (form['destinataire'].hasError('minlength')) {
+    }@else if (form['expediteur'].hasError('minlength')) {
     <span>le nom doit contenir au moins 3 caractères</span>
     } -->
 

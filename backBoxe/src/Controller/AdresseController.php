@@ -47,7 +47,7 @@ class AdresseController extends AbstractController
         $jsonAdresseList = $cache->get($idCache, function (ItemInterface $item) use ($adresseRepository, $serializer) {
             $item->tag("adresseCache");
             $adresseList = $adresseRepository->findAll();
-            $context = SerializationContext::create()->setGroups(['getAdresses','getUsers']);
+            $context = SerializationContext::create()->setGroups(['getAdresses',]);
 
             return $serializer->serialize($adresseList, 'json', $context);
         });
@@ -88,7 +88,7 @@ class AdresseController extends AbstractController
         $em->flush();
 
         // Retourne une réponse indiquant que le contenu n'existe plus
-        return new JsonResponse(null, Response::HTTP_NO_CONTENT);
+        return new JsonResponse( null, Response::HTTP_NO_CONTENT);
     }
 
  /**
@@ -135,7 +135,7 @@ class AdresseController extends AbstractController
         ]
     )]
     #[OA\Tag(name: "adresses")]
-    public function createAdresse(Request $request, SerializerInterface $serializer, EntityManagerInterface $em, UrlGeneratorInterface $urlGenerator, ValidatorInterface $validator, TagAwareCacheInterface $cachePool): JsonResponse
+    public function createAdresse(Request $request, SerializerInterface $serializer, EntityManagerInterface $em, UrlGeneratorInterface $urlGenerator, ValidatorInterface $validator, TagAwareCacheInterface $cachePool,UserRepository $userRepository): JsonResponse
     {
         // Invalide le cache associé aux adresses
         $cachePool->invalidateTags(["adressesCache"]);
@@ -151,6 +151,14 @@ class AdresseController extends AbstractController
         // Récupération des données envoyées avec la requête
         $content = $request->toArray();
 
+        // Récupération de l'ID de user avec une valeur par défaut si non spécifié
+        $userId = $content['userId'] ?? -1;
+        // Association de user à l'adresse'
+        $user = $userRepository->find($userId);
+        if (!$user) {
+            return new JsonResponse(['error' => 'user not found'], Response::HTTP_BAD_REQUEST);
+        }
+        $adresse->setUser($user);
 
         // Vérification des erreurs
         $errors = $validator->validate($adresse);
@@ -239,13 +247,20 @@ class AdresseController extends AbstractController
         UserRepository $userRepository,
         SalleRepository $salleRepository
     ): JsonResponse {
+
         // Décoder le contenu JSON de la requête
         $data = json_decode($request->getContent(), true);
+
+ // Désérialisation des données en objet adresse
+        $adresse = $serializer->deserialize(json_encode($data), Adresse::class, 'json');
 
 // Vérifier que le décodage a fonctionné
 if ($data === null) {
     return new JsonResponse(['message' => 'Le corps de la requête est invalide'], Response::HTTP_BAD_REQUEST);
 }
+
+
+var_dump($data);
 
         // Vérifiez que l'ID user est présent
         if (!isset($data['userId'])) {
@@ -268,13 +283,7 @@ if ($data === null) {
             return new JsonResponse(['message' => 'salle non trouvée'], Response::HTTP_NOT_FOUND);
         }
 
-        // Vérification des champs de l'adresse dans $data
-        $requiredFields = ['numero', 'typeVoie', 'NomVoie', 'complementAdresse', 'ville', 'codePostal', 'pays'];
-        foreach ($requiredFields as $field) {
-            if (!isset($data[$field])) {
-                return new JsonResponse(['message' => "Le champ $field est requis"], Response::HTTP_BAD_REQUEST);
-            }
-        }
+
 
         // Mise à jour des propriétés de l'adresse
         $currentAdresse->setNumero($data['numero']);

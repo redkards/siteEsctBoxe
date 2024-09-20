@@ -146,6 +146,15 @@ class MessageController extends AbstractController
         // Récupération des données envoyées avec la requête
         $content = $request->toArray();
 
+         // Exemple : relation avec une messagerie (messagerieID dans la requête JSON)
+    if (isset($data['messagerieId'])) {
+        $messagerie = $em->getRepository(Messagerie::class)->find($data['messagerieId']);
+        if (!$messagerie) {
+            return new JsonResponse(['error' => 'messagerie not found'], JsonResponse::HTTP_BAD_REQUEST);
+        }
+        $message->setMessagerie($messagerie); // Associe la messagerie au message
+    }
+
 
         // Vérification des erreurs
         $errors = $validator->validate($message);
@@ -157,7 +166,7 @@ class MessageController extends AbstractController
         $em->persist($message);
         $em->flush();
 
-        // Sérialisation de la message créée pour la réponse
+        // Sérialisation du message créée pour la réponse
         $context = SerializationContext::create()->setGroups(['getMessages']);
         $jsonMessage = $serializer->serialize($message, 'json', $context);
 
@@ -167,6 +176,8 @@ class MessageController extends AbstractController
         // Retourne la message créée avec l'URL de la nouvelle ressource
         return new JsonResponse($jsonMessage, Response::HTTP_CREATED, ['Location' => $location], true);
     }
+
+
 
     /**
      * Cette méthode permet de mettre à jour un message

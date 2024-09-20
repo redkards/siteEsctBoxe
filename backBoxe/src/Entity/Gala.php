@@ -37,7 +37,7 @@ class Gala
     /**
      * @var Collection<int, salle>
      */
-    #[ORM\OneToMany(targetEntity: salle::class, mappedBy: 'gala', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Salle::class, mappedBy: 'gala', orphanRemoval: true)]
     #[groups(['getSalles'])]
     private Collection $galaSalle;
 
@@ -107,7 +107,7 @@ class Gala
         return $this->galaSalle;
     }
 
-    public function addGalaSalle(salle $galaSalle): static
+    public function addGalaSalle(Salle $galaSalle): static
     {
         if (!$this->galaSalle->contains($galaSalle)) {
             $this->galaSalle->add($galaSalle);
@@ -117,7 +117,7 @@ class Gala
         return $this;
     }
 
-    public function removeGalaSalle(salle $galaSalle): static
+    public function removeGalaSalle(Salle $galaSalle): static
     {
         if ($this->galaSalle->removeElement($galaSalle)) {
             // set the owning side to null (unless already changed)

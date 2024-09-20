@@ -85,7 +85,7 @@ class Message
 
     public function setMsgDate(\DateTimeImmutable $msgDate): static
     {
-        $this->msgDate = $msgDate;
+        $this->msgDate = new \DateTimeImmutable();
 
         return $this;
     }

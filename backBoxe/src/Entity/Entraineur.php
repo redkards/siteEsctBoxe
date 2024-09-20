@@ -29,13 +29,13 @@ class Entraineur
     /**
      * @var Collection<int, entrainement>
      */
-    #[ORM\ManyToMany(targetEntity: entrainement::class, inversedBy: 'entraineurs')]
+    #[ORM\ManyToMany(targetEntity: Entrainement::class, inversedBy: 'entraineurs')]
     private Collection $entraineurTraining;
 
     /**
      * @var Collection<int, boxeur>
      */
-    #[ORM\ManyToMany(targetEntity: boxeur::class, inversedBy: 'entraineurs')]
+    #[ORM\ManyToMany(targetEntity: Boxeur::class, inversedBy: 'entraineurs')]
     #[groups(['getBoxeurs'])]
     private Collection $entraineurBoxeur;
 
@@ -82,7 +82,7 @@ class Entraineur
         return $this->entraineurTraining;
     }
 
-    public function addEntraineurTraining(entrainement $entraineurTraining): static
+    public function addEntraineurTraining(Entrainement $entraineurTraining): static
     {
         if (!$this->entraineurTraining->contains($entraineurTraining)) {
             $this->entraineurTraining->add($entraineurTraining);
@@ -91,7 +91,7 @@ class Entraineur
         return $this;
     }
 
-    public function removeEntraineurTraining(entrainement $entraineurTraining): static
+    public function removeEntraineurTraining(Entrainement $entraineurTraining): static
     {
         $this->entraineurTraining->removeElement($entraineurTraining);
 
@@ -106,7 +106,7 @@ class Entraineur
         return $this->entraineurBoxeur;
     }
 
-    public function addEntraineurBoxeur(boxeur $entraineurBoxeur): static
+    public function addEntraineurBoxeur(Boxeur $entraineurBoxeur): static
     {
         if (!$this->entraineurBoxeur->contains($entraineurBoxeur)) {
             $this->entraineurBoxeur->add($entraineurBoxeur);
@@ -115,7 +115,7 @@ class Entraineur
         return $this;
     }
 
-    public function removeEntraineurBoxeur(boxeur $entraineurBoxeur): static
+    public function removeEntraineurBoxeur(Boxeur $entraineurBoxeur): static
     {
         $this->entraineurBoxeur->removeElement($entraineurBoxeur);
 

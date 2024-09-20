@@ -68,9 +68,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\JoinColumn(nullable: true)]
     private ?Messagerie $messagerie = null;
 
+
+
     public function __construct()
     {
         $this->userAdresse = new ArrayCollection();
+
+
     }
 
     public function getId(): ?int
@@ -257,5 +261,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+
+
 
 }

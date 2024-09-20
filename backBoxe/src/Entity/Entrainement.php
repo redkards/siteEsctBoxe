@@ -44,7 +44,7 @@ class Entrainement
     /**
      * @var Collection<int, salle>
      */
-    #[ORM\ManyToMany(targetEntity: salle::class, inversedBy: 'entrainements')]
+    #[ORM\ManyToMany(targetEntity: Salle::class, inversedBy: 'entrainements')]
     #[groups(['getSalles'])]
     private Collection $trainingSalle;
 
@@ -142,7 +142,7 @@ class Entrainement
         return $this->trainingSalle;
     }
 
-    public function addTrainingSalle(salle $trainingSalle): static
+    public function addTrainingSalle(Salle $trainingSalle): static
     {
         if (!$this->trainingSalle->contains($trainingSalle)) {
             $this->trainingSalle->add($trainingSalle);
@@ -151,7 +151,7 @@ class Entrainement
         return $this;
     }
 
-    public function removeTrainingSalle(salle $trainingSalle): static
+    public function removeTrainingSalle(Salle $trainingSalle): static
     {
         $this->trainingSalle->removeElement($trainingSalle);
 
