@@ -32,9 +32,14 @@ class Boxeur
     #[groups(['getBoxeurs'])]
     private ?string $boxeurPrenom = null;
 
-    #[ORM\Column]  
+    #[ORM\Column]
     #[groups(['getBoxeurs'])]
     private ?\DateTimeImmutable $boxeurDateNaissance = null;
+
+
+    #[ORM\Column (nullable:true)]
+    #[groups(['getBoxeurs'])]
+    private ?string $photo;
 
     /**
      * @var Collection<int, categorie>
@@ -199,6 +204,17 @@ class Boxeur
     {
         $this->boxeurDateNaissance = $boxeurDateNaissance;
 
+        return $this;
+    }
+
+    public function getPhoto(): ?string
+    {
+        return $this->photo;
+    }
+
+    public function setPhoto(?string $photo): self
+    {
+        $this->photo = $photo;
         return $this;
     }
 }

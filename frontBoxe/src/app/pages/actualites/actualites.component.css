@@ -1,0 +1,19 @@
+h2 {
+  text-align: center;
+  font-size: 3rem;
+}
+
+.actu {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  margin: 25px;
+
+  background: linear-gradient(
+    90deg,
+    rgb(30, 155, 177) 4%,
+    rgb(15, 185, 43) 50%,
+    rgb(223, 165, 8) 100%
+  );
+}

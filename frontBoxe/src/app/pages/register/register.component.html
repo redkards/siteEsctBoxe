@@ -1,103 +1,31 @@
-<div class="container colonne">
-  <form
-    [formGroup]="user"
-    (ngSubmit)="onSubmit()"
-    class="formRegister centre colonne bordure"
-  >
-    <h2>Inscription</h2>
-    <br />
-    <div class="input">
-      <label for="email">Email</label>
-      <input
-        type="email"
-        placeholder="E-mail"
-        id="username"
-        formControlName="username"
-        required
+<body>
+  <div class="title">
+    <h4>connexion et inscription</h4>
+  </div>
+
+  <div class="kards">
+    <div class="card" style="width: 18rem">
+      <img
+        routerLink="/connexion"
+        src="img/boxeur dessin.png"
+        class="card-img-top"
+        alt="..."
       />
-    </div>
-    <br />
-    <div class="input">
-      <label for="password">Mot de passe</label>
-      <input
-        type="password"
-        placeholder="Mot de passe"
-        id="password"
-        formControlName="password"
-        required
-      />
-    </div>
-    <br />
-    <div class="input confirmPass">
-      <label for="confirmPassword">Confirmer le mot de passe</label>
-      <input
-        type="password"
-        placeholder="Confirmer le mot de passe"
-        id="confirmPassword"
-        formControlName="confirmPassword"
-        required
-      />
-      <div
-        *ngIf="
-      user.get('confirmPassword')?.errors?.['passwordMismatch'] &&
-      user.get('confirmPassword')?.touched
-    "
-      >
-        Les mots de passe ne correspondent pas.
+      <div class="card-body">
+        <h5 class="card-title" routerLink="/connexion">Se connecter</h5>
       </div>
     </div>
     <br />
-    <div class="input">
-      <label for="nom">Nom</label>
-      <input
-        type="text"
-        placeholder="Nom"
-        id="nom"
-        formControlName="nom"
-        required
+    <div class="card" style="width: 18rem">
+      <img
+        routerLink="/inscription"
+        src="img/boxeur dessin2.png"
+        class="card-img-top"
+        alt="..."
       />
+      <div class="card-body">
+        <h5 class="card-title" routerLink="/inscription">S'inscrire</h5>
+      </div>
     </div>
-    <br />
-    <div class="input">
-      <label for="prenom">Prénom</label>
-
-      <input
-        type="text"
-        placeholder="Prénom"
-        id="prenom"
-        formControlName="prenom"
-        required
-      />
-    </div>
-    <br />
-    <div class="input">
-      <label for="tel">Numéro de Téléphone</label>
-
-      <input
-        type="tel"
-        placeholder="Téléphone"
-        id="tel"
-        formControlName="tel"
-        required
-      />
-    </div>
-    <br />
-    <div class="input">
-      <label for="dateNaissance">date de naissance</label>
-
-      <br />
-      <input
-        type="date"
-        placeholder="date de naissance"
-        id="dateNaissance"
-        formControlName="dateNaissance"
-        required
-      />
-    </div>
-
-    <br />
-    <button type="submit">S'inscrire</button>
-    <br />
-  </form>
-  <hr />
-</div>
+  </div>
+</body>

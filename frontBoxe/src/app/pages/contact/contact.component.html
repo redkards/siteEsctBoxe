@@ -1,25 +1,37 @@
-<h2>Contact</h2>
+<body>
+  <h2>Contact</h2>
 
-<form [formGroup]="createMsg" (ngSubmit)="createMessage()">
-  <div class="mt-4 centre colonne">
-    <div class="text">
-      <label for="expediteur">votre email :</label>
-      <input type="text" id="expediteur" formControlName="expediteur" />
-      <!-- @if (submitted && form['expediteur'].invalid) {
+  <form [formGroup]="createMsg" (ngSubmit)="createMessage()">
+    <div class="mt-4 centre colonne">
+      <div class="text">
+        <label for="expediteur">votre email :</label>
+        <input
+          type="text"
+          id="expediteur"
+          placeholder="entrer votre email"
+          formControlName="expediteur"
+        />
+        <!-- @if (submitted && form['expediteur'].invalid) {
     <span>nom invalid</span>
     }@else if (form['expediteur'].hasError('minlength')) {
     <span>le nom doit contenir au moins 3 caractères</span>
     } -->
 
-      <label for="content">contenu :</label>
-      <textarea type="text" id="content" formControlName="content"></textarea>
-      <!-- @if (submitted && form['content'].invalid) {
+        <label for="content">contenu :</label>
+        <textarea
+          type="text"
+          id="content"
+          placeholder="taper votre texte"
+          formControlName="content"
+        ></textarea>
+        <!-- @if (submitted && form['content'].invalid) {
     <span>prenom invalid</span>
     }@else if (form['content'].hasError('minlength')) {
     <span>le prenom doit contenir au moins 3 caractères</span>
     } -->
 
-      <button type="submit">envoyer</button>
+        <button type="submit">envoyer</button>
+      </div>
     </div>
-  </div>
-</form>
+  </form>
+</body>
