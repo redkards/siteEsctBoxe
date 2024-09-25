@@ -48,3 +48,12 @@ body {
     rgba(173, 126, 0, 1) 100%
   );
 }
+
+.maps {
+  width: 100%;
+  height: 400px;
+  margin: 20px;
+
+  display: flex;
+  justify-content: center;
+}
