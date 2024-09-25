@@ -1,0 +1,193 @@
+.container {
+  overflow: hidden;
+  width: 100%;
+  cursor: grab;
+  margin-bottom: 2rem;
+}
+
+.container:active {
+  cursor: grabbing;
+}
+
+.sliderContent {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+  width: max-content; /* Ajuster la largeur pour permettre le défilement */
+  padding: 1rem 1rem;
+}
+
+.slinderLink {
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  box-sizing: border-box;
+  margin: 0 0.2rem;
+}
+
+.imgMenu {
+  height: 30px;
+  width: 30px;
+}
+
+/* WITH & HEIGHT MENU */
+.menu1 {
+  min-width: 20%;
+}
+
+.menu2 {
+  min-width: 30%;
+}
+
+.menu3 {
+  min-width: 40%;
+}
+
+.menu4 {
+  min-width: 25%;
+}
+
+.height {
+  height: 4rem;
+}
+
+/* COLOR FOR PAGE MON SUIVI */
+.menuSuivi {
+  background-color: #90d3d0;
+  color: #ffffff;
+  border: 2px solid #90d3d0;
+}
+
+.iconSuivi {
+  filter: none;
+}
+.iconInfo {
+  filter: none;
+}
+.iconMdp {
+  filter: none;
+}
+.iconSuivi {
+  filter: none;
+}
+
+.menuSuiviInactive {
+  background-color: #ffffff;
+  color: #90d3d0;
+  border: 2px solid #90d3d0;
+}
+
+img.iconInactiveSuivi {
+  filter: brightness(0) saturate(100%) invert(90%) sepia(22%) saturate(515%)
+    hue-rotate(118deg) brightness(88%) contrast(88%);
+}
+
+/* COLOR FOR PAGE MES INFORMATIONS */
+.menuInfo {
+  background-color: #85b4f2;
+  color: #ffffff;
+  border: 2px solid #85b4f2;
+}
+
+.menuInfoInactive {
+  background-color: #ffffff;
+  color: #85b4f2;
+  border: 2px solid #85b4f2;
+}
+
+img.iconInactiveInfo {
+  filter: brightness(0) saturate(100%) invert(65%) sepia(63%) saturate(597%)
+    hue-rotate(186deg) brightness(101%) contrast(90%);
+}
+
+/* COLOR FOR PAGE CHANGER MOT DE PASSE  */
+.menuMdp {
+  background-color: #ffc17d;
+  color: #ffffff;
+  border: 2px solid #ffc17d;
+}
+
+.menuMdpInactive {
+  background-color: #ffffff;
+  color: #ffc17d;
+  border: 2px solid #ffc17d;
+}
+
+img.iconInactiveMdp {
+  filter: brightness(0) saturate(100%) invert(89%) sepia(74%) saturate(968%)
+    hue-rotate(303deg) brightness(103%) contrast(101%);
+}
+
+/* COLOR FOR PAGE SUPPRIMER LE COMPTE  */
+.menuDelete {
+  background-color: #ff5e5e;
+  color: #ffffff;
+  border: 2px solid #ff5e5e;
+}
+
+.menuDeleteInactive {
+  background-color: #ffffff;
+  color: #ff5e5e;
+  border: 2px solid #ff5e5e;
+}
+
+img.iconInactiveDelete {
+  filter: brightness(0) saturate(100%) invert(44%) sepia(43%) saturate(1658%)
+    hue-rotate(324deg) brightness(111%) contrast(103%);
+}
+
+/* COULEUR BLANCHE*/
+img.iconWhite {
+  filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%)
+    hue-rotate(0deg) brightness(100%) contrast(100%);
+}
+
+@media only screen and (min-width: 600px) {
+  .container {
+    display: flex;
+    justify-content: center;
+    cursor: default;
+    width: 100%;
+  }
+
+  .container:active {
+    cursor: default;
+  }
+
+  .sliderContent {
+    transform: none !important;
+    transition: none !important;
+    justify-content: space-around;
+  }
+
+  .slinderLink {
+    cursor: pointer;
+  }
+}
+
+@media only screen and (min-width: 769px) {
+  .sliderContent {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  /* WITH & HEIGHT MENU */
+  .menu1 {
+    min-width: 10%;
+  }
+
+  .menu2 {
+    min-width: 20%;
+  }
+
+  .menu3 {
+    min-width: 20%;
+  }
+
+  .menu4 {
+    min-width: 20%;
+  }
+}

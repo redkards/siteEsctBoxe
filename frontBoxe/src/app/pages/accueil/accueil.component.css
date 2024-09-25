@@ -2,14 +2,14 @@
   min-height: 30rem;
   width: 100%;
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
 
   padding: 10px;
 }
 
 .photos img {
-  height: 20rem;
+  height: 30rem;
   width: auto;
   margin: 10px;
   border-radius: 10%;
@@ -42,47 +42,4 @@ p {
   padding: 30px;
   margin: 30px;
   color: gold;
-}
-
-.carousel {
-  height: 100vh;
-  width: 50vw;
-  position: relative;
-}
-.carousel button {
-  position: absolute;
-  background: none;
-  border: none;
-  outline: none;
-  font-size: 2.6rem;
-  z-index: 2;
-  cursor: pointer;
-  color: rgb(243, 241, 241);
-  transform: translateY(-50%);
-  top: 50%;
-}
-#prev {
-  left: 5px;
-}
-#next {
-  right: 5px;
-}
-.carousel li {
-  list-style: none;
-}
-.slide {
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  opacity: 0;
-  transition: 0.4s ease-in-out;
-}
-.slide.active {
-  opacity: 1;
-}
-.slide img {
-  display: block;
-  height: 100%;
-  width: 100%;
-  object-fit: cover;
 }

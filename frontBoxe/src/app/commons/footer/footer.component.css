@@ -1,3 +1,19 @@
+.rubik-distressed-regular {
+  font-family: "Rubik Distressed", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
+.title {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin: 20px;
+}
+
+.foot {
+  width: 80%;
+}
+
 a {
   margin: 10px;
   color: #000;
@@ -28,7 +44,7 @@ a {
 
 hr {
   text-align: center;
-  width: 80%;
+  width: 100%;
 }
 
 .marge {
@@ -45,8 +61,9 @@ hr {
 }
 
 h2 {
+  margin: 20px;
   font-size: 3rem;
-  color: rgba(7, 26, 49, 0.7);
+  color: black;
 }
 
 .textColor {

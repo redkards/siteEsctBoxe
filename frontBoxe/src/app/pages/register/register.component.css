@@ -1,8 +1,8 @@
 .kards {
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
-  margin: 15%;
+  justify-content: center;
+  margin-top: 50px;
 }
 
 .title {
@@ -51,4 +51,42 @@ body {
 
 img {
   border-radius: 25%;
+}
+
+.formRegister {
+  background-color: #ffffff;
+  width: 100%;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+/* BLOC INPUT */
+.input {
+  width: 90%;
+  height: 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+input {
+  width: 100%;
+  height: 100%;
+}
+
+input::placeholder {
+  text-align: center;
+  background-color: #ffffff;
+}
+
+select {
+  height: 100%;
+  width: 100%;
+  padding-left: 9%;
+}
+
+/* BOUTON INSCRIPTION */
+button {
+  width: 90%;
+  margin-top: 1rem;
 }

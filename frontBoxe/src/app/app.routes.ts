@@ -11,6 +11,7 @@ import { ConnexionComponent } from './pages/connexion/connexion.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { Inscription20242025Component } from './pages/inscription2024-2025/inscription2024-2025.component';
 import { PartenairesComponent } from './commons/partenaires/partenaires.component';
+import { ProfilComponent } from './pages/profil/profil.component';
 
 export const routes: Routes = [
   // chemins navBar
@@ -29,6 +30,8 @@ export const routes: Routes = [
   { path: 'inscription', component: InscriptionComponent },
 
   { path: 'register', component: RegisterComponent },
+
+  { path: 'profil', component: ProfilComponent },
 
   // Chemin footer
 

@@ -2,21 +2,43 @@
   <div class="title">
     <h4>connexion et inscription</h4>
   </div>
+  <div class="connect">
+    <form
+      [formGroup]="user"
+      (ngSubmit)="onSubmit()"
+      class="formRegister centre colonne bordure"
+    >
+      <h2>connexion</h2>
+      <br />
+      <div class="input">
+        <label for="email">Email</label>
+        <input
+          type="email"
+          placeholder="entrez votre email"
+          id="username"
+          formControlName="username"
+          required
+        />
+      </div>
+      <br />
+      <div class="input">
+        <label for="password">Mot de passe</label>
+        <input
+          type="password"
+          placeholder=" entrez votre Mot de passe"
+          id="password"
+          formControlName="password"
+          required
+        />
+      </div>
+      <button type="submit">Se connecter</button>
+    </form>
+  </div>
 
   <div class="kards">
-    <div class="card" style="width: 18rem">
-      <img
-        routerLink="/connexion"
-        src="img/boxeur dessin.png"
-        class="card-img-top"
-        alt="..."
-      />
-      <div class="card-body">
-        <h5 class="card-title" routerLink="/connexion">Se connecter</h5>
-      </div>
-    </div>
     <br />
     <div class="card" style="width: 18rem">
+      <h3>Pas encore Inscrit</h3>
       <img
         routerLink="/inscription"
         src="img/boxeur dessin2.png"

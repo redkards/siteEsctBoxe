@@ -1,0 +1,18 @@
+<p>profil works!</p>
+<app-slider-profil></app-slider-profil>
+
+<div class="profil">
+  <div class="profil-info">
+    <h2>Nom Prénom</h2>
+    <p>Date de naissance: 12/03/1990</p>
+    <p>Email: john.doe&#64;example.com</p>
+    <p>Adresse: 12 rue des Boulevards, 75008 Paris</p>
+    <p>Tel: 06 12 34 56 78</p>
+    <input type="file" id="inputFile" />
+    <button onclick="">submit</button>
+  </div>
+</div>
+
+<input type="file" (change)="onFileSelected($event)" />
+<button (click)="uploadFile()">Upload File</button>
+<p *ngIf="uploadResponse">{{ uploadResponse }}</p>

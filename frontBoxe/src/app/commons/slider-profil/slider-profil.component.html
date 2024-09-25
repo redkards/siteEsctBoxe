@@ -1,0 +1,62 @@
+<p>slider-profil works!</p>
+
+<div class="container">
+  <div class="sliderContent" [style.transform]="transform">
+    <div
+      (click)="onSelectMenu('menu1')"
+      class="slinderLink menu1 height"
+      [ngClass]="getDivClass('menu1')"
+      routerLink="/profil"
+    >
+      <img
+        class="imgMenu"
+        src="icon/mon-suivi.png"
+        alt=""
+        [ngClass]="getImgClass('menu1')"
+      />
+      <span>Mon profil</span>
+    </div>
+    <div
+      (click)="onSelectMenu('menu2')"
+      class="slinderLink menu2 height"
+      [ngClass]="getDivClass('menu2')"
+      routerLink="/modifProfil"
+    >
+      <img
+        class="imgMenu"
+        src="icon/utilisateur(1).png"
+        alt=""
+        [ngClass]="getImgClass('menu2')"
+      />
+      <span>Mes informations</span>
+    </div>
+    <div
+      (click)="onSelectMenu('menu3')"
+      class="slinderLink menu3 height"
+      [ngClass]="getDivClass('menu3')"
+      routerLink="/modifMdp"
+    >
+      <img
+        class="imgMenu"
+        src="icon/cadenas-black.png"
+        alt=""
+        [ngClass]="getImgClass('menu3')"
+      />
+      <span>Changer le mot de passe</span>
+    </div>
+    <div
+      (click)="onSelectMenu('menu4')"
+      class="slinderLink menu4 height"
+      [ngClass]="getDivClass('menu4')"
+      routerLink="/suppCompte"
+    >
+      <img
+        class="imgMenu"
+        src="icon/quitter.png"
+        alt=""
+        [ngClass]="getImgClass('menu4')"
+      />
+      <span>Déconnexion</span>
+    </div>
+  </div>
+</div>
