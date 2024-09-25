@@ -1,0 +1,68 @@
+.bulle {
+  width: 92%;
+  height: auto;
+  margin: 4%;
+  background-color: white;
+  color: #294f7f;
+  border-radius: 2rem;
+}
+
+button {
+  margin: 5%;
+}
+
+.bgcouleur {
+  background: center / contain no-repeat
+    url(../../../../../public/icon/utilisateurmodif-profil.png) #eaeff5;
+  width: 6rem;
+  height: 6rem;
+  border-radius: 3rem;
+}
+
+input {
+  width: 157%;
+  height: auto;
+  margin: 5%;
+}
+
+@media screen and (min-width: 768px) {
+  .bulle {
+    width: 70%;
+    height: auto;
+    margin: 4%;
+    background-color: white;
+    color: #294f7f;
+    border-radius: 2rem;
+  }
+
+  input {
+    width: 220%;
+    height: auto;
+    margin: 5%;
+  }
+}
+
+@media screen and (min-width: 1440px) {
+  .container {
+    align-items: center;
+  }
+
+  .bulle {
+    width: 50%;
+    height: auto;
+    margin: 4%;
+    background-color: white;
+    color: #294f7f;
+    border-radius: 2rem;
+  }
+
+  input {
+    width: 320%;
+    height: auto;
+    margin: 5%;
+  }
+
+  app-slider-profil {
+    width: 100%;
+  }
+}

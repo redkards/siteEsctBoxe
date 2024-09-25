@@ -8,11 +8,9 @@
     <p>Email: john.doe&#64;example.com</p>
     <p>Adresse: 12 rue des Boulevards, 75008 Paris</p>
     <p>Tel: 06 12 34 56 78</p>
-    <input type="file" id="inputFile" />
-    <button onclick="">submit</button>
+    <br />
+    <input type="file" (change)="onFileSelected($event)" />
+    <button (click)="uploadFile()">Upload File</button>
+    <p *ngIf="uploadResponse">{{ uploadResponse }}</p>
   </div>
 </div>
-
-<input type="file" (change)="onFileSelected($event)" />
-<button (click)="uploadFile()">Upload File</button>
-<p *ngIf="uploadResponse">{{ uploadResponse }}</p>

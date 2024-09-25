@@ -13,3 +13,16 @@ p {
   font-weight: 400;
   font-style: normal;
 }
+
+h5 {
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.cardsPdf {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin: 20px;
+}
