@@ -1,16 +1,25 @@
-<p>profil works!</p>
 <app-slider-profil></app-slider-profil>
+
+<div class="ajoutPhoto">
+  <div class="photo">
+    <img [src]="imagePreview" alt="Image de profil" />
+  </div>
+  <h3>ajouter photo de profil</h3>
+  <div class="upload">
+    <input type="file" #fileInput (change)="onFileSelected($event)" />
+    <button (click)="uploadFile()">Uploader la Photo de Profil</button>
+    <!-- Aucune argument ici -->
+    <p *ngIf="uploadResponse">{{ uploadResponse }}</p>
+  </div>
+</div>
 
 <div class="profil">
   <div class="profil-info">
-    <h2>Nom Prénom</h2>
+    <h2>Mike Tyson</h2>
     <p>Date de naissance: 12/03/1990</p>
     <p>Email: john.doe&#64;example.com</p>
     <p>Adresse: 12 rue des Boulevards, 75008 Paris</p>
     <p>Tel: 06 12 34 56 78</p>
     <br />
-    <input type="file" (change)="onFileSelected($event)" />
-    <button (click)="uploadFile()">Upload File</button>
-    <p *ngIf="uploadResponse">{{ uploadResponse }}</p>
   </div>
 </div>
