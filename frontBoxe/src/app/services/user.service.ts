@@ -15,7 +15,7 @@ export class UserService {
   constructor(private httpClient: HttpClient) {}
 
   // Récupération de la liste des users
-  getUsers(): Observable<User[]> {
+  getAllUsers(): Observable<User[]> {
     return this.httpClient.get<User[]>(`${this.apiUrl}/users`);
   }
 

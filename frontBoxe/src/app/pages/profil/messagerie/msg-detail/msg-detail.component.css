@@ -8,7 +8,7 @@ body {
   height: 15rem;
   width: 100%;
   border: solid 2px black;
-  background-color: #974b4b;
+
   margin-right: 20px;
 }
 
@@ -50,19 +50,6 @@ label {
 .msgHeader {
   display: flex;
   justify-content: center;
-  background-color: aquamarine;
-}
-
-.reponse {
-  margin-top: 1rem;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
-
-.reponse img {
-  height: 3rem;
-  margin-right: 10px;
 }
 
 .reponse input {

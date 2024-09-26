@@ -17,8 +17,14 @@
       </div>
     </div>
 
-    <div class="reponse">
-      <button type="submit" class="button m-5">envoyer</button>
+    <div class="reponse" [formGroup]="msg">
+      <!-- Ajoutez ici la directive formGroup -->
+      <input type="text" placeholder="répondre" formControlName="contenu" />
+
+      <button type="button" (click)="sendMessage()" class="button m-5">
+        envoyer
+      </button>
+      <!-- Changez le type en button -->
     </div>
   </div>
 </div>

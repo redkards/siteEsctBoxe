@@ -2,7 +2,12 @@ import { Component } from '@angular/core';
 import { MessageService } from '../../../../services/message.service';
 import Message from '../../../../models/message.models';
 import { AuthService } from '../../../../services/auth.service';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CommonModule, DatePipe } from '@angular/common';
 
@@ -11,7 +16,8 @@ import { CommonModule, DatePipe } from '@angular/common';
   standalone: true,
   imports: [ReactiveFormsModule, RouterLink, CommonModule],
   templateUrl: './msg-detail.component.html',
-  styleUrls: ['./msg-detail.component.css'], // Correction : styleUrls avec 's'
+  styleUrls: ['./msg-detail.component.css'],
+  providers: [DatePipe], // Ajout du fournisseur pour DatePipe
 })
 export class MsgDetailComponent {
   messages: Message[] = [];
@@ -23,7 +29,7 @@ export class MsgDetailComponent {
   public date: Date = new Date();
   public formattedDate!: string; // Déclarez le type ici, mais pas l'initialisez
 
-  msg: any;
+  msg: FormGroup; // Changer le type en FormGroup
 
   constructor(
     private datePipe: DatePipe,
@@ -34,7 +40,7 @@ export class MsgDetailComponent {
     private router: Router
   ) {
     this.msg = this.formBuilder.group({
-      content: ['', Validators.required],
+      contenu: ['', Validators.required], // Assurez-vous que le nom est correct
       expediteur: ['', Validators.required],
       destinataire: ['', Validators.required],
       msgDate: ['', [Validators.required]],
