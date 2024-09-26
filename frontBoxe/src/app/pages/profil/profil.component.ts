@@ -166,6 +166,7 @@ import { firstValueFrom } from 'rxjs';
   imports: [SliderProfilComponent, CommonModule],
   templateUrl: './profil.component.html',
   styleUrls: ['./profil.component.css'],
+  styleUrls: ['./profil.component.css'],
 })
 export class ProfilComponent {
   selectedFile: File | null = null;
@@ -174,7 +175,9 @@ export class ProfilComponent {
 
   @ViewChild('fileInput') fileInput!: ElementRef; // Référence à l'input file
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private authService: AuthService) {
+    this.userId = this.authService.getUserId(); // Récupère l'ID de l'utilisateur à la création
+  }
 
   // Fonction appelée quand un fichier est sélectionné
   onFileSelected(event: Event): void {

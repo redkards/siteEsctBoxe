@@ -68,6 +68,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\JoinColumn(nullable: true)]
     private ?Messagerie $messagerie = null;
 
+    #[ORM\Column(nullable: true)]
+    #[groups(['getUsers'])]
+    private ?string $profilePicture = null;
 
 
     public function __construct()
@@ -75,6 +78,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->userAdresse = new ArrayCollection();
 
 
+    }
+
+    public function getProfilePicture(): ?string
+    {
+        return $this->profilePicture;
+    }
+
+    public function setProfilePicture(?string $profilePicture): static
+    {
+        $this->profilePicture = $profilePicture;
+        return $this;
     }
 
     public function getId(): ?int
