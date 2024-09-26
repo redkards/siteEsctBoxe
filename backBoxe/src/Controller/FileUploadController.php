@@ -89,5 +89,19 @@ class FileUploadController extends AbstractController
 
         return new JsonResponse(['message' => 'File uploaded successfully', 'filename' => $newFilename], Response::HTTP_OK);
     }
+
+     /**
+     * @Route("/api/check-file-exists/{fileName}", name="check_file_exists", methods={"GET"})
+     */
+    public function checkFileExists(string $fileName): JsonResponse
+    {
+        // Chemin du répertoire où les fichiers sont stockés
+        $filePath = $this->getParameter('upload_directory') . '/' . $fileName;
+
+        // Vérifiez si le fichier existe déjà
+        $fileExists = file_exists($filePath);
+
+        return new JsonResponse($fileExists);
+    }
 }
 

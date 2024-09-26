@@ -21,6 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\Cache\TagAwareCacheInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\Cache\ItemInterface;
+use Symfony\Component\Security\Core\Security;
 
 class AdresseController extends AbstractController
 {
@@ -135,15 +136,13 @@ class AdresseController extends AbstractController
         ]
     )]
     #[OA\Tag(name: "adresses")]
-    public function createAdresse(Request $request, SerializerInterface $serializer, EntityManagerInterface $em, UrlGeneratorInterface $urlGenerator, ValidatorInterface $validator, TagAwareCacheInterface $cachePool,UserRepository $userRepository): JsonResponse
+    public function createAdresse(Request $request, SerializerInterface $serializer, EntityManagerInterface $em, UrlGeneratorInterface $urlGenerator, ValidatorInterface $validator, TagAwareCacheInterface $cachePool, UserRepository $userRepository): JsonResponse
     {
         // Invalide le cache associé aux adresses
         $cachePool->invalidateTags(["adressesCache"]);
 
-        // Désérialisation du contenu de la requête pour créer une instance d' adresse
+        // Désérialisation du contenu de la requête pour créer une instance d'adresse
         $data = json_decode($request->getContent(), true);
-
-
 
         // Désérialisation des données en objet adresse
         $adresse = $serializer->deserialize(json_encode($data), Adresse::class, 'json');
@@ -151,14 +150,18 @@ class AdresseController extends AbstractController
         // Récupération des données envoyées avec la requête
         $content = $request->toArray();
 
-        // Récupération de l'ID de user avec une valeur par défaut si non spécifié
-        $userId = $content['userId'] ?? -1;
-        // Association de user à l'adresse'
-        $user = $userRepository->find($userId);
-        if (!$user) {
-            return new JsonResponse(['error' => 'user not found'], Response::HTTP_BAD_REQUEST);
+        // Récupération de l'ID de user, s'il est fourni
+        $userId = $content['userId'] ?? null;
+
+        // Si un userId est fourni, on essaie de trouver l'utilisateur
+        if ($userId !== null) {
+            $user = $userRepository->find($userId);
+            if (!$user) {
+                return new JsonResponse(['error' => 'user not found'], Response::HTTP_BAD_REQUEST);
+            }
+            // Association de l'utilisateur à l'adresse
+            $adresse->setUser($user);
         }
-        $adresse->setUser($user);
 
         // Vérification des erreurs
         $errors = $validator->validate($adresse);
@@ -166,20 +169,26 @@ class AdresseController extends AbstractController
             return new JsonResponse($serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
         }
 
-        // Persistance de la nouvelle message en base de données
+        // Persistance de la nouvelle adresse en base de données
         $em->persist($adresse);
         $em->flush();
 
-        // Sérialisation de la message créée pour la réponse
+        // Sérialisation de l'adresse créée pour la réponse
         $context = SerializationContext::create()->setGroups(['getAdresses']);
         $jsonAdresse = $serializer->serialize($adresse, 'json', $context);
+
+        // Ajouter l'ID de l'adresse à la réponse
+        $adresseData = json_decode($jsonAdresse, true);
+        $adresseData['id'] = $adresse->getId();
+        $jsonAdresse = json_encode($adresseData);
 
         // Génération de l'URL de la nouvelle ressource
         $location = $urlGenerator->generate('detailAdresse', ['id' => $adresse->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
 
-        // Retourne la message créée avec l'URL de la nouvelle ressource
+        // Retourne l'adresse créée avec l'URL de la nouvelle ressource
         return new JsonResponse($jsonAdresse, Response::HTTP_CREATED, ['Location' => $location], true);
     }
+
 
      /**
      * Cette méthode permet de mettre à jour une adresse
@@ -237,7 +246,95 @@ class AdresseController extends AbstractController
         ]
     )]
     #[OA\Tag(name: "Adresses")]
-    public function updateAdresse(int $id,
+
+
+
+// public function updateAdresse(
+//     int $id,
+//     Request $request,
+//     SerializerInterface $serializer,
+//     Adresse $currentAdresse,
+//     EntityManagerInterface $em,
+//     ValidatorInterface $validator,
+//     TagAwareCacheInterface $cachePool,
+//     UserRepository $userRepository,
+//     SalleRepository $salleRepository,
+//     Security $security  // Ajout de Security pour récupérer l'utilisateur connecté
+// ): JsonResponse {
+//     // Invalider le cache associé aux adresses
+//     $cachePool->invalidateTags(["adresseCache"]);
+
+//     // Vérifiez si l'adresse existe
+//     if (!$currentAdresse) {
+//         return new JsonResponse(['message' => 'Adresse non trouvée'], Response::HTTP_NOT_FOUND);
+//     }
+
+//     // Décoder le contenu JSON de la requête
+//     $data = json_decode($request->getContent(), true);
+
+//     // Vérifier que le décodage a fonctionné
+//     if ($data === null) {
+//         return new JsonResponse(['message' => 'Le corps de la requête est invalide'], Response::HTTP_BAD_REQUEST);
+//     }
+
+//     // Récupérer l'utilisateur connecté
+//     $currentUser = $security->getUser();
+//     if (!$currentUser) {
+//         return new JsonResponse(['message' => 'Utilisateur non authentifié'], Response::HTTP_UNAUTHORIZED);
+//     }
+
+//     // Vérifier qu'un seul type d'association est présent (soit userId, soit salleId, mais pas les deux)
+//     if (isset($data['salleId']) && $currentUser) {
+//         return new JsonResponse(['message' => "L'adresse doit être associée soit à l'utilisateur connecté, soit à une salle, mais pas aux deux."], Response::HTTP_BAD_REQUEST);
+//     }
+
+//     // Si aucun userId ou salleId n'est fourni, associer par défaut l'adresse à l'utilisateur connecté
+//     if (!isset($data['salleId'])) {
+//         // Associer l'adresse à l'utilisateur connecté
+//         $currentAdresse->setUser($currentUser);
+//         $currentAdresse->setSalle(null); // Supprimer l'association avec une salle s'il y en avait une
+//     }
+
+//     // Si l'ID salle est fourni, associer à la salle correspondante
+//     if (isset($data['salleId'])) {
+//         $salle = $salleRepository->find($data['salleId']);
+//         if (!$salle) {
+//             return new JsonResponse(['message' => 'Salle non trouvée'], Response::HTTP_NOT_FOUND);
+//         }
+//         // Associer l'adresse à la salle
+//         $currentAdresse->setSalle($salle);
+//         $currentAdresse->setUser(null); // Supprimer l'association avec un utilisateur s'il y en avait une
+//     }
+
+//     // Mise à jour des autres propriétés de l'adresse
+//     $currentAdresse->setNumero($data['numero']);
+//     $currentAdresse->setTypeVoie($data['typeVoie']);
+//     $currentAdresse->setNomVoie($data['NomVoie']);
+//     $currentAdresse->setComplementAdresse($data['complementAdresse']);
+//     $currentAdresse->setVille($data['ville']);
+//     $currentAdresse->setCodePostal($data['codePostal']);
+//     $currentAdresse->setPays($data['pays']);
+
+//     // Valider les nouvelles données de l'adresse
+//     $errors = $validator->validate($currentAdresse);
+//     if (count($errors) > 0) {
+//         return new JsonResponse($serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
+//     }
+
+//     // Persister les modifications dans la base de données
+//     try {
+//         $em->persist($currentAdresse);
+//         $em->flush();
+//     } catch (\Exception $e) {
+//         return new JsonResponse(['message' => 'Erreur lors de la mise à jour de l\'adresse'], Response::HTTP_INTERNAL_SERVER_ERROR);
+//     }
+
+//     // Retourner une réponse de succès
+//     return new JsonResponse(['message' => 'Adresse mise à jour avec succès'], JsonResponse::HTTP_OK);
+// }
+
+    public function updateAdresse(
+        int $id,
         Request $request,
         SerializerInterface $serializer,
         Adresse $currentAdresse,
@@ -247,53 +344,64 @@ class AdresseController extends AbstractController
         UserRepository $userRepository,
         SalleRepository $salleRepository
     ): JsonResponse {
+        // Invalider le cache associé aux adresses
+        $cachePool->invalidateTags(["adresseCache"]);
+
+        // Vérifiez si l'adresse existe
+        if (!$currentAdresse) {
+            return new JsonResponse(['message' => 'Adresse non trouvée'], Response::HTTP_NOT_FOUND);
+        }
 
         // Décoder le contenu JSON de la requête
         $data = json_decode($request->getContent(), true);
 
- // Désérialisation des données en objet adresse
-        $adresse = $serializer->deserialize(json_encode($data), Adresse::class, 'json');
-
-// Vérifier que le décodage a fonctionné
-if ($data === null) {
-    return new JsonResponse(['message' => 'Le corps de la requête est invalide'], Response::HTTP_BAD_REQUEST);
-}
-
-
-var_dump($data);
-
-        // Vérifiez que l'ID user est présent
-        if (!isset($data['userId'])) {
-            return new JsonResponse(['message' => "L'id user est requis"], Response::HTTP_BAD_REQUEST);
-        }
-        // Vérifiez que l'ID salle est présent
-        if (!isset($data['salleId'])) {
-            return new JsonResponse(['message' => "L'id salle est requis"], Response::HTTP_BAD_REQUEST);
+        // Vérifier que le décodage a fonctionné
+        if ($data === null) {
+            return new JsonResponse(['message' => 'Le corps de la requête est invalide'], Response::HTTP_BAD_REQUEST);
         }
 
-        // Récupérer l'utilisateur par l'ID
-        $user = $userRepository->find($data['userId']);
-        if (!$user) {
-            return new JsonResponse(['message' => 'Utilisateur non trouvé'], Response::HTTP_NOT_FOUND);
+        // Vérifier qu'un seul type d'association est présent (soit userId, soit salleId, mais pas les deux)
+        if (isset($data['userId']) && isset($data['salleId'])) {
+            return new JsonResponse(['message' => "L'adresse doit être associée soit à un utilisateur, soit à une salle, mais pas aux deux."], Response::HTTP_BAD_REQUEST);
         }
 
-        // Récupérer l'utilisateur par l'ID
-        $salle = $salleRepository->find($data['salleId']);
-        if (!$salle) {
-            return new JsonResponse(['message' => 'salle non trouvée'], Response::HTTP_NOT_FOUND);
+        if (!isset($data['userId']) && !isset($data['salleId'])) {
+            return new JsonResponse(['message' => "L'adresse doit être associée à un utilisateur ou à une salle."], Response::HTTP_BAD_REQUEST);
         }
 
+        // Récupérer l'utilisateur si l'ID user est présent
+        if (isset($data['userId'])) {
+            $user = $userRepository->find($data['userId']);
+            if (!$user) {
+                return new JsonResponse(['message' => 'Utilisateur non trouvé'], Response::HTTP_NOT_FOUND);
+            }
+            // Associer l'adresse à l'utilisateur
+            $currentAdresse->setUser($user);
+            $currentAdresse->setSalle(null); // Supprimer l'association avec une salle s'il y en avait une
+        }
 
+        // Récupérer la salle si l'ID salle est présent
+        if (isset($data['salleId'])) {
+            $salle = $salleRepository->find($data['salleId']);
+            if (!$salle) {
+                return new JsonResponse(['message' => 'Salle non trouvée'], Response::HTTP_NOT_FOUND);
+            }
+            // Associer l'adresse à la salle
+            $currentAdresse->setSalle($salle);
+            $currentAdresse->setUser(null); // Supprimer l'association avec un utilisateur s'il y en avait une
+        }
 
-        // Mise à jour des propriétés de l'adresse
+        // Mise à jour des autres propriétés de l'adresse
         $currentAdresse->setNumero($data['numero']);
         $currentAdresse->setTypeVoie($data['typeVoie']);
-        $currentAdresse->setNomVoie($data['NomVoie']);
-        $currentAdresse->setComplementAdresse($data['complementAdresse']);
+        $currentAdresse->setNomVoie($data['nomVoie']);
+        if (isset($data['complementAdresse'])) {
+            $currentAdresse->setComplementAdresse($data['complementAdresse']);  // Assigner uniquement si présent
+        }
+
         $currentAdresse->setVille($data['ville']);
         $currentAdresse->setCodePostal($data['codePostal']);
         $currentAdresse->setPays($data['pays']);
-        $currentAdresse->setUser($user);
 
         // Valider les nouvelles données de l'adresse
         $errors = $validator->validate($currentAdresse);
@@ -309,11 +417,7 @@ var_dump($data);
             return new JsonResponse(['message' => 'Erreur lors de la mise à jour de l\'adresse'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        // Invalider le cache associé aux adresses
-        $cachePool->invalidateTags(["adresseCache"]);
-
         // Retourner une réponse de succès
         return new JsonResponse(['message' => 'Adresse mise à jour avec succès'], JsonResponse::HTTP_OK);
     }
-
 }
