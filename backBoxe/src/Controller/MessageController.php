@@ -78,7 +78,7 @@ class MessageController extends AbstractController
     // Définition d'une route pour supprimer une message spécifique par son ID. La méthode HTTP autorisée est DELETE.
     #[Route('/api/messages/{id}', name: 'deletemessage', methods: ['DELETE'])]
     #[OA\Tag(name: "messages")]
-    public function deletemessage(message $message, EntityManagerInterface $em, TagAwareCacheInterface $cachePool): JsonResponse
+    public function deleteMessage(message $message, EntityManagerInterface $em, TagAwareCacheInterface $cachePool): JsonResponse
     {
         // Invalide le cache associé aux messages
         $cachePool->invalidateTags(["messagesCache"]);

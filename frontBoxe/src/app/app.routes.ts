@@ -12,6 +12,9 @@ import { RegisterComponent } from './pages/register/register.component';
 import { Inscription20242025Component } from './pages/inscription2024-2025/inscription2024-2025.component';
 import { PartenairesComponent } from './commons/partenaires/partenaires.component';
 import { ProfilComponent } from './pages/profil/profil.component';
+import { MessagerieComponent } from './pages/profil/messagerie/messagerie.component';
+import { MsgDetailComponent } from './pages/profil/messagerie/msg-detail/msg-detail.component';
+import { CreateMsgComponent } from './pages/profil/messagerie/create-msg/create-msg.component';
 
 export const routes: Routes = [
   // chemins navBar
@@ -32,6 +35,14 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
 
   { path: 'profil', component: ProfilComponent },
+
+  //chemins messagerie
+
+  { path: 'messagerie', component: MessagerieComponent },
+
+  { path: 'messageDetail/:id', component: MsgDetailComponent },
+
+  { path: 'addMessage', component: CreateMsgComponent },
 
   // Chemin footer
 

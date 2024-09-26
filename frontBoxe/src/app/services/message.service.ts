@@ -20,7 +20,7 @@ export class MessageService {
     return this.httpClient.get<Message>(`${this.apiUrl}/messages/${id}`);
   }
 
-  addMessage(message: Message): Observable<Message> {
+  createMessage(message: Message): Observable<Message> {
     return this.httpClient.post<Message>(`${this.apiUrl}/messages`, message);
   }
 

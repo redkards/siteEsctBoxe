@@ -1,0 +1,69 @@
+<h2 class="centre mb-5">MESSAGERIE</h2>
+
+<table class="textColor mt-1 hidden">
+  <thead class="textColor">
+    <tr>
+      <th scope="col"></th>
+      <th scope="col">expéditeur</th>
+      <th scope="col">contenu du message</th>
+      <th scope="col">date et heure</th>
+    </tr>
+  </thead>
+
+  @for (item of messages; track $index ;){
+  <tr routerLink="/messageDetail/{{ item.id }}" class="bordure">
+    <div class="msg ligne between centrecolonne">
+      <div class="imgProfil centrecolonne">
+        <img id="imgProfil" src="icon/enveloppe.png" alt="homme touriste" />
+      </div>
+
+      <td>{{ item.expediteur }}</td>
+      <td>{{ truncate(item.contenu, 10) }}</td>
+      <td>{{ item.msgDate }}</td>
+
+      <!-- <td class="hidden2">{{ item.expediteur }} <br>
+          {{ truncate(item.contenu,10)}}</td>
+          <td class="hidden2">{{ item.msgDate }}</td> -->
+
+      <button (click)="deleteMessage(item.id)" class="btn m-2">
+        <img id="iconSupp" src="icon/poubelle.png" alt="poubelle supprimer" />
+      </button>
+    </div>
+  </tr>
+  }
+</table>
+
+<table class="textColor table mt-1 hidden2">
+  @for (item of messages; track $index ;){
+  <tr routerLink="/messageDetail/{{ item.id }}" class="bordure textColor">
+    <div class="msg ligne between centrecolonne">
+      <div class="imgProfil">
+        <img id="imgProfil" src="icon/enveloppe.png" alt=" iconeenveloppe" />
+      </div>
+
+      <!-- <td>{{ item.expediteur }}</td>
+      <td>{{ truncate(item.contenu,10)}}</td>
+      <td>{{ item.msgDate }}</td> -->
+
+      <td>
+        {{ item.expediteur }} <br />
+        {{ truncate(item.contenu, 10) }}
+      </td>
+      <td>{{ item.msgDate }}</td>
+
+      <button (click)="deleteMessage(item.id)" class="btn m-2">
+        <img id="iconSupp" src="icon/poubelle.png" alt="poubelle supprimer" />
+      </button>
+    </div>
+  </tr>
+  }
+</table>
+
+<div class="addIcon centre color">
+  <img
+    id="addIcon"
+    src="icon/ajouter.png"
+    alt="ajouter icon"
+    routerLink="/addMessage"
+  />
+</div>

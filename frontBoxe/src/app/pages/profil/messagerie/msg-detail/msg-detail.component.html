@@ -1,0 +1,24 @@
+<div class="card text-center textColor mt-5" *ngIf="msgDetail">
+  <div class="centre p-10">
+    <h4 class="card-title">message</h4>
+  </div>
+  <div class="card-body">
+    <div class="msg">
+      <div class="msgHeader">
+        <h5>expéditeur : {{ msgDetail.expediteur }}</h5>
+        <h5>date : {{ msgDetail.msgDate }}</h5>
+      </div>
+      <div class="msgContenu relative">
+        <p name="text" id="text">{{ msgDetail.contenu }}</p>
+      </div>
+      <div class="div">
+        <h6>supprimer message</h6>
+        <img id="addIcon" src="icon/poubelle.png" alt="icon supprimer" />
+      </div>
+    </div>
+
+    <div class="reponse">
+      <button type="submit" class="button m-5">envoyer</button>
+    </div>
+  </div>
+</div>
