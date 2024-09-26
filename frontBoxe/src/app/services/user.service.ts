@@ -24,7 +24,7 @@ export class UserService {
   }
 
   // Récupérer un users par son ID
-  getUser(id: number): Observable<User> {
+  getUserDetail(id: number): Observable<User> {
     return this.httpClient.get<User>(`${this.apiUrl}/users/${id}`);
   }
 

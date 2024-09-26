@@ -15,6 +15,7 @@ import { ProfilComponent } from './pages/profil/profil.component';
 import { MessagerieComponent } from './pages/profil/messagerie/messagerie.component';
 import { MsgDetailComponent } from './pages/profil/messagerie/msg-detail/msg-detail.component';
 import { CreateMsgComponent } from './pages/profil/messagerie/create-msg/create-msg.component';
+import { LoginComponent } from './pages/profil/login/login.component';
 
 export const routes: Routes = [
   // chemins navBar
@@ -35,6 +36,8 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
 
   { path: 'profil', component: ProfilComponent },
+
+  { path: 'login', component: LoginComponent },
 
   //chemins messagerie
 

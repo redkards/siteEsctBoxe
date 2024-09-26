@@ -1,0 +1,45 @@
+<p>login works!</p>
+<div class="container colonne">
+  <form
+    [formGroup]="loginForm"
+    name="loginForm"
+    (ngSubmit)="onLogin()"
+    class="formLogin centre colonne bordure"
+  >
+    <h2>Connexion</h2>
+    <br />
+    <div class="input">
+      <img class="icon" src="icon\utilisateur.png" alt="identifiant" />
+      <input
+        class="inputId"
+        type="text"
+        name="username"
+        placeholder="Identifiant"
+        formControlName="username"
+      />
+    </div>
+    <br />
+    <div class="input">
+      <img class="icon" src="icon\cadenas.png" alt="identifiant" />
+      <input
+        class="inputMdp"
+        type="password"
+        name="password"
+        placeholder="Mot de passe"
+        formControlName="password"
+      />
+    </div>
+
+    <br />
+
+    <button type="submit" onsubmit="getRole()">Connexion</button>
+    @if (submitted && (form['username'].invalid || form['password'].invalid)) {
+    <span>les éléments saisis sont incorrects</span>
+    }
+    <hr class="customHr" />
+    <span class="forgetPass">Mot de passe oublié</span>
+    <br />
+    <button type="submit">Nouveau mot de passe</button>
+  </form>
+  <hr class="customHr hideHr" />
+</div>

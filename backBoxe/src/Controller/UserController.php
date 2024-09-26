@@ -105,6 +105,7 @@ class UserController extends AbstractController
                     new OA\Property(property: "prenom", type: "string"),
                     new OA\Property(property: "tel", type: "string"),
                     new OA\Property(property: "dateNaissance", type: "string"),
+                    new OA\Property(property: "profilePicture", type: "string"),
                 ]
             )
         ),
@@ -139,6 +140,7 @@ public function createUser(Request $request, EntityManagerInterface $em, UserPas
     $user->setPrenom($data['prenom']);
     $user->setTel($data['tel']);
     $user->setDateNaissance(new \DateTimeImmutable($data['dateNaissance'])); // Assurez-vous que le format est valide
+    $user->setProfilePicture($data['profilePicture']);
     $user->setMessagerie($messagerie);
 
      // Attribuer le rôle par défaut

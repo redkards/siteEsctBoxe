@@ -2,7 +2,6 @@ import { Component, ViewChild, ElementRef } from '@angular/core';
 import { SliderProfilComponent } from '../../commons/slider-profil/slider-profil.component';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { firstValueFrom } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -15,13 +14,13 @@ import { AuthService } from '../../services/auth.service';
 export class ProfilComponent {
   selectedFile: File | null = null;
   uploadResponse: string = '';
-  imagePreview: string | ArrayBuffer | null = 'icon/utilisateur.png'; // Image par défaut
-  userId: number | null = null; // Declare the userId property
+  imagePreview: string | ArrayBuffer | null = 'icon/utilisateur.png'; // Default image
+  userId: number | null = null; // To store the authenticated user's ID
 
   @ViewChild('fileInput') fileInput!: ElementRef; // Reference to the file input
 
   constructor(private http: HttpClient, private authService: AuthService) {
-    this.userId = this.authService.getUserId(); // Initialize the userId
+    this.userId = this.authService.getUserId(); // Get the authenticated user's ID
   }
 
   // Function called when a file is selected
@@ -40,60 +39,52 @@ export class ProfilComponent {
     }
   }
 
-  // Function to check if the file already exists in the API
-  checkFileExists(fileName: string): Promise<boolean> {
-    return firstValueFrom(
-      this.http.get<boolean>(
-        `http://localhost:8000/api/check-file-exists/${fileName}`
-      )
-    )
-      .then((response) => {
-        return response !== undefined ? response : false; // Return false if the response is undefined
-      })
-      .catch((error) => {
-        console.error('Error checking file existence:', error);
-        return false; // If an error occurs, assume the file doesn't exist
-      });
+  // Function to upload the file to the Symfony backend and associate it with the user
+  uploadFile(): void {
+    if (this.selectedFile && this.userId !== null) {
+      // Ensure a file is selected and user ID exists
+      const formData = new FormData();
+      formData.append('file', this.selectedFile);
+      formData.append('userId', this.userId.toString()); // Attach the user ID
+
+      // Send the file to the Symfony FileUploadController
+      this.http.post('http://localhost:8000/api/upload', formData).subscribe(
+        (response: any) => {
+          this.uploadResponse = 'File uploaded successfully!';
+
+          // After successful upload, associate the file with the user in UserController
+          this.associateFileWithUser(response.filePath); // Assuming the response contains the file path
+        },
+        (error) => {
+          this.uploadResponse = 'Error uploading the file.';
+          console.error(error);
+        }
+      );
+    } else {
+      console.error('No file selected or user not authenticated.');
+      this.uploadResponse =
+        'Please select a file and ensure you are authenticated.';
+    }
   }
 
-  // Function to upload the file to the Symfony API
-  async uploadFile(): Promise<void> {
-    if (this.selectedFile) {
-      try {
-        // Check if the file already exists in the API
-        const fileExists = await this.checkFileExists(this.selectedFile.name);
+  // Function to associate the uploaded file with the user in the UserController
+  associateFileWithUser(filePath: string): void {
+    if (this.userId) {
+      const data = {
+        userId: this.userId,
+        filePath: filePath,
+      };
 
-        if (fileExists) {
-          this.uploadResponse = 'The file already exists on the server.';
-          console.log('The file already exists.');
-        } else {
-          // If the file doesn't exist, proceed with the upload
-          const formData = new FormData();
-          formData.append('file', this.selectedFile);
-
-          // Send the file to the Symfony backend
-          this.http
-            .post('http://localhost:8000/api/upload', formData)
-            .subscribe(
-              (response: any) => {
-                this.uploadResponse = 'File uploaded successfully!';
-
-                // Reset the component state without reloading the page
-                this.resetComponentState();
-              },
-              (error) => {
-                this.uploadResponse = 'Error uploading the file.';
-                console.error(error);
-              }
-            );
-        }
-      } catch (error) {
-        console.error('Error checking file:', error);
-        this.uploadResponse = 'Error checking file.';
-      }
-    } else {
-      console.error('No file selected.');
-      this.uploadResponse = 'Please select a file.';
+      this.http
+        .post('http://localhost:8000/api/user/update-profile-picture', data)
+        .subscribe(
+          (response: any) => {
+            console.log('Profile picture updated for the user:', response);
+          },
+          (error) => {
+            console.error('Error updating profile picture:', error);
+          }
+        );
     }
   }
 
