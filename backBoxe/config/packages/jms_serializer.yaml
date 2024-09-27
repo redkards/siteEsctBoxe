@@ -31,6 +31,6 @@ when@dev:
           - JSON_UNESCAPED_SLASHES
           - JSON_PRESERVE_ZERO_FRACTION
 
-    # handlers:
-    #   datetime:
-    #     default_format: 'Y-m-d\TH:i:sP'
+    handlers:
+      datetime:
+        default_format: 'Y-m-d\TH:i:sO'

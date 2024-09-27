@@ -1,0 +1,10 @@
+vich_uploader:
+    db_driver: orm
+    metadata:
+      type: attribute
+
+    mappings:
+       cours_images:
+           uri_prefix: /cours/images
+           upload_destination: '%kernel.project_dir%/public/cours/images'
+           namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
