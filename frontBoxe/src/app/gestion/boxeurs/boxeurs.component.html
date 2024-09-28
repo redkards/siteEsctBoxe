@@ -1,1 +1,51 @@
 <p>boxeurs works!</p>
+
+<div>
+  <h2>{{ isEdit ? "Modifier" : "Ajouter" }} un Boxeur</h2>
+  <form [formGroup]="boxeurForm" (ngSubmit)="onSubmit()">
+    <div>
+      <label>Nom:</label>
+      <input formControlName="nom" required />
+    </div>
+    <div>
+      <label>Prénom:</label>
+      <input formControlName="prenom" required />
+    </div>
+    <div>
+      <label>Poids (kg):</label>
+      <input type="number" formControlName="poids" required />
+    </div>
+
+    <div>
+      <label>Date de Naissance:</label>
+      <input type="date" formControlName="dateNaissance" required />
+    </div>
+
+    <div>
+      <label>Victoires:</label>
+      <input type="number" formControlName="victoires" />
+    </div>
+    <div>
+      <label>Défaites:</label>
+      <input type="number" formControlName="defaites" />
+    </div>
+    <div>
+      <label>Nuls:</label>
+      <input type="number" formControlName="nuls" />
+    </div>
+
+    <button type="submit">{{ isEdit ? "Mettre à jour" : "Ajouter" }}</button>
+    <button type="button" (click)="resetForm()">Annuler</button>
+  </form>
+
+  <h2>Liste des Boxeurs</h2>
+  <ul>
+    <li *ngFor="let boxeur of boxeurs">
+      {{ boxeur.nom }} {{ boxeur.prenom }}
+      <button (click)="editBoxeur(boxeur)">Modifier</button>
+      <button *ngIf="boxeur.id !== undefined" (click)="deleteBoxeur(boxeur.id)">
+        Supprimer
+      </button>
+    </li>
+  </ul>
+</div>

@@ -18,6 +18,7 @@ import { CreateMsgComponent } from './pages/profil/messagerie/create-msg/create-
 import { LoginComponent } from './pages/profil/login/login.component';
 import { PalmaresComponent } from './gestion/boxeurs/palmares/palmares.component';
 import { PalmaresFormComponent } from './gestion/boxeurs/palmares-form/palmares-form.component';
+import { BoxeurComponent } from './gestion/boxeurs/boxeurs.component';
 
 export const routes: Routes = [
   // chemins navBar
@@ -59,7 +60,9 @@ export const routes: Routes = [
 
   { path: 'partenaires', component: PartenairesComponent },
 
-  { path: '**', component: NotFoundComponent },
+  // chemins boxeurs
+
+  { path: 'boxeurs', component: BoxeurComponent },
 
   //chemins palmares
 
@@ -68,4 +71,6 @@ export const routes: Routes = [
   { path: 'palmares/new', component: PalmaresFormComponent },
 
   { path: 'palmares/:id/edit', component: PalmaresFormComponent },
+
+  { path: '**', component: NotFoundComponent },
 ];

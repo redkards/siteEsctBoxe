@@ -48,7 +48,7 @@
       (click)="onSelectMenu('menu4')"
       class="slinderLink menu4 height"
       [ngClass]="getDivClass('menu4')"
-      routerLink="/suppCompte"
+      routerLink="/boxeurs"
     >
       <img
         class="imgMenu"
@@ -57,6 +57,20 @@
         [ngClass]="getImgClass('menu4')"
       />
       <span>Déconnexion</span>
+    </div>
+    <div
+      (click)="onSelectMenu('menu5')"
+      class="slinderLink menu4 height"
+      [ngClass]="getDivClass('menu4')"
+      routerLink="/boxeurs"
+    >
+      <img
+        class="imgMenu"
+        src="icon/quitter.png"
+        alt=""
+        [ngClass]="getImgClass('menu4')"
+      />
+      <span>boxeurs</span>
     </div>
   </div>
 </div>

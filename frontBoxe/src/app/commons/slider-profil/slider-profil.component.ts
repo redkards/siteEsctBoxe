@@ -123,6 +123,8 @@ export class SliderProfilComponent {
       this.selectedMenu = 'menu3';
     } else if (url.includes('/suppCompte')) {
       this.selectedMenu = 'menu4';
+    } else if (url.includes('/boxeurs')) {
+      this.selectedMenu = 'menu5';
     }
     this.cdr.detectChanges();
   }
@@ -134,10 +136,12 @@ export class SliderProfilComponent {
       menuInfo: menu === 'menu2' && isActive,
       menuMdp: menu === 'menu3' && isActive,
       menuDelete: menu === 'menu4' && isActive,
+      menuBoxeur: menu === 'menu5' && isActive,
       menuSuiviInactive: !isActive && this.selectedMenu === 'menu1',
       menuInfoInactive: !isActive && this.selectedMenu === 'menu2',
       menuMdpInactive: !isActive && this.selectedMenu === 'menu3',
       menuDeleteInactive: !isActive && this.selectedMenu === 'menu4',
+      menuBoxeurInactive: !isActive && this.selectedMenu === 'menu',
     };
   }
 
@@ -149,6 +153,7 @@ export class SliderProfilComponent {
       iconInactiveInfo: !isActive && this.selectedMenu === 'menu2',
       iconInactiveMdp: !isActive && this.selectedMenu === 'menu3',
       iconInactiveDelete: !isActive && this.selectedMenu === 'menu4',
+      iconInactiveBoxeur: !isActive && this.selectedMenu === 'menu5',
     };
   }
 
