@@ -16,6 +16,8 @@ import { MessagerieComponent } from './pages/profil/messagerie/messagerie.compon
 import { MsgDetailComponent } from './pages/profil/messagerie/msg-detail/msg-detail.component';
 import { CreateMsgComponent } from './pages/profil/messagerie/create-msg/create-msg.component';
 import { LoginComponent } from './pages/profil/login/login.component';
+import { PalmaresComponent } from './gestion/boxeurs/palmares/palmares.component';
+import { PalmaresFormComponent } from './gestion/boxeurs/palmares-form/palmares-form.component';
 
 export const routes: Routes = [
   // chemins navBar
@@ -58,4 +60,12 @@ export const routes: Routes = [
   { path: 'partenaires', component: PartenairesComponent },
 
   { path: '**', component: NotFoundComponent },
+
+  //chemins palmares
+
+  { path: 'palmares', component: PalmaresComponent },
+
+  { path: 'palmares/new', component: PalmaresFormComponent },
+
+  { path: 'palmares/:id/edit', component: PalmaresFormComponent },
 ];

@@ -25,6 +25,16 @@ class Categorie
     #[ORM\JoinColumn(nullable: true)]
     private ?Boxeur $boxeur = null;
 
+
+     #[ORM\OneToMany(targetEntity : Palmares::class, mappedBy:"categorie")]
+
+    private $palmares;
+
+    public function __construct()
+    {
+        $this->palmares = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -52,5 +62,12 @@ class Categorie
         $this->boxeur = $boxeur;
 
         return $this;
+    }
+    /**
+     * @return Collection|Palmares[]
+     */
+    public function getPalmares(): Collection
+    {
+        return $this->palmares;
     }
 }

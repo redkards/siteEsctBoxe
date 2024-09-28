@@ -60,11 +60,19 @@ class Boxeur
     private Collection $entraineurs;
 
 
+     #[ORM\OneToMany(targetEntity: Palmares::class, mappedBy:"boxeur")]
+
+    private $palmares;
+
+
+
+
     public function __construct()
     {
         $this->boxeurCategorie = new ArrayCollection();
         $this->boxeurTypeBoxe = new ArrayCollection();
         $this->entraineurs = new ArrayCollection();
+        $this->palmares = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -216,5 +224,13 @@ class Boxeur
     {
         $this->photo = $photo;
         return $this;
+    }
+
+     /**
+     * @return Collection|Palmares[]
+     */
+    public function getPalmares(): Collection
+    {
+        return $this->palmares;
     }
 }
