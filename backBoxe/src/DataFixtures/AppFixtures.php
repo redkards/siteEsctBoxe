@@ -13,6 +13,7 @@ use App\Entity\Message;
 use App\Entity\Messagerie;
 use App\Entity\Salle;
 use App\Entity\User;
+use App\Entity\News;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -273,11 +274,27 @@ class AppFixtures extends Fixture
             $listEntrainements[] = $entrainement;
         }
 
+        $listNews= [];
+        for ($i = 1; $i <= 3; $i++) {
+            $news = new News();
+            $news->setTitre('Titre de l\'actualité ' . $i)
+                 ->setNewsContent('Ceci est le contenu de l\'actualité ' . $i)
+                 ->setNewsPictures("cuba-66f45d7c80ee2.jpg")
+                 ->setPublishedAt(new \DateTimeImmutable());
+
+            $manager->persist($news);
+            $listNews[]= $news;
+
+        }
 
         $manager->flush();
     }
 
 
 
+
 }
+
+
+
 

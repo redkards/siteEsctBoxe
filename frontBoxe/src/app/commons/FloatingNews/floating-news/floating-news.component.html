@@ -1,0 +1,13 @@
+<div *ngIf="showNews" class="news-modal">
+  <div class="modal-content">
+    <span class="close" (click)="closeNews()">&times;</span>
+    <h3>Actualités</h3>
+    <ul>
+      <li *ngFor="let article of news">
+        <strong>{{ article.titre }}</strong>
+        <p>{{ article.Newscontent }}</p>
+        <small>{{ article.publishedAt }}</small>
+      </li>
+    </ul>
+  </div>
+</div>

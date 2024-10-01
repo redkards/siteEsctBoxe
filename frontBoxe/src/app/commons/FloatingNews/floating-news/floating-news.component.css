@@ -1,0 +1,21 @@
+.news-modal {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  width: 300px;
+  background-color: rgb(160, 156, 156);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  z-index: 1000;
+}
+
+.modal-content {
+  padding: 20px;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 24px;
+  cursor: pointer;
+}

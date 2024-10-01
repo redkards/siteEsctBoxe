@@ -224,6 +224,9 @@ class BoxeurController extends AbstractController
         }
 
         // Mise à jour des attributs
+        if (isset($data['poids'])) {
+            $currentboxeur->setPoids($data['poids']);
+        }
         if (isset($data['boxeurNom'])) {
             $currentboxeur->setBoxeurNom($data['boxeurNom']);
         }

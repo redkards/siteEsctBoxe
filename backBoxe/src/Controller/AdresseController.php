@@ -248,91 +248,6 @@ class AdresseController extends AbstractController
     #[OA\Tag(name: "Adresses")]
 
 
-
-// public function updateAdresse(
-//     int $id,
-//     Request $request,
-//     SerializerInterface $serializer,
-//     Adresse $currentAdresse,
-//     EntityManagerInterface $em,
-//     ValidatorInterface $validator,
-//     TagAwareCacheInterface $cachePool,
-//     UserRepository $userRepository,
-//     SalleRepository $salleRepository,
-//     Security $security  // Ajout de Security pour récupérer l'utilisateur connecté
-// ): JsonResponse {
-//     // Invalider le cache associé aux adresses
-//     $cachePool->invalidateTags(["adresseCache"]);
-
-//     // Vérifiez si l'adresse existe
-//     if (!$currentAdresse) {
-//         return new JsonResponse(['message' => 'Adresse non trouvée'], Response::HTTP_NOT_FOUND);
-//     }
-
-//     // Décoder le contenu JSON de la requête
-//     $data = json_decode($request->getContent(), true);
-
-//     // Vérifier que le décodage a fonctionné
-//     if ($data === null) {
-//         return new JsonResponse(['message' => 'Le corps de la requête est invalide'], Response::HTTP_BAD_REQUEST);
-//     }
-
-//     // Récupérer l'utilisateur connecté
-//     $currentUser = $security->getUser();
-//     if (!$currentUser) {
-//         return new JsonResponse(['message' => 'Utilisateur non authentifié'], Response::HTTP_UNAUTHORIZED);
-//     }
-
-//     // Vérifier qu'un seul type d'association est présent (soit userId, soit salleId, mais pas les deux)
-//     if (isset($data['salleId']) && $currentUser) {
-//         return new JsonResponse(['message' => "L'adresse doit être associée soit à l'utilisateur connecté, soit à une salle, mais pas aux deux."], Response::HTTP_BAD_REQUEST);
-//     }
-
-//     // Si aucun userId ou salleId n'est fourni, associer par défaut l'adresse à l'utilisateur connecté
-//     if (!isset($data['salleId'])) {
-//         // Associer l'adresse à l'utilisateur connecté
-//         $currentAdresse->setUser($currentUser);
-//         $currentAdresse->setSalle(null); // Supprimer l'association avec une salle s'il y en avait une
-//     }
-
-//     // Si l'ID salle est fourni, associer à la salle correspondante
-//     if (isset($data['salleId'])) {
-//         $salle = $salleRepository->find($data['salleId']);
-//         if (!$salle) {
-//             return new JsonResponse(['message' => 'Salle non trouvée'], Response::HTTP_NOT_FOUND);
-//         }
-//         // Associer l'adresse à la salle
-//         $currentAdresse->setSalle($salle);
-//         $currentAdresse->setUser(null); // Supprimer l'association avec un utilisateur s'il y en avait une
-//     }
-
-//     // Mise à jour des autres propriétés de l'adresse
-//     $currentAdresse->setNumero($data['numero']);
-//     $currentAdresse->setTypeVoie($data['typeVoie']);
-//     $currentAdresse->setNomVoie($data['NomVoie']);
-//     $currentAdresse->setComplementAdresse($data['complementAdresse']);
-//     $currentAdresse->setVille($data['ville']);
-//     $currentAdresse->setCodePostal($data['codePostal']);
-//     $currentAdresse->setPays($data['pays']);
-
-//     // Valider les nouvelles données de l'adresse
-//     $errors = $validator->validate($currentAdresse);
-//     if (count($errors) > 0) {
-//         return new JsonResponse($serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
-//     }
-
-//     // Persister les modifications dans la base de données
-//     try {
-//         $em->persist($currentAdresse);
-//         $em->flush();
-//     } catch (\Exception $e) {
-//         return new JsonResponse(['message' => 'Erreur lors de la mise à jour de l\'adresse'], Response::HTTP_INTERNAL_SERVER_ERROR);
-//     }
-
-//     // Retourner une réponse de succès
-//     return new JsonResponse(['message' => 'Adresse mise à jour avec succès'], JsonResponse::HTTP_OK);
-// }
-
     public function updateAdresse(
         int $id,
         Request $request,
@@ -386,9 +301,9 @@ class AdresseController extends AbstractController
             if (!$salle) {
                 return new JsonResponse(['message' => 'Salle non trouvée'], Response::HTTP_NOT_FOUND);
             }
-            // Associer l'adresse à la salle
+            // Associer l'adresse à la salle ou un user
             $currentAdresse->setSalle($salle);
-            $currentAdresse->setUser(null); // Supprimer l'association avec un utilisateur s'il y en avait une
+            $currentAdresse->setUser($user); // Supprimer l'association avec un utilisateur s'il y en avait une
         }
 
         // Mise à jour des autres propriétés de l'adresse

@@ -1,0 +1,38 @@
+<p>edit-news works!</p>
+<form (ngSubmit)="createNews()">
+  <label for="newsPictures">photo</label>
+  <input
+    type="text"
+    id="newsPictures"
+    [(ngModel)]="newsPictures"
+    name="newsPictures"
+    required
+  />
+
+  <label for="title">Titre</label>
+  <input type="text" id="titre" [(ngModel)]="titre" name="titre" required />
+
+  <label for="newsContent">Contenu</label>
+  <textarea
+    id="newsContent"
+    [(ngModel)]="newsContent"
+    name="newsContent"
+    required
+  ></textarea>
+
+  <label for="publishedAt">date de publication</label>
+  <input
+    type="text"
+    id="publishedAt"
+    [(ngModel)]="publishedAt"
+    name="publishedAt"
+    required
+  />
+
+  <button type="submit">Créer</button>
+
+  <!-- Affichage des erreurs éventuelles -->
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+</form>

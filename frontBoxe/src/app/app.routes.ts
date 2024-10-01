@@ -19,6 +19,9 @@ import { LoginComponent } from './pages/profil/login/login.component';
 import { PalmaresComponent } from './gestion/boxeurs/palmares/palmares.component';
 import { PalmaresFormComponent } from './gestion/boxeurs/palmares-form/palmares-form.component';
 import { BoxeurComponent } from './gestion/boxeurs/boxeurs.component';
+import { FloatingNewsComponent } from './commons/FloatingNews/floating-news/floating-news.component';
+import { AddNewsComponent } from './commons/FloatingNews/add-news/add-news.component';
+import { EditNewsComponent } from './commons/FloatingNews/edit-news/edit-news.component';
 
 export const routes: Routes = [
   // chemins navBar
@@ -71,6 +74,14 @@ export const routes: Routes = [
   { path: 'palmares/new', component: PalmaresFormComponent },
 
   { path: 'palmares/:id/edit', component: PalmaresFormComponent },
+
+  //chemin news
+
+  { path: 'news', component: FloatingNewsComponent },
+
+  { path: 'addNews', component: AddNewsComponent },
+
+  { path: 'editNews', component: EditNewsComponent },
 
   { path: '**', component: NotFoundComponent },
 ];

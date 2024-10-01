@@ -146,6 +146,15 @@ public function createUser(Request $request, EntityManagerInterface $em, UserPas
      // Attribuer le rôle par défaut
      $user->setRoles(['ROLE_User']); // Ajout du rôle par défaut
 
+     // verifie la présence de profilPictures
+
+if (isset($data['profilePicture'])) {
+    $profilePicture = $data['profilePicture'];
+} else {
+    // Gérer le cas où 'profilePicture' n'est pas présent
+    $profilePicture = null; // ou une valeur par défaut
+}
+
     // Valider les données de l'utilisateur
     $errors = $validator->validate($user);
     if (count($errors) > 0) {
@@ -226,7 +235,7 @@ public function createUser(Request $request, EntityManagerInterface $em, UserPas
         $currentUser->setPrenom($data['prenom'] ?? $currentUser->getPrenom());
         $currentUser->setTel($data['tel'] ?? $currentUser->getTel());
         $currentUser->setDateNaissance(new \DateTimeImmutable($data['dateNaissance'] ?? $currentUser->getDateNaissance()->format('Y-m-d')));
-
+        $currentUser->setProfilePicture($data['profilePicture'] ?? $currentUser->getProfilePicture());
         $errors = $validator->validate($currentUser);
         if (count($errors) > 0) {
             return new JsonResponse($serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
@@ -275,12 +284,11 @@ public function uploadProfilePicture(Request $request, User $user, EntityManager
     $uploadResponse = $fileUploadController->upload($request);
 
     if ($uploadResponse->getStatusCode() !== Response::HTTP_OK) {
-        return $uploadResponse; // Retourner l'erreur de l'upload si nécessaire
+        return $uploadResponse;
     }
 
     $filename = json_decode($uploadResponse->getContent(), true)['filename'];
-    $user->setProfilePicture($filename); // Assurez-vous que cette méthode existe dans votre entité User
-
+    $user->setProfilePicture($filename);
     $em->persist($user);
     $em->flush();
 
@@ -290,14 +298,14 @@ public function uploadProfilePicture(Request $request, User $user, EntityManager
 #[Route('/api/users/{id}/profile-picture', name: 'loadProfilePicture', methods: ['GET'])]
 public function loadProfilePicture(User $user): JsonResponse
 {
-    $profilePicture = $user->getProfilePicture(); // Assurez-vous que cette méthode existe dans votre entité User
+    $profilePicture = $user->getProfilePicture();
 
     if (!$profilePicture) {
         return new JsonResponse(['error' => 'No profile picture found'], Response::HTTP_NOT_FOUND);
     }
 
     // Vous pouvez renvoyer soit l'URL complète de l'image, soit le nom du fichier pour que le frontend puisse le gérer
-    $profilePictureUrl = '/uploads/profile_pictures/' . $profilePicture; // Assurez-vous que le chemin est correct
+    $profilePictureUrl = '/uploads/profile_pictures/' . $profilePicture;
 
     return new JsonResponse(['profilePicture' => $profilePictureUrl], Response::HTTP_OK);
 }
