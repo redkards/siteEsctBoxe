@@ -1,0 +1,147 @@
+@startuml
+actor Utilisateur
+actor Admin
+actor Boxeur
+actor Entraineur
+
+rectangle "Système de Gestion de Boxe" {
+    Utilisateur --> (Envoyer Message)
+    Utilisateur --> (Recevoir Message)
+    Utilisateur --> (Consulter Entraînements)
+    Utilisateur --> (S'inscrire à un Gala)
+    
+    Admin --> (Gérer Utilisateurs)
+    Admin --> (Gérer Entraînements)
+    Admin --> (Gérer Galas)
+    
+    Boxeur --> (Participer à un Entraînement)
+    Boxeur --> (Participer à un Gala)
+    
+    Entraineur --> (Conduire Entraînement)
+    Entraineur --> (Gérer Boxeurs)
+}
+
+@enduml
+
+@startuml usecase
+
+!theme silver
+
+title = "useCase eduZouzou"
+
+left to right direction
+
+
+actor superAdmin as sa #red
+
+    actor admin as a #blue
+    actor enseignant as ens #green
+    actor parent as p #Coral
+    actor elève as e #pink
+
+
+
+    package superAdmin as packsa {
+        useCase "ajouter une école" as addSchool #red
+        useCase "modifier une école" as upSchool #red
+        useCase "supprimer une école" as delSchool #red
+        useCase "gestion des admins" as gesAd #Green;text:Black
+        useCase "ajouter admin" as addAdm #lightGreen
+        useCase "modifier admin" as upAdm #lightGreen
+        useCase "supprimer admin" as delAdm #lightGreen
+
+sa-->packsa #line:red;line.dashed;text:red
+gesAd -->addAdm :extend
+gesAd -->upAdm :extend
+gesAd -->delAdm :extend
+
+    }
+
+
+    package admin as packa {
+        useCase "statistiques et rapports" as stats #LightPink
+        useCase "analyser données utilisation" as aDataUse #LightPink
+        useCase "analyser performances élèves" as aPerfEl #LightPink
+        useCase "analyser participation Activités" as aParta #LightPink
+        useCase "gestion des comptes" as gestCompte #LightCoral
+        useCase "ajouter compte" as addCompte #Coral
+        useCase "modifier compte" as upCompte #Coral
+        useCase "supprimer compte" as delCompte #Coral
+
+a-up->packa #blue;line.dashed;text:blue
+
+gestCompte --> addCompte : extend
+gestCompte --> upCompte : extend
+gestCompte --> delCompte : extend
+
+stats --> aDataUse :extend
+stats --> aPerfEl :extend
+stats --> aParta :extend
+
+
+    }
+
+package enseignant  as packens{
+        useCase "ajouter une classe" as addClass #LightBlue
+        useCase "modifier une classe" as upClass #LightBlue
+        useCase "supprimer une classe" as delClass #LightBlue
+        useCase "ajouter un cours" as addcours #LightGreen
+        useCase "ajouter descriptions" as descr #Green;text:Black
+        useCase "ajouter documents" as doc #Green;text:Black
+        useCase "ajouter videos" as video #Green;text:Black
+        useCase "ajouter ressources supplémentaires" as ressource #Green;text:Black
+
+addcours --> descr :extends
+addcours --> doc :extends
+addcours --> video :extends
+addcours --> ressource :extends
+
+ens-->packens  #green;line.dashed;text:green 
+
+}
+
+
+
+package "parents" as packp{
+usecase "messages" as mess #orange
+usecase "messagerie" as tchat #orange
+    usecase inscription as ins #LightGray 
+    usecase "gestion du Profil" as gesProf #LightGray 
+
+p->packp #coral;line.dashed;text:coral
+tchat-->mess :extend
+
+}
+
+
+ package "élèves" as packel{
+ usecase "cours" as cours #LightSeaGreen
+ usecase "activités" as act #LightSeaGreen
+ usecase "resultat" as res #LightSeaGreen
+ usecase "compétences" as comp #LightSeaGreen
+
+
+e-->packel #DarkMagenta;line.dashed;
+
+ }
+
+    useCase connexion as connect #Violet
+
+
+
+a <|---sa  #line:lightgray;line.bold;text:lightgray
+ens <|---a  #line:lightgray;line.bold;text:lightgray
+p<|---ens  #line:lightgray;line.bold;text:lightgray
+e<|---p  #line:lightgray;line.bold;text:lightgray
+
+
+
+ins <..connect #line:black;line.dashed;text:lightgray :includes 
+packa ..> connect #line:black;line.dashed;text:lightgray : includes 
+packens ..> connect #line:black;line.dashed;text:lightgray : includes 
+packel ..> connect #line:black;line.dashed;text:lightgray : includes 
+
+
+@enduml
+
+
