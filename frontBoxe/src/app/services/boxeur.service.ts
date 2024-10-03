@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class BoxeurService {
-  private apiUrl = 'http://localhost:8000/api/boxeur'; // Remplacer par l'URL de l'API Symfony
+  private apiUrl = 'http://localhost:8000/api/boxeurs'; // Remplacer par l'URL de l'API Symfony
 
   constructor(private http: HttpClient) {}
 
@@ -23,7 +23,7 @@ export class BoxeurService {
 
   // Créer un nouveau boxeur
   createBoxeur(boxeur: Boxeur): Observable<any> {
-    return this.http.post(`${this.apiUrl}/new`, boxeur);
+    return this.http.post(`${this.apiUrl}`, boxeur);
   }
 
   // Mettre à jour un boxeur existant

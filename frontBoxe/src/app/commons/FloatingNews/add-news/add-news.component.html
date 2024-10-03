@@ -5,18 +5,18 @@
   <input
     type="text"
     id="newsPictures"
-    [(ngModel)]="newsPictures"
+    ngModel="newsPictures"
     name="newsPictures"
     required
   />
 
   <label for="title">Titre</label>
-  <input type="text" id="titre" [(ngModel)]="titre" name="titre" required />
+  <input type="text" id="titre" ngModel="titre" name="titre" required />
 
   <label for="newsContent">Contenu</label>
   <textarea
     id="newsContent"
-    [(ngModel)]="newsContent"
+    ngModel="newsContent"
     name="newsContent"
     required
   ></textarea>
@@ -25,7 +25,7 @@
   <input
     type="text"
     id="publishedAt"
-    [(ngModel)]="publishedAt"
+    ngModel="publishedAt"
     name="publishedAt"
     required
   />

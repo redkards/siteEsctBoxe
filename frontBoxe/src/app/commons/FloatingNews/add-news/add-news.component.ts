@@ -2,12 +2,12 @@ import { Component } from '@angular/core';
 import { NewsService } from '../../../services/news.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-add-news',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule,],
   templateUrl: './add-news.component.html',
   styleUrl: './add-news.component.css',
 })

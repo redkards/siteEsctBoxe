@@ -60,7 +60,7 @@ class EmailControlController extends AbstractController
 
         // Envoyer une notification à votre adresse e-mail
         $notificationEmail = (new Email())
-            ->from('redkardss@gmail.com') // Adresse de l'expéditeur
+            ->from($emailAddress) // Adresse de l'expéditeur
             ->to('redkardss@gmail.com') // Remplacez par votre adresse e-mail
             ->subject('Nouvel e-mail enregistré')
             ->text("Un nouvel e-mail a été enregistré:\n\nExpéditeur: $emailAddress\nMessage: $messageContent");
