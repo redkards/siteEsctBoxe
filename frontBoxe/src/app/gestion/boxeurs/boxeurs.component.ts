@@ -1,11 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Boxeur } from '../../models/boxeur.models';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BoxeurService } from '../../services/boxeur.service';
 import { CommonModule } from '@angular/common';
 
@@ -14,13 +9,13 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './boxeurs.component.html',
-  styleUrl: './boxeurs.component.css',
+  styleUrls: ['./boxeurs.component.css'],
 })
 export class BoxeurComponent implements OnInit {
   boxeurs: Boxeur[] = [];
   boxeurForm: FormGroup;
   isEdit: boolean = false;
-  boxeurId: number | undefined; // Change ici
+  boxeurId: number | undefined;
 
   constructor(private fb: FormBuilder, private boxeurService: BoxeurService) {
     this.boxeurForm = this.fb.group({
@@ -41,19 +36,17 @@ export class BoxeurComponent implements OnInit {
   loadBoxeurs(): void {
     this.boxeurService.getAllBoxeurs().subscribe((boxeurs) => {
       this.boxeurs = boxeurs;
+      console.log(this.boxeurs); // Vérification des données
     });
   }
 
   onSubmit(): void {
     if (this.boxeurForm.valid) {
       if (this.isEdit && this.boxeurId !== undefined) {
-        // Changement ici
-        this.boxeurService
-          .updateBoxeur(this.boxeurId, this.boxeurForm.value)
-          .subscribe(() => {
-            this.loadBoxeurs();
-            this.resetForm();
-          });
+        this.boxeurService.updateBoxeur(this.boxeurId, this.boxeurForm.value).subscribe(() => {
+          this.loadBoxeurs();
+          this.resetForm();
+        });
       } else {
         this.boxeurService.createBoxeur(this.boxeurForm.value).subscribe(() => {
           this.loadBoxeurs();
@@ -79,7 +72,7 @@ export class BoxeurComponent implements OnInit {
 
   resetForm(): void {
     this.isEdit = false;
-    this.boxeurId = undefined; // Change ici
+    this.boxeurId = undefined;
     this.boxeurForm.reset();
   }
 }

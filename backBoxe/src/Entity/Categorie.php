@@ -6,7 +6,7 @@ use App\Repository\CategorieRepository;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Groups;
 use Doctrine\Common\Collections\ArrayCollection;
-
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: CategorieRepository::class)]
 class Categorie

@@ -136,7 +136,7 @@ class BoxeurController extends AbstractController
             if (!$categorie) {
                 return new JsonResponse(['error' => 'Categorie not found'], JsonResponse::HTTP_BAD_REQUEST);
             }
-            $boxeur->setCategorie($categorie);
+            $boxeur->addBoxeurCategorie($categorie);
         }
 
         // Récupération de l'ID du type de boxe et association
@@ -146,7 +146,7 @@ class BoxeurController extends AbstractController
             if (!$boxeType) {
                 return new JsonResponse(['error' => 'BoxeType not found'], JsonResponse::HTTP_BAD_REQUEST);
             }
-            $boxeur->setBoxeType($boxeType);
+            $boxeur->addBoxeurTypeBoxe($boxeType);
         }
 
         // Vérification des erreurs
@@ -243,7 +243,7 @@ class BoxeurController extends AbstractController
             if (!$categorie) {
                 return new JsonResponse(['error' => 'Categorie not found'], JsonResponse::HTTP_BAD_REQUEST);
             }
-            $currentboxeur->setCategorie($categorie);
+            $currentboxeur->addBoxeurCategorie($categorie);
         }
 
         // Récupération de l'ID du type de boxe et mise à jour
@@ -252,7 +252,7 @@ class BoxeurController extends AbstractController
             if (!$boxeType) {
                 return new JsonResponse(['error' => 'BoxeType not found'], JsonResponse::HTTP_BAD_REQUEST);
             }
-            $currentboxeur->setBoxeType($boxeType);
+            $currentboxeur->addBoxeurTypeBoxe($boxeType);
         }
 
         // Vérification des erreurs
