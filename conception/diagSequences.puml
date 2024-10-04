@@ -1,0 +1,42 @@
+@startuml
+actor Membre as m
+participant "Système" as system
+
+m -> system: Remplir le formulaire d'inscription
+system -> system: Valider les informations
+alt Informations valides
+    system -> system: Créer un nouveau compte
+    system -> m: Confirmer l'inscription
+else Informations invalides
+    system -> m: Afficher un message d'erreur
+end
+@enduml
+
+@startuml
+actor Membre as m
+participant "Système" as system
+
+m -> system: Entrer les identifiants
+system -> system: Vérifier les identifiants
+alt Identifiants corrects
+    system -> m: Afficher la page d'accueil
+else Identifiants incorrects
+    system -> m: Afficher un message d'erreur
+end
+@enduml
+
+@startuml
+actor Membre as m
+participant "Système" as system
+
+m -> system: Consulter les événements
+system -> system: Afficher la liste des événements
+m -> system: Sélectionner un événement
+system -> system: Vérifier la disponibilité
+alt Événement disponible
+    system -> system: Enregistrer la participation
+    system -> m: Confirmer la participation
+else Événement complet
+    system -> m: Afficher un message d'erreur
+end
+@enduml
