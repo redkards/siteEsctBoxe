@@ -23,21 +23,47 @@ export class ProfilComponent {
     this.userId = this.authService.getUserId(); // Get the authenticated user's ID
   }
 
-  // Function called when a file is selected
-  onFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      this.selectedFile = input.files[0];
-      console.log('Selected file:', this.selectedFile.name);
+  // // fonction pour selectionner une image
+  // onFileSelected(event: Event): void {
+  //   const input = event.target as HTMLInputElement;
+  //   if (input.files && input.files.length > 0) {
+  //     this.selectedFile = input.files[0];
+  //     console.log('Selected file:', this.selectedFile.name);
 
-      // Preview the image immediately after selection
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.imagePreview = reader.result;
-      };
-      reader.readAsDataURL(this.selectedFile);
-    }
+  //     // aperçu de l'image après selection
+  //     const reader = new FileReader();
+  //     reader.onload = () => {
+  //       this.imagePreview = reader.result;
+  //     };
+  //     reader.readAsDataURL(this.selectedFile);
+  //   }
+  // }
+  // Fonction pour sélectionner une image à partir d'un événement déclenché (par exemple, lors du choix d'un fichier dans un input de type "file")
+onFileSelected(event: Event): void {
+  // Récupération de l'élément input à partir de l'événement et conversion en HTMLInputElement
+  const input = event.target as HTMLInputElement;
+
+  // Vérification si des fichiers sont sélectionnés et s'il y a au moins un fichier dans la liste
+  if (input.files && input.files.length > 0) {
+    // Sélectionne le premier fichier dans la liste et le stocke dans la variable "selectedFile"
+    this.selectedFile = input.files[0];
+
+    // Affiche le nom du fichier sélectionné dans la console pour vérification
+    console.log('Fichier sélectionné:', this.selectedFile.name);
+
+    // Création d'une instance de FileReader pour lire le fichier et générer un aperçu
+    const reader = new FileReader();
+
+    // Lorsque la lecture est terminée, stocke le résultat (l'aperçu de l'image) dans la variable "imagePreview"
+    reader.onload = () => {
+      this.imagePreview = reader.result;
+    };
+
+    // Lit le fichier sélectionné sous forme de Data URL (base64), utile pour l'aperçu de l'image dans une balise <img>
+    reader.readAsDataURL(this.selectedFile);
   }
+}
+
 
   // Function to upload the file to the Symfony backend and associate it with the user
   uploadFile(): void {

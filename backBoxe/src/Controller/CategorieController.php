@@ -14,6 +14,12 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/categorie')]
 final class CategorieController extends AbstractController
 {
+    /*
+     *  function index
+     *
+     * @param CategorieRepository $categorieRepository
+     * @return Response
+     */
     #[Route(name: 'app_categorie_index', methods: ['GET'])]
     public function index(CategorieRepository $categorieRepository): Response
     {
