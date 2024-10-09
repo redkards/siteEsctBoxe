@@ -7,5 +7,5 @@ export default interface User {
   prenom: string;
   tel: number;
   dateNaissance: string;
-  profilePicture?: string; // Champ optionnel pour la photo de profil
+  profilePicture?: string;
 }

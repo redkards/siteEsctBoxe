@@ -222,7 +222,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->userAdresse;
     }
 
-    public function addUserAdresse(Adresse $userAdresse): static
+    public function addUserAdresse(Adresse $userAdresse): void
     {
         if (!$this->userAdresse->contains($userAdresse)) {
             $this->userAdresse->add($userAdresse);

@@ -16,6 +16,8 @@ use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 
 class RegisterController extends AbstractController
 {
@@ -56,20 +58,20 @@ class RegisterController extends AbstractController
         ]
     )]
     #[Groups(["getUser"])]
-    public function register(Request $request, EntityManagerInterface $manager, SerializerSerializerInterface $serializer, ValidatorInterface $validator, MessagerieRepository $messagerieRepository): Response
+    public function register(Request $request, EntityManagerInterface $manager, SerializerSerializerInterface $serializer, ValidatorInterface $validator, MessagerieRepository $messagerieRepository, MailerInterface $mailer): Response
     {
         // Décoder le contenu JSON de la requête
         $data = json_decode($request->getContent(), true);
 
-        // // Vérifiez que l'ID de messagerie est présent
-        // if (!isset($data['messagerieId'])) {
-        //     return new JsonResponse(['message' => "L'id de messagerie est requis"], Response::HTTP_BAD_REQUEST);
-        // }
+        // Vérifiez que l'ID de messagerie est présent
+        if (!isset($data['messagerieId'])) {
+            return new JsonResponse(['message' => "L'id de messagerie est requis"], Response::HTTP_BAD_REQUEST);
+        }
 
-        // $messagerie = $messagerieRepository->find($data['messagerieId']);
-        // if (!$messagerie) {
-        //     return new JsonResponse(['message' => 'messagerie non trouvée'], Response::HTTP_NOT_FOUND);
-        // }
+        $messagerie = $messagerieRepository->find($data['messagerieId']);
+        if (!$messagerie) {
+            return new JsonResponse(['message' => 'Messagerie non trouvée'], Response::HTTP_NOT_FOUND);
+        }
 
         // Créer un nouvel utilisateur et définir ses propriétés
         $user = new User();
@@ -79,13 +81,22 @@ class RegisterController extends AbstractController
         $user->setNom($data['nom']);
         $user->setPrenom($data['prenom']);
         $user->setTel($data['tel']);
-        $user->setDateNaissance($data['dateNaissance']);
-        $user->setMessagerie($messagerie);
 
-        // // Créer une nouvelle instance de Messagerie et l'associer à l'utilisateur
-        // $messagerie = new Messagerie();
-        // $manager->persist($messagerie);
-        // $user->setMessagerie($messagerie);
+        // Vérifier et définir la date de naissance
+        if (isset($data['dateNaissance'])) {
+            $dateNaissance = \DateTimeImmutable::createFromFormat('Y-m-d', $data['dateNaissance']);
+            if (!$dateNaissance) {
+                return new JsonResponse(['message' => "Format de date de naissance invalide, utilisez YYYY-MM-DD."], Response::HTTP_BAD_REQUEST);
+            }
+            $user->setDateNaissance($dateNaissance);
+        } else {
+            return new JsonResponse(['message' => "La date de naissance est requise."], Response::HTTP_BAD_REQUEST);
+        }
+
+        // Créer une nouvelle instance de Messagerie et l'associer à l'utilisateur
+        $messagerie = new Messagerie();
+        $manager->persist($messagerie);
+        $user->setMessagerie($messagerie);
 
         // Valider l'utilisateur
         $errors = $validator->validate($user);
@@ -97,7 +108,21 @@ class RegisterController extends AbstractController
         $manager->persist($user);
         $manager->flush();
 
+        // Envoi d'un e-mail de confirmation
+        $this->sendConfirmationEmail($mailer, $user->getEmail());
+
         // Retourner une réponse de succès
         return new JsonResponse(['message' => 'Utilisateur enregistré avec succès'], JsonResponse::HTTP_CREATED);
+    }
+
+    private function sendConfirmationEmail(MailerInterface $mailer, string $email): void
+    {
+        $confirmationEmail = (new Email())
+            ->from('redkardss@gmail.com')   
+            ->to($email)
+            ->subject('Confirmation d\'inscription')
+            ->text('Merci de vous être inscrit. Veuillez confirmer votre adresse e-mail.');
+
+        $mailer->send($confirmationEmail);
     }
 }

@@ -31,6 +31,9 @@ class Categorie
 
     private $palmares;
 
+     #[ORM\ManyToOne(inversedBy: 'categorie')]
+     private ?NewBoxeurs $newBoxeurs = null;
+
     public function __construct()
     {
         $this->palmares = new ArrayCollection();
@@ -70,5 +73,17 @@ class Categorie
     public function getPalmares(): Collection
     {
         return $this->palmares;
+    }
+
+    public function getNewBoxeurs(): ?NewBoxeurs
+    {
+        return $this->newBoxeurs;
+    }
+
+    public function setNewBoxeurs(?NewBoxeurs $newBoxeurs): static
+    {
+        $this->newBoxeurs = $newBoxeurs;
+
+        return $this;
     }
 }

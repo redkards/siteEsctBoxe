@@ -116,7 +116,8 @@ class UserController extends AbstractController
     ]
 )]
 #[OA\Tag(name: "Users")]
-public function createUser(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $hasher, ValidatorInterface $validator, MessagerieRepository $messagerieRepository): JsonResponse
+public function createUser(Request $request, EntityManagerInterface $em,
+ UserPasswordHasherInterface $hasher, ValidatorInterface $validator, MessagerieRepository $messagerieRepository): JsonResponse
 {
     // Décoder le contenu JSON de la requête
     $data = json_decode($request->getContent(), true);
@@ -129,7 +130,7 @@ public function createUser(Request $request, EntityManagerInterface $em, UserPas
         }
     }
 
-    // Vérifier si la messagerie est fournie (optionnel)
+    // Vérifier si la messagerie est fournie
     $messagerie = isset($data['messagerieId']) ? $messagerieRepository->find($data['messagerieId']) : null;
 
     // Créer un nouvel utilisateur
@@ -139,12 +140,12 @@ public function createUser(Request $request, EntityManagerInterface $em, UserPas
     $user->setNom($data['nom']);
     $user->setPrenom($data['prenom']);
     $user->setTel($data['tel']);
-    $user->setDateNaissance(new \DateTimeImmutable($data['dateNaissance'])); // Assurez-vous que le format est valide
+    $user->setDateNaissance(new \DateTimeImmutable($data['dateNaissance'])); 
     $user->setProfilePicture($data['profilePicture']);
     $user->setMessagerie($messagerie);
 
      // Attribuer le rôle par défaut
-     $user->setRoles(['ROLE_User']); // Ajout du rôle par défaut
+     $user->setRoles(['ROLE_User']); 
 
      // verifie la présence de profilPictures
 
@@ -152,7 +153,7 @@ if (isset($data['profilePicture'])) {
     $profilePicture = $data['profilePicture'];
 } else {
     // Gérer le cas où 'profilePicture' n'est pas présent
-    $profilePicture = null; // ou une valeur par défaut
+    $profilePicture = null; 
 }
 
     // Valider les données de l'utilisateur
@@ -215,7 +216,9 @@ if (isset($data['profilePicture'])) {
         ]
     )]
     #[OA\Tag(name: "Users")]
-    public function updateUser(Request $request, SerializerInterface $serializer, User $currentUser, EntityManagerInterface $em, ValidatorInterface $validator, TagAwareCacheInterface $cachePool, MessagerieRepository $messagerieRepository, UserPasswordHasherInterface $hasher): JsonResponse
+    public function updateUser(Request $request, SerializerInterface $serializer, User $currentUser,
+     EntityManagerInterface $em, ValidatorInterface $validator, TagAwareCacheInterface $cachePool,
+      MessagerieRepository $messagerieRepository, UserPasswordHasherInterface $hasher): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
 
@@ -266,7 +269,7 @@ if (isset($data['profilePicture'])) {
         return new JsonResponse($jsonUser, Response::HTTP_OK, [], true);
     }
 
-    // Ajoutez cette méthode dans UserController.php
+ 
 
 
 

@@ -1,4 +1,4 @@
-@startuml
+@startuml a
 actor Membre as m
 participant "Système" as system
 
@@ -12,7 +12,7 @@ else Informations invalides
 end
 @enduml
 
-@startuml
+@startuml b
 actor Membre as m
 participant "Système" as system
 
@@ -25,7 +25,7 @@ else Identifiants incorrects
 end
 @enduml
 
-@startuml
+@startuml c
 actor Membre as m
 participant "Système" as system
 
@@ -39,4 +39,22 @@ alt Événement disponible
 else Événement complet
     system -> m: Afficher un message d'erreur
 end
+@enduml
+
+@startuml d
+actor Membre
+participant "Système" as System
+
+Membre -> System: Remplir le formulaire d'inscription
+activate System
+
+System -> System: Valider les informations
+alt Informations valides
+    System -> System: Créer un nouveau compte
+    System -> Membre: Envoyer confirmation d'inscription
+else Informations invalides
+    System -> Membre: Afficher message d'erreur
+end
+
+deactivate System
 @enduml
