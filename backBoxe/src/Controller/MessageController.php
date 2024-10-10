@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Message;
+use App\Entity\Messagerie;
 use App\Repository\MessageRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class BoxeurService {
-  private apiUrl = 'http://localhost:8000/api'; // Remplacer par l'URL de l'API Symfony
+  private apiUrl = 'http://localhost:8000/api';
 
   constructor(private http: HttpClient) {}
 

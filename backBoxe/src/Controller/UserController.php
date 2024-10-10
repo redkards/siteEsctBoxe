@@ -117,7 +117,7 @@ class UserController extends AbstractController
 )]
 #[OA\Tag(name: "Users")]
 public function createUser(Request $request, EntityManagerInterface $em,
- UserPasswordHasherInterface $hasher, ValidatorInterface $validator, MessagerieRepository $messagerieRepository): JsonResponse
+    UserPasswordHasherInterface $hasher, ValidatorInterface $validator, MessagerieRepository $messagerieRepository): JsonResponse
 {
     // Décoder le contenu JSON de la requête
     $data = json_decode($request->getContent(), true);
@@ -140,21 +140,27 @@ public function createUser(Request $request, EntityManagerInterface $em,
     $user->setNom($data['nom']);
     $user->setPrenom($data['prenom']);
     $user->setTel($data['tel']);
-    $user->setDateNaissance(new \DateTimeImmutable($data['dateNaissance'])); 
+
+    // Formater la date au format 'Y-m-d'
+    $dateNaissance = \DateTimeImmutable::createFromFormat('Y-m-d', $data['dateNaissance']);
+    if (!$dateNaissance) {
+        return new JsonResponse(['message' => 'La date de naissance doit être au format année-mois-jour.'], Response::HTTP_BAD_REQUEST);
+    }
+    $user->setDateNaissance($dateNaissance);
+    
     $user->setProfilePicture($data['profilePicture']);
     $user->setMessagerie($messagerie);
 
-     // Attribuer le rôle par défaut
-     $user->setRoles(['ROLE_User']); 
+    // Attribuer le rôle par défaut
+    $user->setRoles(['ROLE_User']);
 
-     // verifie la présence de profilPictures
-
-if (isset($data['profilePicture'])) {
-    $profilePicture = $data['profilePicture'];
-} else {
-    // Gérer le cas où 'profilePicture' n'est pas présent
-    $profilePicture = null; 
-}
+    // Vérifie la présence de profilePicture
+    if (isset($data['profilePicture'])) {
+        $profilePicture = $data['profilePicture'];
+    } else {
+        // Gérer le cas où 'profilePicture' n'est pas présent
+        $profilePicture = null; 
+    }
 
     // Valider les données de l'utilisateur
     $errors = $validator->validate($user);
@@ -169,6 +175,7 @@ if (isset($data['profilePicture'])) {
     // Retourne une réponse de succès avec les détails de l'utilisateur créé
     return new JsonResponse(['message' => 'Utilisateur créé avec succès', 'userId' => $user->getId()], Response::HTTP_CREATED);
 }
+
 
     /**
      * Cette méthode permet de mettre à jour un utilisateur
@@ -217,39 +224,51 @@ if (isset($data['profilePicture'])) {
     )]
     #[OA\Tag(name: "Users")]
     public function updateUser(Request $request, SerializerInterface $serializer, User $currentUser,
-     EntityManagerInterface $em, ValidatorInterface $validator, TagAwareCacheInterface $cachePool,
-      MessagerieRepository $messagerieRepository, UserPasswordHasherInterface $hasher): JsonResponse
-    {
-        $data = json_decode($request->getContent(), true);
+    EntityManagerInterface $em, ValidatorInterface $validator, TagAwareCacheInterface $cachePool,
+    MessagerieRepository $messagerieRepository, UserPasswordHasherInterface $hasher): JsonResponse
+{
+    $data = json_decode($request->getContent(), true);
 
-        if (isset($data['messagerieId'])) {
-            $messagerie = $messagerieRepository->find($data['messagerieId']);
-            if (!$messagerie) {
-                return new JsonResponse(['message' => 'Messagerie non trouvée'], Response::HTTP_NOT_FOUND);
-            }
-            $currentUser->setMessagerie($messagerie);
+    if (isset($data['messagerieId'])) {
+        $messagerie = $messagerieRepository->find($data['messagerieId']);
+        if (!$messagerie) {
+            return new JsonResponse(['message' => 'Messagerie non trouvée'], Response::HTTP_NOT_FOUND);
         }
-
-        $currentUser->setEmail($data['email'] ?? $currentUser->getEmail());
-        if (isset($data['password'])) {
-            $currentUser->setPassword($hasher->hashPassword($currentUser, $data['password']));
-        }
-        $currentUser->setNom($data['nom'] ?? $currentUser->getNom());
-        $currentUser->setPrenom($data['prenom'] ?? $currentUser->getPrenom());
-        $currentUser->setTel($data['tel'] ?? $currentUser->getTel());
-        $currentUser->setDateNaissance(new \DateTimeImmutable($data['dateNaissance'] ?? $currentUser->getDateNaissance()->format('Y-m-d')));
-        $currentUser->setProfilePicture($data['profilePicture'] ?? $currentUser->getProfilePicture());
-        $errors = $validator->validate($currentUser);
-        if (count($errors) > 0) {
-            return new JsonResponse($serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
-        }
-
-        $em->persist($currentUser);
-        $em->flush();
-        $cachePool->invalidateTags(["usersCache"]);
-
-        return new JsonResponse(['message' => 'Utilisateur mis à jour avec succès'], JsonResponse::HTTP_OK);
+        $currentUser->setMessagerie($messagerie);
     }
+
+    $currentUser->setEmail($data['email'] ?? $currentUser->getEmail());
+    if (isset($data['password'])) {
+        $currentUser->setPassword($hasher->hashPassword($currentUser, $data['password']));
+    }
+    $currentUser->setNom($data['nom'] ?? $currentUser->getNom());
+    $currentUser->setPrenom($data['prenom'] ?? $currentUser->getPrenom());
+    $currentUser->setTel($data['tel'] ?? $currentUser->getTel());
+
+    // Formater la date au format 'Y-m-d'
+    if (isset($data['dateNaissance'])) {
+        $dateNaissance = \DateTimeImmutable::createFromFormat('Y-m-d', $data['dateNaissance']);
+        if (!$dateNaissance) {
+            return new JsonResponse(['message' => 'La date de naissance doit être au format année-mois-jour.'], Response::HTTP_BAD_REQUEST);
+        }
+        $currentUser->setDateNaissance($dateNaissance);
+    }
+
+    $currentUser->setProfilePicture($data['profilePicture'] ?? $currentUser->getProfilePicture());
+
+    // Validation des données de l'utilisateur
+    $errors = $validator->validate($currentUser);
+    if (count($errors) > 0) {
+        return new JsonResponse($serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
+    }
+
+    // Persist et mise à jour de l'utilisateur
+    $em->persist($currentUser);
+    $em->flush();
+    $cachePool->invalidateTags(["usersCache"]);
+
+    return new JsonResponse(['message' => 'Utilisateur mis à jour avec succès'], JsonResponse::HTTP_OK);
+}
 
     /**
      * Cette méthode permet de récupérer un utilisateur par son email
