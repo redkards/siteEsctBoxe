@@ -5,7 +5,7 @@ h2 {
 
 .actu {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   justify-content: space-around;
   align-items: center;
   margin: 25px;

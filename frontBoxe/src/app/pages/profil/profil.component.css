@@ -10,13 +10,15 @@
   margin: 20px;
 }
 .photo {
-  height: 15rem;
+
   display: flex;
   justify-content: center;
   margin: 20px;
 }
 
 .photo img {
+  width:5rem auto;
+  height: auto;
   border-radius: 50%;
   border: solid 2px black;
 }
@@ -30,4 +32,8 @@ h3 {
   font-size: 2rem;
   margin: 20px;
   text-align: center;
+}
+
+body{
+  background-color: lightgray;
 }

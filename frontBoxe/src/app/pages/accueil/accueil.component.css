@@ -35,11 +35,15 @@ p {
 .text1 {
   background: linear-gradient(
     90deg,
-    rgb(176, 189, 226) 4%,
-    rgb(41, 51, 204) 50%,
-    rgb(7, 9, 136) 100%
+    rgba(254, 225, 138, 1) 4%,
+    rgba(244, 192, 40, 1) 50%,
+    rgba(173, 126, 0, 1) 100%
   );
   padding: 30px;
   margin: 30px;
-  color: gold;
+
+}
+
+body{
+  background-color: lightgray;
 }

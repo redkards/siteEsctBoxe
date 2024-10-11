@@ -1,8 +1,13 @@
+body{
+  background-color: lightgray;
+}
+
 .container {
   overflow: hidden;
   width: 100%;
   cursor: grab;
   margin-bottom: 2rem;
+
 }
 
 .container:active {

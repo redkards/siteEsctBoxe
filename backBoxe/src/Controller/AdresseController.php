@@ -100,7 +100,7 @@ class AdresseController extends AbstractController
     #[OA\Post(
         path: "/api/adresses",
         summary: "Crée une nouvelle adresse",
-        tags: ["adresses"],
+        tags: ["Adresses"],
         requestBody: new OA\RequestBody(
             description: "Les informations d'une adresse à créer",
             required: true,
@@ -135,7 +135,7 @@ class AdresseController extends AbstractController
             )
         ]
     )]
-    #[OA\Tag(name: "adresses")]
+    #[OA\Tag(name: "Adresses")]
     public function createAdresse(Request $request, SerializerInterface $serializer, EntityManagerInterface $em, UrlGeneratorInterface $urlGenerator, ValidatorInterface $validator, TagAwareCacheInterface $cachePool, UserRepository $userRepository): JsonResponse
     {
         // Invalide le cache associé aux adresses

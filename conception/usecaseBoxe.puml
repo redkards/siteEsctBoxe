@@ -2,48 +2,93 @@
 
 title = "Use Case ESCT Boxe"
 
-left to right direction
+' left to right direction
 
+actor Visiteur as v
 actor Membre as m
 actor Administrateur as a
-actor Visiteur as v
 
-package "Membre" as packM {
-    useCase "S'inscrire" as signUp
-    useCase "Se connecter" as logIn
-    useCase "Mettre à jour son profil" as updateProfile
-    useCase "Consulter les événements" as viewEvents
-    useCase "Participer à un événement" as participateEvent
-    useCase "Laisser un commentaire" as leaveComment
-    useCase "Consulter la galerie" as viewGallery
-
-    m --> packM
-}
 
 package "Administrateur" as packA {
-    useCase "Se connecter" as adminLogIn
-    useCase "Gérer les membres" as manageMembers
-    useCase "Gérer les événements" as manageEvents
-    useCase "Gérer les actualités" as manageNews
-    useCase "Gérer les commentaires" as manageComments
-    useCase "Gérer la galerie" as manageGallery
 
-    a --> packA
+    useCase "**Gérer les boxeurs**" as manageBoxers #red
+    useCase "**ajouter boxeur**" as addBoxers #red
+    useCase "**suprimer boxeur**" as delBoxers #red
+    useCase "**modifier boxeur**" as upBoxers #red
+    useCase "**Gérer les membres**" as manageMembers #orange
+    useCase "**ajouter membres**" as addMembers  #orange
+    useCase "**suprimer les membres**" as delMembers  #orange
+    useCase "**modifier les membres**" as upMembers  #orange
+    useCase "**Gérer les événements**" as manageEvents  #coral
+    useCase "**ajouter événements**" as addEvents  #coral
+    useCase "**suprimer les événements**" as delEvents  #coral
+    useCase "**modifier événements**" as upEvents  #coral
+    useCase "**Gérer les actualités**" as manageNews  #DarkGoldenRod
+    useCase "**ajouter actualités**" as addNews #DarkGoldenRod
+    useCase "**suprimer actualités**" as delNews #DarkGoldenRod
+    useCase "**modifier actualités**" as upNews #DarkGoldenRod
+    useCase "**Gérer les commentaires**" as manageComments  #DarkOrchid
+    useCase "**ajouter commentaires**" as addComments #DarkOrchid
+    useCase "**suprimer commentaires**" as delComments #DarkOrchid
+    useCase "**modifier les commentaires**" as upComments #DarkOrchid
+    useCase "**Gérer la galerie**" as manageGallery #pink
+    useCase "**ajouter photo**" as addGallery #pink
+    useCase "**suprimer photo**" as delGallery #pink
+   
+ 
+manageBoxers -->  addBoxers :extend
+manageBoxers -->  delBoxers :extend
+manageBoxers -->  upBoxers :extend
+manageMembers --> addMembers :extend
+manageMembers --> delMembers :extend
+manageMembers --> upMembers :extend
+manageEvents --> addEvents :extend
+manageEvents --> delEvents :extend
+manageEvents --> upEvents :extend
+manageNews --> addNews :extend
+manageNews --> delNews :extend
+manageNews --> upNews :extend
+manageComments --> addComments :extend
+manageComments --> delComments :extend
+manageComments --> upComments :extend
+manageGallery -->  addGallery :extend
+manageGallery --> delGallery :extend
+
+      a -> packA
+    }
+  
+
+
+package "Membre" as packM {
+    useCase "**S'inscrire**" as signUp #LightBlue
+    useCase "**Mettre à jour son profil**" as updateProfile #LightCyan
+    useCase "**Consulter les événements**" as viewEvents #LightGreen
+    useCase "**Laisser un commentaire**" as leaveComment #LightSalmon
+    useCase "**Consulter la galerie**" as viewGallery #LightSeaGreen
+
+  m --> packM
 }
+  
+    a<|--m
+    m<|--v
+
 
 package "Visiteur" as packV {
-    useCase "Consulter les événements" as viewEventsV
-    useCase "Consulter les actualités" as viewNews
-    useCase "Consulter la galerie" as viewGalleryV
+    useCase "**Consulter les événements**" as viewEventsV #DarkGreen
+    useCase "**Consulter les actualités**" as viewNews #DarkGoldenRod
+    useCase "**Consulter la galerie**" as viewGalleryV #Darkorange
 
-    v --> packV
+ v ---> packV
 }
+   
+useCase "**Connexion**" as connect #IndianRed
 
-useCase "Connexion" as connect
+packA ...> connect : includes 
+packM ...> connect : includes 
 
-packM ..> connect : includes 
-packA ..> connect : includes 
-packV ..> connect : includes 
+
+
+
 
 @enduml
 

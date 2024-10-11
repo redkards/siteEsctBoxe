@@ -1,0 +1,36 @@
+@startuml Starbucks
+
+left to right direction
+
+node "Client" as C #LightBlue-LightGreen {
+    component "Navigateur" as n #LightGreen
+   
+}
+
+node "<font color=white>Serveur d'application</font>" as App #A7000C {
+    component "NodeJS" as Js
+    component "Nginx" as NG
+    artifact "angular" as RE #LightGreen
+   
+}
+
+node "Serveur API" as API #LightGrey{
+    component "<font color=white>Apache</font>" as Ap #A7000C
+    component "<font color=white>PHP</font>" as Php  #A7000C
+    artifact "<font color=white>Symfony</font>" as Sy #A7000C    
+}
+
+database "Base de données" as BDD #Orange\White {
+    component "MySql" as MySql #LightPink
+
+}
+Ap <.. Php
+Php <.. Sy
+NG <.. Js
+Js <.. RE
+C -- App : HTTPS
+BDD -- API : TCP
+API -- App : HTTP
+
+
+@enduml

@@ -1,0 +1,240 @@
+@startuml connexion
+title "Diagramme d'activité se connecter"
+|#LightBlue|Administrateur|
+|#SkyBlue|s| Site
+|#RoyalBlue|Serveur|
+
+   
+|Administrateur|
+start
+:se connecter;
+|s|
+:affiche fenetre connexion;
+|Administrateur|
+repeat
+fork
+:entrer mail ou pseudo;
+fork again
+:entrer mot de passe;
+end fork
+:valider connexion;
+ |Serveur|
+ :vérifie base de donnée;
+|Administrateur|
+backward: réessayer mot de passe (3 tentatives);
+repeatwhile (mot de passe correct) is (non) not (oui)
+|Serveur|
+ :connexion au site;
+ |s|
+ :affiche page d'accueil et dashboard admin;
+ |Administrateur|
+ :connecté;
+
+ end
+
+
+
+
+
+@enduml
+
+
+
+@startuml ajout boxeur
+
+title "Diagramme d'activité ajout boxeur"
+|#4C7D4C| Administrateur|
+|#Palegreen|s| Site
+|#395E39|Serveur|
+
+
+
+      | Administrateur|
+    start
+    :se connecte;
+     |Serveur|
+    :interroge database;
+    |s|
+ :affiche page d'accueil et dashboard  admin;
+  | Administrateur|
+
+  
+    :Clique sur le bouton de gestion boxeur ;
+    |s|
+    :affiche fenêtre gestion boxeur;  
+    
+   
+    | Administrateur|
+    :choisit  ajouter boxeur; 
+    |Serveur|
+    :charge formulaire d'ajout boxeur;
+   
+      
+    |s|
+    :affiche formulaire d'ajout;
+    | Administrateur|
+    repeat
+    :remplit formulaire;  
+    backward: corriger erreurs;
+repeatwhile (formulaire conforme) is (non) not (oui)  
+    :valide; 
+    |Serveur|
+    :enregistre et envoie notification;
+    
+    | Administrateur|
+    :Message de succès;
+    end
+
+
+@enduml
+
+@startuml modification compte
+
+title "Diagramme d'activité mofification compte "
+|#4C7D4C| Administrateur|
+|#Palegreen|s| Site
+|#395E39|Serveur|
+
+
+
+    | Administrateur|
+    start
+    :se connecte;
+     |Serveur|
+    :interroge database;
+    |s|
+ :affiche page d'accueil et dashboard admin;
+  | Administrateur|
+
+  
+    :Clique sur le bouton de gestion de compte ;
+    |s|
+    :affiche fenêtre gestion de compte;  
+    
+   | Administrateur|
+    :choisit  compte; 
+    fork
+    :enseignant;
+    fork again
+    :parent; 
+ 
+    end fork 
+
+    :selectionne modifier;
+  
+   
+    |Serveur|
+    :recupère data;
+    |s|
+    :affiche formulaire modification pré remplit;
+    | Administrateur|
+    repeat
+    :remplit formulaire;  
+    backward: corriger erreurs;
+repeatwhile (formulaire conforme) is (non) not (oui)  
+    :valide; 
+    |Serveur|
+    :enregistre et envoie notification;
+    
+    | Administrateur|
+    :Message de succès;
+    end
+
+
+@enduml
+
+@startuml supprimer compte
+
+title "Diagramme d'activité suppression compte "
+|#4C7D4C| Administrateur|
+|#Palegreen|s| Site
+|#395E39|Serveur|
+
+
+
+      | Administrateur|
+    start
+    :se connecte;
+     |Serveur|
+    :interroge database;
+    |s|
+ :affiche page d'accueil et dashboard  admin;
+  | Administrateur|
+
+  
+    :Clique sur le bouton de gestion de compte ;
+    |s|
+    :affiche fenêtre gestion de compte;  
+    
+   
+    | Administrateur|
+    :choisit  compte; 
+    fork
+    :enseignant;
+    fork again
+    :parent; 
+   
+    end fork 
+
+    :selectionne supprimer; 
+   
+   
+    |s|
+    :affiche formulaire de suppression;
+    | Administrateur|
+    repeat
+    :remplit formulaire;  
+    backward: corriger erreurs;
+repeatwhile (formulaire conforme) is (non) not (oui)  
+    :valide; 
+    |Serveur|
+    :enregistre et envoie notification;
+    
+    | Administrateur|
+    :Message de succès;
+    end
+
+
+@enduml
+
+@startuml stats
+
+title "Diagramme d'activité statiques et rapports"
+
+|#Orange|Administrateur|
+|#OrangeRed|s| Site
+|#DarkRed|Serveur|
+
+
+    |Administrateur|
+    start
+    :Clique sur le bouton statistiques;
+     |s|
+    :affiche fenêtre statiques;
+
+    |Administrateur|
+    :choisit;
+    fork
+     :analyse données utilisateur;
+     fork again
+    :analyse performances élèves;
+     fork again
+    :analyse participation aux activités;
+    end fork
+     :valider;
+    |Serveur|
+    :charge les données;
+    |s|
+     :affiche fenêtre correspondante;
+    
+    
+    |Administrateur|
+    :accède aux datas;
+    end
+
+
+
+
+
+
+@enduml 
