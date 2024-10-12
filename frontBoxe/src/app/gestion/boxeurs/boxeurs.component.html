@@ -1,38 +1,18 @@
-<h2>{{ isEdit ? "Modifier" : "Ajouter" }} un Boxeur</h2>
+<h2>Gestion des Boxeurs</h2>
 <form [formGroup]="boxeurForm" (ngSubmit)="onSubmit()">
   <div>
     <label>Nom:</label>
-    <input formControlName="nom" required />
+    <input formControlName="boxeurNom" required />
   </div>
   <div>
     <label>Prénom:</label>
-    <input formControlName="prenom" required />
+    <input formControlName="boxeurPrenom" required />
   </div>
   <div>
     <label>Poids (kg):</label>
     <input type="number" formControlName="poids" required />
   </div>
-
-  <div>
-    <label>Date de Naissance:</label>
-    <input type="date" formControlName="dateNaissance" required />
-  </div>
-
-  <div>
-    <label>Victoires:</label>
-    <input type="number" formControlName="victoires" />
-  </div>
-  <div>
-    <label>Défaites:</label>
-    <input type="number" formControlName="defaites" />
-  </div>
-  <div>
-    <label>Nuls:</label>
-    <input type="number" formControlName="nuls" />
-  </div>
-
   <button type="submit">{{ isEdit ? "Mettre à jour" : "Ajouter" }}</button>
-  <button type="button" (click)="resetForm()">Annuler</button>
 </form>
 
 <h2>Liste des Boxeurs</h2>
@@ -41,18 +21,18 @@
     <tr>
       <th>Nom</th>
       <th>Prénom</th>
+      <th>Poids (kg)</th>
       <th>Actions</th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let boxeur of boxeurs">
-      <td>{{ boxeur.nom }}</td>
-      <td>{{ boxeur.prenom }}</td>
+      <td>{{ boxeur.boxeurNom }}</td>
+      <td>{{ boxeur.boxeurPrenom }}</td>
+      <td>{{ boxeur.poids }}</td>
       <td>
         <button (click)="editBoxeur(boxeur)">Modifier</button>
-        <button *ngIf="boxeur.id !== undefined" (click)="deleteBoxeur(boxeur.id)">
-          Supprimer
-        </button>
+        <button (click)="deleteBoxeur(boxeur.id!)">Supprimer</button>
       </td>
     </tr>
   </tbody>

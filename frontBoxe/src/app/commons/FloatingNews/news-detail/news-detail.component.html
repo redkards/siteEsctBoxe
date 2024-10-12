@@ -1,1 +1,13 @@
 <p>news-detail works!</p>
+
+<div *ngFor="let item of news" class="news-item">
+  <h2>{{ item.titre }}</h2>
+  <p>{{ item.newsContent }}</p>
+  <span>{{ item.publishedAt | date : "fullDate" }}</span>
+  <img
+    *ngIf="item.newsPictures"
+    [src]="item.newsPictures"
+    alt="{{ item.titre }}"
+    class="news-image"
+  />
+</div>

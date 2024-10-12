@@ -1,6 +1,6 @@
 export interface Boxeur {
   id?: number;
-  nom: string;
-  prenom: string;
+  boxeurNom: string;
+  boxeurPrenom: string;
   poids: number;
 }

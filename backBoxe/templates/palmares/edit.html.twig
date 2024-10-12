@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Palmares{% endblock %}
+
+{% block body %}
+    <h1>Edit Palmares</h1>
+
+    {{ include('palmares/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_palmares_index') }}">back to list</a>
+
+    {{ include('palmares/_delete_form.html.twig') }}
+{% endblock %}

@@ -5,25 +5,31 @@ namespace App\Entity;
 use App\Repository\NewsRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: NewsRepository::class)]
 class News
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
+    #[groups(['getNews'])]
     #[ORM\Column]
     private ?int $id = null;
 
     #[ORM\Column(length: 120)]
+    #[groups(['getNews'])]
     private ?string $titre = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[groups(['getNews'])]
     private ?string $newsContent = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[groups(['getNews'])]
     private ?string $newsPictures = null;
 
     #[ORM\Column]
+    #[groups(['getNews'])]
     private ?\DateTimeImmutable $publishedAt = null;
 
     public function getId(): ?int

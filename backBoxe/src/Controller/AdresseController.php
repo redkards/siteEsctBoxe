@@ -292,7 +292,7 @@ class AdresseController extends AbstractController
             }
             // Associer l'adresse à l'utilisateur
             $currentAdresse->setUser($user);
-            $currentAdresse->setSalle(null); // Supprimer l'association avec une salle s'il y en avait une
+            $currentAdresse->setSalle(null);
         }
 
         // Récupérer la salle si l'ID salle est présent
@@ -303,7 +303,7 @@ class AdresseController extends AbstractController
             }
             // Associer l'adresse à la salle ou un user
             $currentAdresse->setSalle($salle);
-            $currentAdresse->setUser($user); // Supprimer l'association avec un utilisateur s'il y en avait une
+            $currentAdresse->setUser($user);
         }
 
         // Mise à jour des autres propriétés de l'adresse

@@ -26,7 +26,7 @@ export class PalmaresComponent implements OnInit {
 
   deletePalmares(id: number): void {
     this.palmaresService.deletePalmares(id).subscribe(() => {
-      this.getPalmares(); // rafraîchit la liste après suppression
+      this.getPalmares();
     });
   }
 }

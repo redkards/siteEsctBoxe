@@ -27,8 +27,8 @@ class EmailControlController extends AbstractController
     {
         // Récupération des données de la requête
         $data = json_decode($request->getContent(), true);
-        $emailAddress = $data['email'] ?? null; // L'email de l'expéditeur
-        $messageContent = $data['message'] ?? null; // Le contenu du message
+        $emailAddress = $data['email'] ?? null; // L'em
+        $messageContent = $data['message'] ?? null;
 
         // Vérifier les données
         if (!$emailAddress || !$messageContent) {
@@ -37,8 +37,8 @@ class EmailControlController extends AbstractController
 
         // Créer et envoyer l'email
         $email = (new Email())
-            ->from('redkardss@gmail.com') // Adresse de l'expéditeur Mailgun
-            ->to('redkardss@gmail.com') // Adresse de destination
+            ->from('redkardss@gmail.com')
+            ->to('redkardss@gmail.com')
             ->subject('Nouveau message du formulaire de contact')
             ->text($messageContent)
             ->replyTo($emailAddress);
@@ -51,17 +51,17 @@ class EmailControlController extends AbstractController
         }
 
         // Enregistrement dans la base de données
-        $emailEntity = new EmailTable(); // Utiliser l'entité EmailTable
-        $emailEntity->setEmailAdresse($emailAddress); // Assurez-vous que cette méthode existe
-        $emailEntity->setEmailMsg($messageContent); // Assurez-vous que cette méthode existe
+        $emailEntity = new EmailTable();
+        $emailEntity->setEmailAdresse($emailAddress);
+        $emailEntity->setEmailMsg($messageContent);
 
         $this->entityManager->persist($emailEntity);
         $this->entityManager->flush();
 
         // Envoyer une notification à votre adresse e-mail
         $notificationEmail = (new Email())
-            ->from($emailAddress) // Adresse de l'expéditeur
-            ->to('redkardss@gmail.com') // Remplacez par votre adresse e-mail
+            ->from($emailAddress)
+            ->to('redkardss@gmail.com')
             ->subject('Nouvel e-mail enregistré')
             ->text("Un nouvel e-mail a été enregistré:\n\nExpéditeur: $emailAddress\nMessage: $messageContent");
 

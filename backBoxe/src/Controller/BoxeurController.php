@@ -9,7 +9,6 @@ use App\Repository\BoxeTypeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\SerializerInterface;
 use JMS\Serializer\SerializationContext;
-use JMS\Serializer\Annotation\Groups;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -21,7 +20,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\Cache\TagAwareCacheInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\Cache\ItemInterface;
-use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 
 class BoxeurController extends AbstractController
 {
@@ -117,6 +115,7 @@ class BoxeurController extends AbstractController
         $data = json_decode($request->getContent(), true);
 
         // Gestion de la date
+        $date = null;
         if (isset($data['boxeurDateNaissance'])) {
             $date = \DateTimeImmutable::createFromFormat('Y-m-d', $data['boxeurDateNaissance']);
             if (!$date) {
@@ -127,12 +126,13 @@ class BoxeurController extends AbstractController
         $boxeur = new Boxeur();
         $boxeur->setBoxeurNom($data['boxeurNom']);
         $boxeur->setBoxeurPrenom($data['boxeurPrenom']);
-        $boxeur->setBoxeurDateNaissance($date);
+        if ($date) {
+            $boxeur->setBoxeurDateNaissance($date);
+        }
 
         // Récupération de l'ID de la catégorie et association
-        $categorieId = $data['categorieId'] ?? null;
-        if ($categorieId) {
-            $categorie = $categorieRepository->find($categorieId);
+        if (isset($data['categorieId'])) {
+            $categorie = $categorieRepository->find($data['categorieId']);
             if (!$categorie) {
                 return new JsonResponse(['error' => 'Categorie not found'], JsonResponse::HTTP_BAD_REQUEST);
             }
@@ -140,9 +140,8 @@ class BoxeurController extends AbstractController
         }
 
         // Récupération de l'ID du type de boxe et association
-        $boxeTypeId = $data['boxeTypeId'] ?? null;
-        if ($boxeTypeId) {
-            $boxeType = $boxeTypeRepository->find($boxeTypeId);
+        if (isset($data['boxeTypeId'])) {
+            $boxeType = $boxeTypeRepository->find($data['boxeTypeId']);
             if (!$boxeType) {
                 return new JsonResponse(['error' => 'BoxeType not found'], JsonResponse::HTTP_BAD_REQUEST);
             }
@@ -172,7 +171,7 @@ class BoxeurController extends AbstractController
         summary: "Met à jour un boxeur existant",
         tags: ["boxeurs"],
         requestBody: new OA\RequestBody(
-            description: "Les informations de l'boxeur à mettre à jour",
+            description: "Les informations du boxeur à mettre à jour",
             required: true,
             content: new OA\JsonContent(
                 ref: new Model(type: Boxeur::class, groups: ["update"])
@@ -182,7 +181,7 @@ class BoxeurController extends AbstractController
             new OA\Parameter(
                 name: "id",
                 in: "path",
-                description: "L'identifiant de l'boxeur à mettre à jour",
+                description: "L'identifiant du boxeur à mettre à jour",
                 required: true,
                 schema: new OA\Schema(type: "integer")
             )
@@ -190,7 +189,7 @@ class BoxeurController extends AbstractController
         responses: [
             new OA\Response(
                 response: 204,
-                description: "Classe mis à jour avec succès"
+                description: "Boxeur mis à jour avec succès"
             ),
             new OA\Response(
                 response: 400,
@@ -198,7 +197,7 @@ class BoxeurController extends AbstractController
             ),
             new OA\Response(
                 response: 404,
-                description: "boxeur non trouvé"
+                description: "Boxeur non trouvé"
             )
         ]
     )]
@@ -221,6 +220,7 @@ class BoxeurController extends AbstractController
             if (!$date) {
                 return new JsonResponse(['error' => 'Invalid date format, expected Y-m-d'], JsonResponse::HTTP_BAD_REQUEST);
             }
+            $currentboxeur->setBoxeurDateNaissance($date);
         }
 
         // Mise à jour des attributs
@@ -232,9 +232,6 @@ class BoxeurController extends AbstractController
         }
         if (isset($data['boxeurPrenom'])) {
             $currentboxeur->setBoxeurPrenom($data['boxeurPrenom']);
-        }
-        if (isset($data['boxeurDateNaissance'])) {
-            $currentboxeur->setBoxeurDateNaissance($date);
         }
 
         // Récupération de l'ID de la catégorie et mise à jour

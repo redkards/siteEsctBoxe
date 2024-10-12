@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Boxeur } from '../../models/boxeur.models';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { BoxeurService } from '../../services/boxeur.service';
 import { CommonModule } from '@angular/common';
 
@@ -19,13 +24,9 @@ export class BoxeurComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private boxeurService: BoxeurService) {
     this.boxeurForm = this.fb.group({
-      nom: ['', Validators.required],
-      prenom: ['', Validators.required],
+      boxeurNom: ['', Validators.required],
+      boxeurPrenom: ['', Validators.required],
       poids: [0, [Validators.required, Validators.min(0)]],
-      dateNaissance: [null, Validators.required],
-      victoires: [0, Validators.min(0)],
-      defaites: [0, Validators.min(0)],
-      nuls: [0, Validators.min(0)],
     });
   }
 
@@ -36,19 +37,22 @@ export class BoxeurComponent implements OnInit {
   loadBoxeurs(): void {
     this.boxeurService.getAllBoxeurs().subscribe((boxeurs) => {
       this.boxeurs = boxeurs;
-      console.log(this.boxeurs); // Vérification des données
+      console.log(this.boxeurs);
     });
   }
 
   onSubmit(): void {
     if (this.boxeurForm.valid) {
+      const boxeurData = this.boxeurForm.value;
       if (this.isEdit && this.boxeurId !== undefined) {
-        this.boxeurService.updateBoxeur(this.boxeurId, this.boxeurForm.value).subscribe(() => {
-          this.loadBoxeurs();
-          this.resetForm();
-        });
+        this.boxeurService
+          .updateBoxeur(this.boxeurId, boxeurData)
+          .subscribe(() => {
+            this.loadBoxeurs();
+            this.resetForm();
+          });
       } else {
-        this.boxeurService.createBoxeur(this.boxeurForm.value).subscribe(() => {
+        this.boxeurService.createBoxeur(boxeurData).subscribe(() => {
           this.loadBoxeurs();
           this.resetForm();
         });
@@ -59,7 +63,11 @@ export class BoxeurComponent implements OnInit {
   editBoxeur(boxeur: Boxeur): void {
     this.boxeurId = boxeur.id;
     this.isEdit = true;
-    this.boxeurForm.patchValue({ ...boxeur });
+    this.boxeurForm.patchValue({
+      boxeurNom: boxeur.boxeurNom,
+      boxeurPrenom: boxeur.boxeurPrenom,
+      poids: boxeur.poids,
+    });
   }
 
   deleteBoxeur(boxeurId: number): void {

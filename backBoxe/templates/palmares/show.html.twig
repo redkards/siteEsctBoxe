@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Palmares{% endblock %}
+
+{% block body %}
+    <h1>Palmares</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ palmare.id }}</td>
+            </tr>
+            <tr>
+                <th>Victoires</th>
+                <td>{{ palmare.victoires }}</td>
+            </tr>
+            <tr>
+                <th>Defaites</th>
+                <td>{{ palmare.defaites }}</td>
+            </tr>
+            <tr>
+                <th>Nul</th>
+                <td>{{ palmare.nul }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_palmares_index') }}">back to list</a>
+
+    <a href="{{ path('app_palmares_edit', {'id': palmare.id}) }}">edit</a>
+
+    {{ include('palmares/_delete_form.html.twig') }}
+{% endblock %}
