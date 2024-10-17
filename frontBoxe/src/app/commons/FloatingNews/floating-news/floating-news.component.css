@@ -1,6 +1,6 @@
 .news-modal {
   position: fixed;
-  bottom: 10px;
+  bottom: 50%;
   right: 10px;
   width: 300px;
   background-color: rgb(160, 156, 156);
