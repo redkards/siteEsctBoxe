@@ -10,13 +10,10 @@ start
 :se connecter;
 |s|
 :affiche fenetre connexion;
-|Administrateur|
 repeat
-fork
-:entrer mail ou pseudo;
-fork again
-:entrer mot de passe;
-end fork
+|Administrateur|
+:Entrer email ou pseudo;
+:Entrer mot de passe;
 :valider connexion;
  |Serveur|
  :vérifie base de donnée;
@@ -31,10 +28,6 @@ repeatwhile (mot de passe correct) is (non) not (oui)
  :connecté;
 
  end
-
-
-
-
 
 @enduml
 
@@ -238,3 +231,49 @@ title "Diagramme d'activité statiques et rapports"
 
 
 @enduml 
+
+
+
+@startuml connexions
+title "Diagramme d'activité se connecter"
+|#LightBlue|Administrateur|
+|#SkyBlue|s| Site
+|#RoyalBlue|Serveur|
+
+|Administrateur|
+start
+:se connecter;
+|s|
+:affiche fenêtre de connexion;
+
+repeat
+  |Administrateur|
+  :Entrer email ou pseudo;
+  :Entrer mot de passe;
+  :valider connexion;
+  
+  |Serveur|
+  :vérifie base de données;
+
+  if (mot de passe correct ?) then (non)
+    |Administrateur|
+    :réessayer mot de passe (3 tentatives);
+  else (oui)
+    |Serveur|
+    :connexion au site;
+    |s|
+    :affiche page d'accueil et dashboard admin;
+    |Administrateur|
+    :connecté;
+    :fin du processus;
+    break
+  endif
+repeat while (tentatives < 3)
+
+|Administrateur|
+:tentatives épuisées;
+:fin du processus;
+
+end
+@enduml
+
