@@ -123,15 +123,12 @@ public function createUser(Request $request, EntityManagerInterface $em,
     $data = json_decode($request->getContent(), true);
 
     // Vérifier si tous les champs requis sont présents
-    $requiredFields = ['email', 'password', 'nom', 'prenom', 'tel', 'dateNaissance'];
+    $requiredFields = ['email', 'password','role', 'nom', 'prenom', 'tel', 'dateNaissance','profilePicture'];
     foreach ($requiredFields as $field) {
         if (!isset($data[$field])) {
             return new JsonResponse(['message' => "Le champ '$field' est requis."], Response::HTTP_BAD_REQUEST);
         }
     }
-
-    // Vérifier si la messagerie est fournie
-    $messagerie = isset($data['messagerieId']) ? $messagerieRepository->find($data['messagerieId']) : null;
 
     // Créer un nouvel utilisateur
     $user = new User();
@@ -149,18 +146,10 @@ public function createUser(Request $request, EntityManagerInterface $em,
     $user->setDateNaissance($dateNaissance);
     
     $user->setProfilePicture($data['profilePicture']);
-    $user->setMessagerie($messagerie);
+    $user->setMessagerie($data['messagerieId']);
 
     // Attribuer le rôle par défaut
-    $user->setRoles(['ROLE_User']);
-
-    // Vérifie la présence de profilePicture
-    if (isset($data['profilePicture'])) {
-        $profilePicture = $data['profilePicture'];
-    } else {
-        // Gérer le cas où 'profilePicture' n'est pas présent
-        $profilePicture = null; 
-    }
+    $user->setRoles(['ROLE_User']);   
 
     // Valider les données de l'utilisateur
     $errors = $validator->validate($user);

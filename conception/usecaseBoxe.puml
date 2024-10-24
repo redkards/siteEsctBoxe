@@ -65,7 +65,7 @@ package "Membre" as packM {
     useCase "**partager des messages**" as viewEvents #LightGreen
     useCase "**Laisser un commentaire**" as leaveComment #LightSalmon
 
-signUp ..> updateProfile :extend
+signUp ..>updateProfile :extend
   m --> packM
 }
 
@@ -77,6 +77,7 @@ package "Visiteur" as packV {
     useCase "**Consulter les événements**" as viewEventsV #DarkGreen
     useCase "**Consulter les actualités**" as viewNews #DarkGoldenRod
     useCase "**Consulter la galerie**" as viewGalleryV #Darkorange
+    useCase "**Visiter le site**" as viewSiteV #DarkViolet
 
  v ---> packV
 }
@@ -98,14 +99,7 @@ left to right direction
 actor Membre as m
 actor Administrateur as a
 actor Visiteur as v
-package "Membre" as packM {
-    useCase "S'inscrire" as signUp
-    useCase "Se connecter" as logIn
-    useCase "Mettre à jour son profil" as updateProfile
-    useCase "Consulter les événements" as viewEvents
-    useCase "Participer à un événement" as participateEvent
-    useCase "Laisser un commentaire" as leaveComment
-    useCase "Consulter la galerie" as viewGallery
-    m --> packM
-}
+
+a<|--m
+m<|--v
 @enduml
