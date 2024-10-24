@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-boxeurs',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule], // Assurez-vous que cela est présent
   templateUrl: './boxeurs.component.html',
   styleUrls: ['./boxeurs.component.css'],
 })
@@ -27,6 +27,7 @@ export class BoxeurComponent implements OnInit {
       boxeurNom: ['', Validators.required],
       boxeurPrenom: ['', Validators.required],
       poids: [0, [Validators.required, Validators.min(0)]],
+      boxeurDateNaissance: ['', Validators.required], // Ajout du champ date de naissance
     });
   }
 

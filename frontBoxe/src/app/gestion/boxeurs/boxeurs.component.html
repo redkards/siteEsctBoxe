@@ -12,6 +12,10 @@
     <label>Poids (kg):</label>
     <input type="number" formControlName="poids" required />
   </div>
+  <div>
+    <label>Date de naissance:</label>
+    <input type="date" formControlName="boxeurDateNaissance" required />
+  </div>
   <button type="submit">{{ isEdit ? "Mettre à jour" : "Ajouter" }}</button>
 </form>
 
@@ -22,6 +26,8 @@
       <th>Nom</th>
       <th>Prénom</th>
       <th>Poids (kg)</th>
+      <th>Date de naissance</th>
+      <!-- Ajout de la colonne pour la date de naissance -->
       <th>Actions</th>
     </tr>
   </thead>
@@ -30,6 +36,8 @@
       <td>{{ boxeur.boxeurNom }}</td>
       <td>{{ boxeur.boxeurPrenom }}</td>
       <td>{{ boxeur.poids }}</td>
+      <td>{{ boxeur.boxeurDateNaissance | date : "yyyy-MM-dd" }}</td>
+      <!-- Affichage de la date de naissance -->
       <td>
         <button (click)="editBoxeur(boxeur)">Modifier</button>
         <button (click)="deleteBoxeur(boxeur.id!)">Supprimer</button>

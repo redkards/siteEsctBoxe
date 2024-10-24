@@ -20,7 +20,7 @@ export class FloatingNewsComponent implements OnInit {
   }
 
   getLatestNews(): void {
-    this.newsService.getNews().subscribe((data: any) => {
+    this.newsService.getAllNews().subscribe((data: any) => {
       this.news = data;
     });
   }

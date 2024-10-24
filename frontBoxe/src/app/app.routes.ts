@@ -22,6 +22,7 @@ import { BoxeurComponent } from './gestion/boxeurs/boxeurs.component';
 import { FloatingNewsComponent } from './commons/FloatingNews/floating-news/floating-news.component';
 import { AddNewsComponent } from './commons/FloatingNews/add-news/add-news.component';
 import { EditNewsComponent } from './commons/FloatingNews/edit-news/edit-news.component';
+import { NewsMenuComponent } from './commons/FloatingNews/news-menu/news-menu.component';
 
 export const routes: Routes = [
   // chemins navBar
@@ -78,6 +79,8 @@ export const routes: Routes = [
   //chemin news
 
   { path: 'news', component: FloatingNewsComponent },
+
+  { path: 'newsMenu', component: NewsMenuComponent },
 
   { path: 'addNews', component: AddNewsComponent },
 

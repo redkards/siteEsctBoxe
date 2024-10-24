@@ -12,7 +12,7 @@ export class NewsService {
   constructor(private http: HttpClient) {}
 
   // Récupérer la liste complète des actualités
-  getNews(): Observable<News[]> {
+  getAllNews(): Observable<News[]> {
     return this.http.get<News[]>(`${this.apiUrl}/news`);
   }
 
@@ -23,7 +23,7 @@ export class NewsService {
 
   // Créer une nouvelle actualité
   createNews(news: News): Observable<News> {
-    return this.http.post<News>(`${this.apiUrl}/news/new`, news);
+    return this.http.post<News>(`${this.apiUrl}/news`, news);
   }
 
   // Mettre à jour une actualité existante

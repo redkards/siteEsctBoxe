@@ -1,26 +1,8 @@
-.photos {
-  min-height: 30rem;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  padding: 10px;
+body {
+  background-color: lightgray;
 }
 
-.photos img {
-  height: 30rem;
-  width: auto;
-  margin: 10px;
-  border-radius: 10%;
-}
-
-p {
-  margin: 1% 2%;
-  text-align: center;
-  font-size: 1.5rem;
-}
-
+.text1,
 .text {
   border-radius: 15%;
   background: linear-gradient(
@@ -32,18 +14,27 @@ p {
   padding: 30px;
   margin: 30px;
 }
-.text1 {
-  background: linear-gradient(
-    90deg,
-    rgba(254, 225, 138, 1) 4%,
-    rgba(244, 192, 40, 1) 50%,
-    rgba(173, 126, 0, 1) 100%
-  );
-  padding: 30px;
-  margin: 30px;
 
+.photos {
+  min-height: 30rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
 }
 
-body{
-  background-color: lightgray;
+.photos img {
+  max-height: 30rem; /* Limite la hauteur */
+  width: auto; /* Maintient le ratio de l'image */
+  max-width: 100%; /* S'assure que l'image ne dépasse pas la largeur du conteneur */
+  margin: 10px;
+  border-radius: 10%;
+  object-fit: cover; /* Ajuste l'image à son conteneur tout en conservant le ratio */
+}
+
+p {
+  margin: 1% 2%;
+  text-align: center;
+  font-size: 1.5rem;
 }

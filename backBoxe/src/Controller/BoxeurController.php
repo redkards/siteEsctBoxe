@@ -24,7 +24,7 @@ use Symfony\Contracts\Cache\ItemInterface;
 class BoxeurController extends AbstractController
 {
     // Récupération de tous les boxeurs
-    #[Route('/api/boxeurs', name: 'boxeur', methods: ['GET'])]
+    #[Route('/api/boxeurs', name: 'getAllBoxeurs', methods: ['GET'])]
     #[OA\Response(
         response: 200,
         description: "Retourne la liste des boxeurs",
@@ -49,7 +49,7 @@ class BoxeurController extends AbstractController
     }
 
     // Récupération d'un boxeur spécifique par son ID
-    #[Route('/api/boxeurs/{id}', name: 'detailBoxeur', methods: ['GET'])]
+    #[Route('/api/boxeurs/{id}', name: 'getBoxeurDetail', methods: ['GET'])]
     #[OA\Tag(name: "boxeurs")]
     public function getBoxeurDetail(Boxeur $boxeur, SerializerInterface $serializer): JsonResponse
     {
@@ -85,7 +85,7 @@ class BoxeurController extends AbstractController
         responses: [
             new OA\Response(
                 response: 201,
-                description: "boxeur créé avec succès",
+                description: "Boxeur créé avec succès",
                 content: new OA\JsonContent(type: "object", properties: [
                     new OA\Property(property: "id", type: "integer"),
                     new OA\Property(property: "poids", type: "float"),
@@ -129,6 +129,7 @@ class BoxeurController extends AbstractController
         if ($date) {
             $boxeur->setBoxeurDateNaissance($date);
         }
+        $boxeur->setPoids($data['poids']);
 
         // Récupération de l'ID de la catégorie et association
         if (isset($data['categorieId'])) {
@@ -159,7 +160,7 @@ class BoxeurController extends AbstractController
 
         $context = SerializationContext::create()->setGroups(['getBoxeurs']);
         $jsonBoxeur = $serializer->serialize($boxeur, 'json', $context);
-        $location = $urlGenerator->generate('detailBoxeur', ['id' => $boxeur->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
+        $location = $urlGenerator->generate('getBoxeurDetail', ['id' => $boxeur->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
 
         return new JsonResponse($jsonBoxeur, JsonResponse::HTTP_CREATED, ['Location' => $location], true);
     }
@@ -223,18 +224,17 @@ class BoxeurController extends AbstractController
             $currentboxeur->setBoxeurDateNaissance($date);
         }
 
-        // Mise à jour des attributs
-        if (isset($data['poids'])) {
-            $currentboxeur->setPoids($data['poids']);
-        }
         if (isset($data['boxeurNom'])) {
             $currentboxeur->setBoxeurNom($data['boxeurNom']);
         }
         if (isset($data['boxeurPrenom'])) {
             $currentboxeur->setBoxeurPrenom($data['boxeurPrenom']);
         }
+        if (isset($data['poids'])) {
+            $currentboxeur->setPoids($data['poids']);
+        }
 
-        // Récupération de l'ID de la catégorie et mise à jour
+        // Récupération de l'ID de la catégorie et association
         if (isset($data['categorieId'])) {
             $categorie = $categorieRepository->find($data['categorieId']);
             if (!$categorie) {
@@ -243,7 +243,7 @@ class BoxeurController extends AbstractController
             $currentboxeur->addBoxeurCategorie($categorie);
         }
 
-        // Récupération de l'ID du type de boxe et mise à jour
+        // Récupération de l'ID du type de boxe et association
         if (isset($data['boxeTypeId'])) {
             $boxeType = $boxeTypeRepository->find($data['boxeTypeId']);
             if (!$boxeType) {
@@ -259,6 +259,6 @@ class BoxeurController extends AbstractController
         }
 
         $em->flush();
-        return new JsonResponse(null, Response::HTTP_NO_CONTENT);
+        return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
     }
 }

@@ -2,7 +2,7 @@
 
 title = "Use Case ESCT Boxe"
 
-' left to right direction
+left to right direction
 
 actor Visiteur as v
 actor Membre as m
@@ -34,8 +34,8 @@ package "Administrateur" as packA {
     useCase "**Gérer la galerie**" as manageGallery #pink
     useCase "**ajouter photo**" as addGallery #pink
     useCase "**suprimer photo**" as delGallery #pink
-   
- 
+
+
 manageBoxers -->  addBoxers :extend
 manageBoxers -->  delBoxers :extend
 manageBoxers -->  upBoxers :extend
@@ -56,19 +56,19 @@ manageGallery --> delGallery :extend
 
       a -> packA
     }
-  
+
 
 
 package "Membre" as packM {
     useCase "**S'inscrire**" as signUp #LightBlue
     useCase "**Mettre à jour son profil**" as updateProfile #LightCyan
-    useCase "**Consulter les événements**" as viewEvents #LightGreen
+    useCase "**partager des messages**" as viewEvents #LightGreen
     useCase "**Laisser un commentaire**" as leaveComment #LightSalmon
-    useCase "**Consulter la galerie**" as viewGallery #LightSeaGreen
 
+signUp ..> updateProfile :extend
   m --> packM
 }
-  
+
     a<|--m
     m<|--v
 
@@ -80,11 +80,11 @@ package "Visiteur" as packV {
 
  v ---> packV
 }
-   
+
 useCase "**Connexion**" as connect #IndianRed
 
-packA ...> connect : includes 
-packM ...> connect : includes 
+packA ...> connect : includes
+packM ...> connect : includes
 
 
 

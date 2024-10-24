@@ -9,6 +9,7 @@ use JMS\Serializer\SerializerInterface;
 use JMS\Serializer\SerializationContext;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Attributes as OA;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,6 +19,8 @@ use Symfony\Contracts\Cache\ItemInterface;
 
 class NewsController extends AbstractController
 {
+    public function __construct(private LoggerInterface $logger) {}
+
     // Récupérer tous les articles de news
     #[Route('/api/news', name: 'app_news_index', methods: ['GET'])]
     #[OA\Response(
@@ -42,10 +45,10 @@ class NewsController extends AbstractController
 
             return new JsonResponse($jsonNewsList, JsonResponse::HTTP_OK, [], true);
         } catch (\Exception $e) {
+            $this->logger->error('Erreur lors de la récupération des nouvelles : ' . $e->getMessage());
             return new JsonResponse(['error' => 'Une erreur est survenue lors de la récupération des nouvelles.'], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-
 
     // Récupérer les détails d'un article spécifique
     #[Route('/api/news/{id}', name: 'app_news_detail', methods: ['GET'])]
@@ -60,13 +63,14 @@ class NewsController extends AbstractController
             $news = $newsRepository->find($id);
 
             if (!$news) {
-                return new JsonResponse(['error' => 'News not found'], JsonResponse::HTTP_NOT_FOUND);
+                return new JsonResponse(['error' => 'News non trouvée'], JsonResponse::HTTP_NOT_FOUND);
             }
 
             $context = SerializationContext::create()->setGroups(['getNews']);
             $jsonNews = $serializer->serialize($news, 'json', $context);
             return new JsonResponse($jsonNews, JsonResponse::HTTP_OK, [], true);
         } catch (\Exception $e) {
+            $this->logger->error('Erreur lors de la récupération des détails de la news : ' . $e->getMessage());
             return new JsonResponse(['error' => 'Une erreur est survenue lors de la récupération des nouvelles.'], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -78,9 +82,13 @@ class NewsController extends AbstractController
         try {
             $data = json_decode($request->getContent(), true);
 
+            if (empty($data['titre']) || empty($data['newsContent'])) {
+                return new JsonResponse(['error' => 'Titre et contenu sont requis.'], JsonResponse::HTTP_BAD_REQUEST);
+            }
+
             $news = new News();
-            $news->setTitre($data['titre'] ?? null);
-            $news->setNewsContent($data['newsContent'] ?? null);
+            $news->setTitre($data['titre']);
+            $news->setNewsContent($data['newsContent']);
             $news->setNewsPictures($data['newsPictures'] ?? null);
             $news->setPublishedAt(new \DateTimeImmutable());
 
@@ -89,8 +97,10 @@ class NewsController extends AbstractController
 
             $context = SerializationContext::create()->setGroups(['getNews']);
             $jsonNews = $serializer->serialize($news, 'json', $context);
+
             return new JsonResponse($jsonNews, JsonResponse::HTTP_CREATED, [], true);
         } catch (\Exception $e) {
+            $this->logger->error('Erreur lors de la création de la news : ' . $e->getMessage());
             return new JsonResponse(['error' => 'Une erreur est survenue lors de la création de l\'article.'], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -103,7 +113,7 @@ class NewsController extends AbstractController
             $news = $newsRepository->find($id);
 
             if (!$news) {
-                return new JsonResponse(['error' => 'News not found'], JsonResponse::HTTP_NOT_FOUND);
+                return new JsonResponse(['error' => 'News non trouvée'], JsonResponse::HTTP_NOT_FOUND);
             }
 
             $data = json_decode($request->getContent(), true);
@@ -112,8 +122,9 @@ class NewsController extends AbstractController
             $news->setNewsPictures($data['newsPictures'] ?? $news->getNewsPictures());
             $entityManager->flush();
 
-            return new JsonResponse(['status' => 'News updated!'], JsonResponse::HTTP_OK);
+            return new JsonResponse(['status' => 'News mise à jour !'], JsonResponse::HTTP_OK);
         } catch (\Exception $e) {
+            $this->logger->error('Erreur lors de la mise à jour de la news : ' . $e->getMessage());
             return new JsonResponse(['error' => 'Une erreur est survenue lors de la mise à jour de l\'article.'], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -126,14 +137,15 @@ class NewsController extends AbstractController
             $news = $newsRepository->find($id);
 
             if (!$news) {
-                return new JsonResponse(['error' => 'News not found'], JsonResponse::HTTP_NOT_FOUND);
+                return new JsonResponse(['error' => 'News non trouvée'], JsonResponse::HTTP_NOT_FOUND);
             }
 
             $entityManager->remove($news);
             $entityManager->flush();
 
-            return new JsonResponse(['status' => 'News deleted'], JsonResponse::HTTP_OK);
+            return new JsonResponse(['status' => 'News supprimée'], JsonResponse::HTTP_OK);
         } catch (\Exception $e) {
+            $this->logger->error('Erreur lors de la suppression de la news : ' . $e->getMessage());
             return new JsonResponse(['error' => 'Une erreur est survenue lors de la suppression de l\'article.'], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

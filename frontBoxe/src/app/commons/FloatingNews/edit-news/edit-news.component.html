@@ -1,37 +1,39 @@
-<p>edit-news works!</p>
-<form >
-  <label for="newsPictures">photo</label>
+<p>Edit News</p>
+
+<form (ngSubmit)="updateNews()">
+  <label for="newsPictures">Photo</label>
   <input
-    type="text"
+    type="file"
     id="newsPictures"
-    ngModel="newsPictures"
-    name="newsPictures"
+    (change)="uploadPicture($event)"
     required
   />
+  <input type="hidden" [(ngModel)]="newsPictures" name="newsPictures" />
 
-  <label for="title">Titre</label>
-  <input type="text" id="titre" ngModel="titre" name="titre" required />
+  <label for="titre">Titre</label>
+  <input type="text" id="titre" [(ngModel)]="titre" name="titre" required />
 
   <label for="newsContent">Contenu</label>
   <textarea
     id="newsContent"
-    ngModel="newsContent"
+    [(ngModel)]="newsContent"
     name="newsContent"
     required
   ></textarea>
 
-  <label for="publishedAt">date de publication</label>
+  <label for="publishedAt">Date de publication</label>
   <input
     type="text"
     id="publishedAt"
-    ngModel="publishedAt"
+    [(ngModel)]="news.publishedAt"
     name="publishedAt"
     required
+    disabled
   />
 
-  <button type="submit">Créer</button>
+  <button type="submit">Modifier</button>
 
-   Affichage des erreurs éventuelles
+  <!-- Affichage des erreurs éventuelles -->
   <div *ngIf="errorMessage" class="alert alert-danger">
     {{ errorMessage }}
   </div>
