@@ -4,8 +4,10 @@ namespace App\Controller;
 
 use App\Entity\Messagerie;
 use App\Entity\User;
-use App\Repository\MessagerieRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\SerializerInterface as SerializerSerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,6 +23,14 @@ use Symfony\Component\Mime\Email;
 
 class RegisterController extends AbstractController
 {
+    // Version de la politique de confidentialité acceptée à l'inscription
+    public const CONSENT_VERSION = '2026-10';
+
+    public function __construct(
+        #[Autowire('%env(MAILER_FROM)%')] private string $mailerFrom,
+    ) {
+    }
+
     // Définition de la route pour l'inscription d'un nouvel utilisateur
     #[Route('/api/register', name: 'register', methods: ['POST'])]
     #[OA\Post(
@@ -58,26 +68,41 @@ class RegisterController extends AbstractController
         ]
     )]
     #[Groups(["getUser"])]
-    public function register(Request $request, EntityManagerInterface $manager, SerializerSerializerInterface $serializer, ValidatorInterface $validator, MessagerieRepository $messagerieRepository, MailerInterface $mailer): Response
+    public function register(Request $request, EntityManagerInterface $manager, SerializerSerializerInterface $serializer, ValidatorInterface $validator, UserRepository $userRepository, UserPasswordHasherInterface $hasher, MailerInterface $mailer): Response
     {
         // Décoder le contenu JSON de la requête
         $data = json_decode($request->getContent(), true);
 
-        // Vérifiez que l'ID de messagerie est présent
-        if (!isset($data['messagerieId'])) {
-            return new JsonResponse(['message' => "L'id de messagerie est requis"], Response::HTTP_BAD_REQUEST);
+        foreach (['email', 'password', 'nom', 'prenom', 'tel'] as $champ) {
+            if (empty($data[$champ]) || !is_string($data[$champ])) {
+                return new JsonResponse(['message' => "Le champ $champ est requis."], Response::HTTP_BAD_REQUEST);
+            }
         }
 
-        $messagerie = $messagerieRepository->find($data['messagerieId']);
-        if (!$messagerie) {
-            return new JsonResponse(['message' => 'Messagerie non trouvée'], Response::HTTP_NOT_FOUND);
+        // RGPD : consentement explicite obligatoire (case non pré-cochée côté front)
+        if (($data['consent'] ?? false) !== true) {
+            return new JsonResponse(['message' => "Vous devez accepter la politique de confidentialité."], Response::HTTP_BAD_REQUEST);
+        }
+
+        if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+            return new JsonResponse(['message' => "Adresse email invalide."], Response::HTTP_BAD_REQUEST);
+        }
+
+        // Recommandation ANSSI/CNIL : 12 caractères minimum, majuscule, minuscule et chiffre
+        if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{12,}$/', $data['password'])) {
+            return new JsonResponse(['message' => "Le mot de passe doit contenir au moins 12 caractères, dont une majuscule, une minuscule et un chiffre."], Response::HTTP_BAD_REQUEST);
+        }
+
+        if ($userRepository->findOneBy(['email' => $data['email']])) {
+            return new JsonResponse(['message' => "Un compte existe déjà avec cet email."], Response::HTTP_CONFLICT);
         }
 
         // Créer un nouvel utilisateur et définir ses propriétés
         $user = new User();
         $user->setEmail($data['email']);
         $user->setRoles(['ROLE_USER']);
-        $user->setPassword(password_hash($data['password'], PASSWORD_BCRYPT));
+        $user->setPassword($hasher->hashPassword($user, $data['password']));
+        $user->giveConsent(self::CONSENT_VERSION);
         $user->setNom($data['nom']);
         $user->setPrenom($data['prenom']);
         $user->setTel($data['tel']);
@@ -118,10 +143,11 @@ class RegisterController extends AbstractController
     private function sendConfirmationEmail(MailerInterface $mailer, string $email): void
     {
         $confirmationEmail = (new Email())
-            ->from('redkardss@gmail.com')   
+            ->from($this->mailerFrom)
             ->to($email)
             ->subject('Confirmation d\'inscription')
-            ->text('Merci de vous être inscrit. Veuillez confirmer votre adresse e-mail.');
+            ->text("Bienvenue à l'ESCT Boxe ! Votre compte a bien été créé.\n\n"
+                . "Vous pouvez à tout moment consulter, exporter ou supprimer vos données depuis votre profil.");
 
         $mailer->send($confirmationEmail);
     }

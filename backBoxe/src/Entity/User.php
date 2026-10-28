@@ -36,8 +36,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var string The hashed password
      */
+    // Jamais sérialisé : le hash ne doit pas sortir de l'API
     #[ORM\Column]
-    #[groups(['getUsers'])]
     private ?string $password = null;
 
     #[ORM\Column(length: 120)]
@@ -71,6 +71,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     #[groups(['getUsers'])]
     private ?string $profilePicture = null;
+
+    // Preuve du consentement RGPD (date + version de la politique acceptée)
+    #[ORM\Column(nullable: true)]
+    #[groups(['getUsers'])]
+    private ?\DateTimeImmutable $consentAt = null;
+
+    #[ORM\Column(length: 20, nullable: true)]
+    #[groups(['getUsers'])]
+    private ?string $consentVersion = null;
+
+    public function getConsentAt(): ?\DateTimeImmutable
+    {
+        return $this->consentAt;
+    }
+
+    public function getConsentVersion(): ?string
+    {
+        return $this->consentVersion;
+    }
+
+    public function giveConsent(string $version): static
+    {
+        $this->consentAt = new \DateTimeImmutable();
+        $this->consentVersion = $version;
+        return $this;
+    }
 
 
     public function __construct()

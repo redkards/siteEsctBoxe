@@ -56,6 +56,7 @@ class UserController extends AbstractController
     #[OA\Tag(name: "Users")]
     public function getUserDetails(User $user, SerializerInterface $serializer): JsonResponse
     {
+        $this->denyUnlessOwnerOrAdmin($user);
         $context = SerializationContext::create()->setGroups(['getUsers']);
         $jsonUser = $serializer->serialize($user, 'json', $context);
         return new JsonResponse($jsonUser, Response::HTTP_OK, [], true);
@@ -216,6 +217,7 @@ public function createUser(Request $request, EntityManagerInterface $em,
     EntityManagerInterface $em, ValidatorInterface $validator, TagAwareCacheInterface $cachePool,
     MessagerieRepository $messagerieRepository, UserPasswordHasherInterface $hasher): JsonResponse
 {
+    $this->denyUnlessOwnerOrAdmin($currentUser);
     $data = json_decode($request->getContent(), true);
 
     if (isset($data['messagerieId'])) {
@@ -284,6 +286,7 @@ public function createUser(Request $request, EntityManagerInterface $em,
 #[Route('/api/users/{id}/upload-profile-picture', name: 'uploadProfilePicture', methods: ['POST'])]
 public function uploadProfilePicture(Request $request, User $user, EntityManagerInterface $em, FileUploadController $fileUploadController): JsonResponse
 {
+        $this->denyUnlessOwnerOrAdmin($user);
     /** @var UploadedFile $file */
     $file = $request->files->get('file');
 
@@ -309,6 +312,7 @@ public function uploadProfilePicture(Request $request, User $user, EntityManager
 #[Route('/api/users/{id}/profile-picture', name: 'loadProfilePicture', methods: ['GET'])]
 public function loadProfilePicture(User $user): JsonResponse
 {
+        $this->denyUnlessOwnerOrAdmin($user);
     $profilePicture = $user->getProfilePicture();
 
     if (!$profilePicture) {
@@ -323,4 +327,11 @@ public function loadProfilePicture(User $user): JsonResponse
 
 
 
+    // Un membre ne peut lire ou modifier que son propre compte
+    private function denyUnlessOwnerOrAdmin(User $user): void
+    {
+        if ($this->getUser() !== $user && !$this->isGranted('ROLE_ADMIN')) {
+            throw $this->createAccessDeniedException();
+        }
+    }
 }

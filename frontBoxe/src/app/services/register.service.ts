@@ -1,4 +1,5 @@
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import User from '../models/user.models';
@@ -8,7 +9,7 @@ import User from '../models/user.models';
 })
 export class RegistrationService {
   // URL de base de l'API
-  private apiUrl = 'https://localhost:8000/api'; // Remplacez par l'URL appropriée
+  private apiUrl = environment.apiUrl;
 
   // Injection du service HttpClient
   constructor(private httpClient: HttpClient) {}

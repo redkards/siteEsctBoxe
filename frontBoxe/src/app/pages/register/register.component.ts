@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, NgModule } from '@angular/core';
+import { Component } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -20,7 +20,7 @@ import { AuthService } from '../../services/auth.service';
 export class RegisterComponent {
   user: FormGroup; // Déclaration du formulaire de type FormGroup
   submitted: boolean = false; // Indicateur de soumission du formulaire
-  selectedEcoleId: number | null = null; // ID de l'école sélectionnée
+  errorMessage: string | null = null; // Message affiché si la connexion échoue
 
   // Constructeur avec injection des services nécessaires
   constructor(
@@ -56,11 +56,14 @@ export class RegisterComponent {
   // Méthode appelée lors de la soumission du formulaire
   onSubmit() {
     this.submitted = true; // Indique que le formulaire a été soumis
+    this.errorMessage = null;
     if (this.user.invalid) {
-      return false; // Si le formulaire est invalide, on arrête la soumission
-    } else {
-      return true;
+      return; // Si le formulaire est invalide, on arrête la soumission
     }
+    this.authService.login(this.user.value).subscribe({
+      next: () => this.router.navigate(['profil']),
+      error: () => (this.errorMessage = 'Email ou mot de passe incorrect.'),
+    });
   }
 
   // Getter pour accéder facilement aux contrôles du formulaire dans le template

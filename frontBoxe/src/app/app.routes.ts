@@ -1,90 +1,203 @@
 import { Routes } from '@angular/router';
-import { AccueilComponent } from './pages/accueil/accueil.component';
-import { InscriptionComponent } from './pages/inscription/inscription.component';
-import { ContactComponent } from './pages/contact/contact.component';
-import { ConditionsGeneralesDutilisationComponent } from './commons/footer/conditions-generales-dutilisation/conditions-generales-dutilisation.component';
-import { SupportEtAssistanceComponent } from './commons/footer/support-et-assistance/support-et-assistance.component';
-import { ProtectionDesDonneesComponent } from './commons/footer/protection-des-donnees/protection-des-donnees.component';
-import { ActualitesComponent } from './pages/actualites/actualites.component';
-import { NotFoundComponent } from './commons/not-found/not-found.component';
-import { ConnexionComponent } from './pages/connexion/connexion.component';
-import { RegisterComponent } from './pages/register/register.component';
-import { Inscription20242025Component } from './pages/inscription2024-2025/inscription2024-2025.component';
-import { PartenairesComponent } from './commons/partenaires/partenaires.component';
-import { ProfilComponent } from './pages/profil/profil.component';
-import { MessagerieComponent } from './pages/profil/messagerie/messagerie.component';
-import { MsgDetailComponent } from './pages/profil/messagerie/msg-detail/msg-detail.component';
-import { CreateMsgComponent } from './pages/profil/messagerie/create-msg/create-msg.component';
-import { LoginComponent } from './pages/profil/login/login.component';
-import { PalmaresComponent } from './gestion/boxeurs/palmares/palmares.component';
-import { PalmaresFormComponent } from './gestion/boxeurs/palmares-form/palmares-form.component';
-import { BoxeurComponent } from './gestion/boxeurs/boxeurs.component';
-import { FloatingNewsComponent } from './commons/FloatingNews/floating-news/floating-news.component';
-import { AddNewsComponent } from './commons/FloatingNews/add-news/add-news.component';
-import { EditNewsComponent } from './commons/FloatingNews/edit-news/edit-news.component';
-import { NewsMenuComponent } from './commons/FloatingNews/news-menu/news-menu.component';
+import { adminGuard, authGuard } from './core/auth.guard';
 
+// Chaque page est chargée à la demande (lazy loading)
 export const routes: Routes = [
   // chemins navBar
   { path: '', redirectTo: 'accueil', pathMatch: 'full' },
 
-  { path: 'accueil', component: AccueilComponent },
+  {
+    path: 'accueil',
+    title: 'Accueil | ESCT Boxe',
+    loadComponent: () =>
+      import('./pages/accueil/accueil.component').then((m) => m.AccueilComponent),
+  },
+  {
+    path: 'actualites',
+    title: 'Actualités | ESCT Boxe',
+    loadComponent: () =>
+      import('./pages/actualites/actualites.component').then((m) => m.ActualitesComponent),
+  },
+  {
+    path: 'inscription2024',
+    title: 'Inscriptions | ESCT Boxe',
+    loadComponent: () =>
+      import('./pages/inscription2024-2025/inscription2024-2025.component').then(
+        (m) => m.Inscription20242025Component
+      ),
+  },
+  {
+    path: 'contact',
+    title: 'Contact | ESCT Boxe',
+    loadComponent: () =>
+      import('./pages/contact/contact.component').then((m) => m.ContactComponent),
+  },
+  {
+    path: 'connexion',
+    title: 'Connexion | ESCT Boxe',
+    loadComponent: () =>
+      import('./pages/connexion/connexion.component').then((m) => m.ConnexionComponent),
+  },
+  {
+    path: 'inscription',
+    title: 'Créer un compte | ESCT Boxe',
+    loadComponent: () =>
+      import('./pages/inscription/inscription.component').then((m) => m.InscriptionComponent),
+  },
+  {
+    path: 'register',
+    title: 'Connexion | ESCT Boxe',
+    loadComponent: () =>
+      import('./pages/register/register.component').then((m) => m.RegisterComponent),
+  },
+  {
+    path: 'login',
+    title: 'Connexion | ESCT Boxe',
+    loadComponent: () =>
+      import('./pages/profil/login/login.component').then((m) => m.LoginComponent),
+  },
+  {
+    path: 'profil',
+    title: 'Mon profil | ESCT Boxe',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/profil/profil.component').then((m) => m.ProfilComponent),
+  },
 
-  { path: 'actualites', component: ActualitesComponent },
-
-  { path: 'inscription2024', component: Inscription20242025Component },
-
-  { path: 'contact', component: ContactComponent },
-
-  { path: 'connexion', component: ConnexionComponent },
-
-  { path: 'inscription', component: InscriptionComponent },
-
-  { path: 'register', component: RegisterComponent },
-
-  { path: 'profil', component: ProfilComponent },
-
-  { path: 'login', component: LoginComponent },
-
-  //chemins messagerie
-
-  { path: 'messagerie', component: MessagerieComponent },
-
-  { path: 'messageDetail/:id', component: MsgDetailComponent },
-
-  { path: 'addMessage', component: CreateMsgComponent },
+  //chemins messagerie (membres connectés)
+  {
+    path: 'messagerie',
+    title: 'Messagerie | ESCT Boxe',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/profil/messagerie/messagerie.component').then(
+        (m) => m.MessagerieComponent
+      ),
+  },
+  {
+    path: 'messageDetail/:id',
+    title: 'Message | ESCT Boxe',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/profil/messagerie/msg-detail/msg-detail.component').then(
+        (m) => m.MsgDetailComponent
+      ),
+  },
+  {
+    path: 'addMessage',
+    title: 'Nouveau message | ESCT Boxe',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/profil/messagerie/create-msg/create-msg.component').then(
+        (m) => m.CreateMsgComponent
+      ),
+  },
 
   // Chemin footer
+  {
+    path: 'rgpd',
+    title: 'Protection des données | ESCT Boxe',
+    loadComponent: () =>
+      import('./commons/footer/protection-des-donnees/protection-des-donnees.component').then(
+        (m) => m.ProtectionDesDonneesComponent
+      ),
+  },
+  {
+    path: 'cgu',
+    title: "Conditions générales d'utilisation | ESCT Boxe",
+    loadComponent: () =>
+      import(
+        './commons/footer/conditions-generales-dutilisation/conditions-generales-dutilisation.component'
+      ).then((m) => m.ConditionsGeneralesDutilisationComponent),
+  },
+  {
+    path: 'supportassistance',
+    title: 'Support | ESCT Boxe',
+    loadComponent: () =>
+      import('./commons/footer/support-et-assistance/support-et-assistance.component').then(
+        (m) => m.SupportEtAssistanceComponent
+      ),
+  },
+  {
+    path: 'partenaires',
+    title: 'Partenaires | ESCT Boxe',
+    loadComponent: () =>
+      import('./commons/partenaires/partenaires.component').then((m) => m.PartenairesComponent),
+  },
 
-  { path: 'rgpd', component: ProtectionDesDonneesComponent },
+  // chemins news
+  {
+    path: 'news',
+    title: 'News | ESCT Boxe',
+    loadComponent: () =>
+      import('./commons/FloatingNews/floating-news/floating-news.component').then(
+        (m) => m.FloatingNewsComponent
+      ),
+  },
 
-  { path: 'cgu', component: ConditionsGeneralesDutilisationComponent },
+  // gestion du club (administrateurs)
+  {
+    path: 'boxeurs',
+    title: 'Boxeurs | ESCT Boxe',
+    canActivate: [adminGuard],
+    loadComponent: () =>
+      import('./gestion/boxeurs/boxeurs.component').then((m) => m.BoxeurComponent),
+  },
+  {
+    path: 'palmares',
+    title: 'Palmarès | ESCT Boxe',
+    canActivate: [adminGuard],
+    loadComponent: () =>
+      import('./gestion/boxeurs/palmares/palmares.component').then((m) => m.PalmaresComponent),
+  },
+  {
+    path: 'palmares/new',
+    title: 'Nouveau palmarès | ESCT Boxe',
+    canActivate: [adminGuard],
+    loadComponent: () =>
+      import('./gestion/boxeurs/palmares-form/palmares-form.component').then(
+        (m) => m.PalmaresFormComponent
+      ),
+  },
+  {
+    path: 'palmares/:id/edit',
+    title: 'Modifier un palmarès | ESCT Boxe',
+    canActivate: [adminGuard],
+    loadComponent: () =>
+      import('./gestion/boxeurs/palmares-form/palmares-form.component').then(
+        (m) => m.PalmaresFormComponent
+      ),
+  },
+  {
+    path: 'newsMenu',
+    title: 'Gestion des news | ESCT Boxe',
+    canActivate: [adminGuard],
+    loadComponent: () =>
+      import('./commons/FloatingNews/news-menu/news-menu.component').then(
+        (m) => m.NewsMenuComponent
+      ),
+  },
+  {
+    path: 'addNews',
+    title: 'Ajouter une news | ESCT Boxe',
+    canActivate: [adminGuard],
+    loadComponent: () =>
+      import('./commons/FloatingNews/add-news/add-news.component').then((m) => m.AddNewsComponent),
+  },
+  {
+    path: 'editNews',
+    title: 'Modifier une news | ESCT Boxe',
+    canActivate: [adminGuard],
+    loadComponent: () =>
+      import('./commons/FloatingNews/edit-news/edit-news.component').then(
+        (m) => m.EditNewsComponent
+      ),
+  },
 
-  { path: 'supportassistance', component: SupportEtAssistanceComponent },
-
-  { path: 'partenaires', component: PartenairesComponent },
-
-  // chemins boxeurs
-
-  { path: 'boxeurs', component: BoxeurComponent },
-
-  //chemins palmares
-
-  { path: 'palmares', component: PalmaresComponent },
-
-  { path: 'palmares/new', component: PalmaresFormComponent },
-
-  { path: 'palmares/:id/edit', component: PalmaresFormComponent },
-
-  //chemin news
-
-  { path: 'news', component: FloatingNewsComponent },
-
-  { path: 'newsMenu', component: NewsMenuComponent },
-
-  { path: 'addNews', component: AddNewsComponent },
-
-  { path: 'editNews', component: EditNewsComponent },
-
-  { path: '**', component: NotFoundComponent },
+  {
+    path: '**',
+    title: 'Page introuvable | ESCT Boxe',
+    loadComponent: () =>
+      import('./commons/not-found/not-found.component').then((m) => m.NotFoundComponent),
+  },
 ];

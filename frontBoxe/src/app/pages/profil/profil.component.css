@@ -39,7 +39,7 @@ h3 {
   text-align: center;
 }
 
-body {
+:host > section {
   background-color: lightgray;
   font-family: Arial, sans-serif;
   margin: 0;

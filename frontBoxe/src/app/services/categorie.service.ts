@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
 import { Categorie } from '../models/categorie.models';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
@@ -7,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root',
 })
 export class CategorieService {
-  private apiUrl = 'http://localhost:8000/api/categorie'; // URL de l'API Symfony
+  private apiUrl = `${environment.apiUrl}/categorie`;
 
   constructor(private http: HttpClient) {}
 

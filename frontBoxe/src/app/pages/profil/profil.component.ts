@@ -1,4 +1,5 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
+import { environment } from '../../../environments/environment';
 import { SliderProfilComponent } from '../../commons/slider-profil/slider-profil.component';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
@@ -74,7 +75,7 @@ onFileSelected(event: Event): void {
       formData.append('userId', this.userId.toString()); // Attach the user ID
 
       // Send the file to the Symfony FileUploadController
-      this.http.post('http://localhost:8000/api/upload', formData).subscribe(
+      this.http.post(`${environment.apiUrl}/upload`, formData).subscribe(
         (response: any) => {
           this.uploadResponse = 'File uploaded successfully!';
 
@@ -102,7 +103,7 @@ onFileSelected(event: Event): void {
       };
 
       this.http
-        .post('http://localhost:8000/api/user/update-profile-picture', data)
+        .post(`${environment.apiUrl}/user/update-profile-picture`, data)
         .subscribe(
           (response: any) => {
             console.log('Profile picture updated for the user:', response);

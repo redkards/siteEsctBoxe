@@ -1,5 +1,4 @@
 security:
-  enable_authenticator_manager: true
   # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
   password_hashers:
     Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: "auto"
@@ -7,7 +6,6 @@ security:
       algorithm: auto
   # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
   providers:
-    # used to reload user from session & other features (e.g. switch_user)
     app_user_provider:
       entity:
         class: App\Entity\User
@@ -16,15 +14,6 @@ security:
     dev:
       pattern: ^/(_(profiler|wdt)|css|images|js)/
       security: false
-    # main:
-    #     lazy: true
-    #     provider: app_user_provider
-
-    # activate different ways to authenticate
-    # https://symfony.com/doc/current/security.html#the-firewall
-
-    # https://symfony.com/doc/current/security/impersonating_user.html
-    # switch_user: true
 
     login:
       pattern: ^/api/login
@@ -35,17 +24,31 @@ security:
         password_path: password
         success_handler: lexik_jwt_authentication.handler.authentication_success
         failure_handler: lexik_jwt_authentication.handler.authentication_failure
+      # Anti force brute : 5 tentatives par minute (par email et par IP)
+      login_throttling:
+        max_attempts: 5
+        interval: "1 minute"
     api:
       pattern: ^/api
       stateless: true
       jwt: ~
 
-  # Easy way to control access for large sections of your site
-  # Note: Only the *first* access control that matches will be used
+  # Seule la première règle qui correspond s'applique : du plus précis au plus général
   access_control:
-    - { path: ^api/login, roles: PUBLIC_ACCESS }
+    # Accès public
+    - { path: ^/api/login, roles: PUBLIC_ACCESS }
+    - { path: ^/api/register$, roles: PUBLIC_ACCESS, methods: [POST] }
+    - { path: ^/api/send-email$, roles: PUBLIC_ACCESS, methods: [POST] }
     - { path: ^/api/doc, roles: PUBLIC_ACCESS }
-    - { path: ^/api, roles: PUBLIC_ACCESS }
+    - { path: ^/api/(news|palmares|categorie|boxeurs), roles: PUBLIC_ACCESS, methods: [GET] }
+
+    # Membres connectés (le contrôleur vérifie qu'on ne touche qu'à son propre compte)
+    - { path: ^/api/me, roles: ROLE_USER }
+    - { path: ^/api/users/\d+(/(upload-profile-picture|profile-picture))?$, roles: ROLE_USER, methods: [GET, PUT, POST] }
+    - { path: ^/api/(messages|messageries|upload), roles: ROLE_USER }
+
+    # Tout le reste de l'API (écriture, gestion des utilisateurs…) : administrateurs
+    - { path: ^/api, roles: ROLE_ADMIN }
 
 when@test:
   security:

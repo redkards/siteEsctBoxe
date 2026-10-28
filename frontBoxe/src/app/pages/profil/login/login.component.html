@@ -1,4 +1,3 @@
-<p>login works!</p>
 <div class="container colonne">
   <form
     [formGroup]="loginForm"
@@ -9,7 +8,7 @@
     <h2>Connexion</h2>
     <br />
     <div class="input">
-      <img class="icon" src="icon\utilisateur.png" alt="identifiant" />
+      <img class="icon" src="icon/utilisateur.png" alt="identifiant" />
       <input
         class="inputId"
         type="text"
@@ -20,7 +19,7 @@
     </div>
     <br />
     <div class="input">
-      <img class="icon" src="icon\cadenas.png" alt="identifiant" />
+      <img class="icon" src="icon/cadenas.png" alt="mot de passe" />
       <input
         class="inputMdp"
         type="password"
@@ -32,7 +31,10 @@
 
     <br />
 
-    <button type="submit" onsubmit="getRole()">Connexion</button>
+    @if (errorMessage) {
+    <span role="alert">{{ errorMessage }}</span>
+    }
+    <button type="submit">Connexion</button>
     @if (submitted && (form['username'].invalid || form['password'].invalid)) {
     <span>les éléments saisis sont incorrects</span>
     }

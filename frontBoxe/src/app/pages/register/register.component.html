@@ -1,4 +1,4 @@
-<body>
+<section>
   <div class="title">
     <h4>connexion et inscription</h4>
   </div>
@@ -11,7 +11,7 @@
       <h2>connexion</h2>
       <br />
       <div class="input">
-        <label for="email">Email</label>
+        <label for="username">Email</label>
         <input
           type="email"
           placeholder="entrez votre email"
@@ -31,6 +31,9 @@
           required
         />
       </div>
+      @if (errorMessage) {
+      <p class="error" role="alert">{{ errorMessage }}</p>
+      }
       <button type="submit">Se connecter</button>
     </form>
   </div>
@@ -43,11 +46,11 @@
         routerLink="/inscription"
         src="img/boxeur dessin2.png"
         class="card-img-top"
-        alt="..."
+        alt="Créer un compte"
       />
       <div class="card-body">
         <h5 class="card-title" routerLink="/inscription">S'inscrire</h5>
       </div>
     </div>
   </div>
-</body>
+</section>

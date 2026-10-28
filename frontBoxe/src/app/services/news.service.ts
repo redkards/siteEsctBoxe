@@ -1,4 +1,5 @@
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import News from '../models/news.models';
@@ -7,7 +8,7 @@ import News from '../models/news.models';
   providedIn: 'root',
 })
 export class NewsService {
-  private apiUrl = 'http://localhost:8000/api'; // URL de l'API Symfony
+  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 

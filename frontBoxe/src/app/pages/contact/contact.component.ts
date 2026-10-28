@@ -1,4 +1,5 @@
 import { CommonModule, DatePipe } from '@angular/common';
+import { environment } from '../../../environments/environment';
 import { Component, OnInit } from '@angular/core';
 import { MessageService } from '../../services/message.service';
 import { AuthService } from '../../services/auth.service';
@@ -84,7 +85,7 @@ export class ContactComponent {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     // Envoyer les données à l'API Symfony
     this.http
-      .post('http://localhost:8000/api/send-email', this.formData, { headers })
+      .post(`${environment.apiUrl}/send-email`, this.formData, { headers })
       .subscribe(
         (response) => {
           console.log('Email envoyé avec succès', response);

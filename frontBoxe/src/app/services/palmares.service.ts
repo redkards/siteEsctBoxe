@@ -1,6 +1,7 @@
 // src/app/services/palmares.service.ts
 
 import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Palmares } from '../models/palmares.models';
@@ -9,7 +10,7 @@ import { Palmares } from '../models/palmares.models';
   providedIn: 'root',
 })
 export class PalmaresService {
-  private apiUrl = 'http://localhost:8000/api/palmares'; // URL de l'API Symfony
+  private apiUrl = `${environment.apiUrl}/palmares`;
 
   constructor(private http: HttpClient) {}
 

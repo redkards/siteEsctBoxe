@@ -38,7 +38,7 @@ button {
   font-size: 2rem;
 }
 
-body {
+:host > section {
   margin: 30px;
   border-radius: 15px;
   background: linear-gradient(

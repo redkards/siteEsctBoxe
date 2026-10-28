@@ -1,4 +1,4 @@
-body {
+:host > section {
   background-color: lightgray;
 }
 
