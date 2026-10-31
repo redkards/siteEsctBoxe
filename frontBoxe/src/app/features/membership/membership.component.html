@@ -1,0 +1,229 @@
+<section class="bx-page-head">
+  <div class="bx-container">
+    <nav class="bx-breadcrumb" aria-label="Fil d'Ariane"><a routerLink="/">Accueil</a><span aria-hidden="true">/</span><span>Inscription</span></nav>
+    <h1>Inscription saison {{ season }}</h1>
+    <p>Quelques minutes suffisent. Le club vous recontacte pour finaliser le dossier et caler votre séance d'essai gratuite.</p>
+  </div>
+</section>
+
+<section class="bx-section" id="inscription-form">
+  <div class="bx-container layout">
+    @if (done(); as d) {
+      <div class="bx-panel success" role="status">
+        <span class="success__icon" aria-hidden="true">✓</span>
+        <h2>Merci {{ d.firstName }}, c'est envoyé !</h2>
+        <p>
+          Votre demande d'inscription n°{{ d.id }} est <strong>en attente de validation</strong>. Un coach vous recontacte
+          rapidement à l'adresse <strong>{{ d.email }}</strong>.
+        </p>
+        <h3>Prochaines étapes</h3>
+        <ol>
+          <li>Préparez les <a routerLink="/tarifs">documents du dossier</a> (licence, certificat médical@if (minor()) {, autorisation parentale}).</li>
+          <li>Venez à votre séance d'essai : <a routerLink="/planning">consultez le planning</a>.</li>
+          <li>Réglez la cotisation au club pour valider l'inscription.</li>
+        </ol>
+        <div class="success__actions">
+          @if (auth.isLoggedIn()) {
+            <a routerLink="/mon-espace" class="bx-btn bx-btn--primary">Suivre mon inscription</a>
+          } @else {
+            <a routerLink="/inscription-compte" class="bx-btn bx-btn--primary">Créer un compte pour suivre ma demande</a>
+          }
+          <a routerLink="/" class="bx-btn bx-btn--outline">Retour à l'accueil</a>
+        </div>
+      </div>
+    } @else {
+      <div class="wizard">
+        <ol class="progress" aria-label="Étapes de l'inscription">
+          @for (s of steps(); track s; let i = $index) {
+            <li [class.is-done]="i < index()" [class.is-current]="i === index()" [attr.aria-current]="i === index() ? 'step' : null">
+              <button type="button" (click)="goTo(i)" [disabled]="i >= index()">
+                <span class="progress__num" aria-hidden="true">{{ i < index() ? '✓' : i + 1 }}</span>
+                <span class="progress__label">{{ labels[s] }}</span>
+              </button>
+            </li>
+          }
+        </ol>
+
+        @if (!auth.isLoggedIn()) {
+          <p class="bx-hint login-hint">Déjà membre ? <a routerLink="/connexion" [queryParams]="{ returnUrl: '/inscription' }">Connectez-vous</a> pour préremplir le formulaire et suivre votre demande.</p>
+        }
+
+        @if (error(); as e) {
+          <div class="bx-alert bx-alert--error" role="alert">{{ e }}</div>
+        }
+
+        <form [formGroup]="form" (ngSubmit)="step() === 'validation' ? submit() : next()" novalidate class="bx-panel">
+          <h2 class="step-title">
+            <span class="bx-sr-only">Étape {{ index() + 1 }} sur {{ steps().length }} : </span>{{ labels[step()] }}
+          </h2>
+
+          @switch (step()) {
+            @case ('identite') {
+              <fieldset formGroupName="identite">
+                <legend class="bx-sr-only">Identité du futur adhérent</legend>
+                <div class="bx-row">
+                  <div class="bx-field">
+                    <label for="firstName">Prénom <span class="bx-req" aria-hidden="true">*</span></label>
+                    <input id="firstName" class="bx-input" formControlName="firstName" autocomplete="given-name" required [attr.aria-invalid]="!!fieldError('identite', 'firstName')" />
+                    @if (fieldError('identite', 'firstName'); as e) { <p class="bx-error">{{ e }}</p> }
+                  </div>
+                  <div class="bx-field">
+                    <label for="lastName">Nom <span class="bx-req" aria-hidden="true">*</span></label>
+                    <input id="lastName" class="bx-input" formControlName="lastName" autocomplete="family-name" required [attr.aria-invalid]="!!fieldError('identite', 'lastName')" />
+                    @if (fieldError('identite', 'lastName'); as e) { <p class="bx-error">{{ e }}</p> }
+                  </div>
+                </div>
+                <div class="bx-row">
+                  <div class="bx-field">
+                    <label for="email">Email <span class="bx-req" aria-hidden="true">*</span></label>
+                    <input id="email" type="email" class="bx-input" formControlName="email" autocomplete="email" required [attr.aria-invalid]="!!fieldError('identite', 'email')" />
+                    @if (fieldError('identite', 'email'); as e) { <p class="bx-error">{{ e }}</p> }
+                  </div>
+                  <div class="bx-field">
+                    <label for="phone">Téléphone <span class="bx-req" aria-hidden="true">*</span></label>
+                    <input id="phone" type="tel" class="bx-input" formControlName="phone" autocomplete="tel" required [attr.aria-invalid]="!!fieldError('identite', 'phone')" />
+                    @if (fieldError('identite', 'phone'); as e) { <p class="bx-error">{{ e }}</p> }
+                  </div>
+                </div>
+                <div class="bx-field birth">
+                  <label for="birthDate">Date de naissance <span class="bx-req" aria-hidden="true">*</span></label>
+                  <input id="birthDate" type="date" class="bx-input" formControlName="birthDate" autocomplete="bday" required aria-describedby="birth-hint" [attr.aria-invalid]="!!fieldError('identite', 'birthDate')" />
+                  @if (fieldError('identite', 'birthDate'); as e) {
+                    <p class="bx-error">{{ e }}</p>
+                  } @else if (age() !== null) {
+                    <p class="bx-hint" id="birth-hint" aria-live="polite">
+                      {{ age() }} ans
+                      @if (minor()) {
+                        · <strong>mineur</strong> : un responsable légal sera demandé.
+                      }
+                    </p>
+                  } @else {
+                    <p class="bx-hint" id="birth-hint">Pour les enfants, indiquez la date de naissance de l'enfant.</p>
+                  }
+                </div>
+              </fieldset>
+            }
+
+            @case ('pratique') {
+              <fieldset formGroupName="pratique" class="choices">
+                <legend class="bx-label">Discipline <span class="bx-req" aria-hidden="true">*</span></legend>
+                @if (disciplines.error()) {
+                  <app-load-error [message]="disciplines.error()!" (retry)="disciplines.retry()" />
+                } @else if (disciplines.loading() && !disciplines.data()) {
+                  <span class="bx-skeleton sk"></span>
+                } @else {
+                  <div class="options">
+                    @for (d of disciplines.data(); track d.id) {
+                      <label class="option" [class.is-checked]="selectedDiscipline()?.id === d.id">
+                        <input type="radio" formControlName="discipline" [value]="d.id" name="discipline" />
+                        <span class="option__body">
+                          <strong>{{ d.name }}</strong>
+                          @if (d.minAge) { <small>Dès {{ d.minAge }} ans</small> }
+                        </span>
+                      </label>
+                    }
+                  </div>
+                }
+                @if (fieldError('pratique', 'discipline'); as e) { <p class="bx-error">{{ e }}</p> }
+                @if (tooYoung()) {
+                  <div class="bx-alert bx-alert--warning">Cette discipline est ouverte à partir de {{ selectedDiscipline()?.minAge }} ans : le club vous proposera le cours adapté.</div>
+                }
+              </fieldset>
+
+              <fieldset formGroupName="pratique" class="choices">
+                <legend class="bx-label">Formule <small class="bx-muted">(facultatif)</small></legend>
+                <div class="options">
+                  <label class="option" [class.is-checked]="!selectedPricing()">
+                    <input type="radio" formControlName="pricing" [value]="0" name="pricing" />
+                    <span class="option__body"><strong>Je ne sais pas encore</strong><small>Le club me conseillera</small></span>
+                  </label>
+                  @for (p of sortedPricing(); track p.id) {
+                    <label class="option" [class.is-checked]="selectedPricing()?.id === p.id">
+                      <input type="radio" formControlName="pricing" [value]="p.id" name="pricing" />
+                      <span class="option__body">
+                        <strong>{{ p.label }}</strong>
+                        <small>{{ p.priceCents | euros }} {{ periods[p.period] }}@if (p.audience) { · {{ p.audience }} }</small>
+                      </span>
+                    </label>
+                  }
+                </div>
+              </fieldset>
+
+              <div class="bx-field" formGroupName="pratique">
+                <label for="message">Un mot pour le club <small class="bx-muted">(facultatif)</small></label>
+                <textarea id="message" class="bx-input" formControlName="message" maxlength="1000" placeholder="Expérience en boxe, objectifs, disponibilités…"></textarea>
+              </div>
+            }
+
+            @case ('responsable') {
+              <div class="bx-alert bx-alert--info">
+                Le futur adhérent a {{ age() }} ans. L'inscription d'un mineur se fait sous la responsabilité d'un parent ou
+                tuteur légal, qui devra signer l'<a routerLink="/tarifs">autorisation parentale</a>.
+              </div>
+              <div class="bx-field" formGroupName="responsable">
+                <label for="legalGuardian">Nom, prénom et lien du responsable légal <span class="bx-req" aria-hidden="true">*</span></label>
+                <input id="legalGuardian" class="bx-input" formControlName="legalGuardian" placeholder="Ex. : Marie Dupont (mère)" required [attr.aria-invalid]="!!fieldError('responsable', 'legalGuardian')" />
+                @if (fieldError('responsable', 'legalGuardian'); as e) { <p class="bx-error">{{ e }}</p> }
+                <p class="bx-hint">Les coordonnées saisies à l'étape 1 doivent être celles du responsable légal.</p>
+              </div>
+            }
+
+            @case ('validation') {
+              <dl class="recap">
+                <div><dt>Adhérent</dt><dd>{{ form.value.identite?.firstName }} {{ form.value.identite?.lastName }} ({{ age() }} ans)</dd></div>
+                <div><dt>Contact</dt><dd>{{ form.value.identite?.email }} · {{ form.value.identite?.phone }}</dd></div>
+                <div><dt>Discipline</dt><dd>{{ selectedDiscipline()?.name }}</dd></div>
+                <div><dt>Formule</dt><dd>{{ selectedPricing()?.label ?? 'À définir avec le club' }}</dd></div>
+                @if (minor()) {
+                  <div><dt>Responsable légal</dt><dd>{{ form.value.responsable?.legalGuardian }}</dd></div>
+                }
+                <div><dt>Saison</dt><dd>{{ season }}</dd></div>
+              </dl>
+
+              <div formGroupName="validation">
+                <label class="bx-check">
+                  <input type="checkbox" formControlName="medicalCertificate" />
+                  <span>Je dispose (ou fournirai avant la première séance) d'un <strong>certificat médical</strong> de non contre-indication à la boxe de moins d'un an.</span>
+                </label>
+                <label class="bx-check">
+                  <input type="checkbox" formControlName="consent" [attr.aria-invalid]="!!fieldError('validation', 'consent')" />
+                  <span>
+                    J'accepte que l'ESC Boxe Tergnier traite ces données pour gérer mon inscription, conformément à la
+                    <a routerLink="/confidentialite" target="_blank">politique de confidentialité</a>. <span class="bx-req" aria-hidden="true">*</span>
+                  </span>
+                </label>
+                @if (fieldError('validation', 'consent'); as e) { <p class="bx-error">{{ e }}</p> }
+              </div>
+            }
+          }
+
+          <div class="nav">
+            @if (index() > 0) {
+              <button type="button" class="bx-btn bx-btn--ghost" (click)="previous()"><span aria-hidden="true">←</span> Retour</button>
+            }
+            @if (step() === 'validation') {
+              <button type="submit" class="bx-btn bx-btn--primary bx-btn--lg" [disabled]="submitting()">
+                {{ submitting() ? 'Envoi…' : 'Envoyer mon inscription' }}
+              </button>
+            } @else {
+              <button type="submit" class="bx-btn bx-btn--primary bx-btn--lg">Continuer <span class="bx-arrow" aria-hidden="true">→</span></button>
+            }
+          </div>
+        </form>
+      </div>
+
+      <aside class="aside">
+        <img src="img/eduTergnier2.jpg" alt="Jeunes boxeurs du club à l'entraînement" loading="lazy" />
+        <div class="bx-panel aside__box">
+          <h2>Bon à savoir</h2>
+          <ul>
+            <li>Première séance d'essai <strong>gratuite</strong>.</li>
+            <li>Gants prêtés pour l'essai.</li>
+            <li>Inscription validée après dossier complet et règlement.</li>
+          </ul>
+          <a routerLink="/tarifs" class="bx-link">Tarifs et documents <span class="bx-arrow" aria-hidden="true">→</span></a>
+        </div>
+      </aside>
+    }
+  </div>
+</section>

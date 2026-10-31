@@ -1,52 +1,75 @@
-<app-auth-shell eyebrow="Bon retour" heading="Connexion">
+<app-auth-shell eyebrow="Espace membre" heading="Connexion" quote="Gants, protège-dents, mental : on remonte sur le ring.">
   @if (error(); as message) {
-    <div class="pv-alert pv-alert--error" role="alert">
+    <div class="bx-alert bx-alert--error" role="alert">
       {{ message }}
       @if (notVerified()) {
         <br />
-        <button type="button" class="link-btn" (click)="resend()">Renvoyer le lien de vérification</button>
+        <button type="button" class="link-btn" (click)="resend()" [disabled]="resending()">
+          {{ resending() ? 'Envoi…' : 'Renvoyer le lien de vérification' }}
+        </button>
       }
     </div>
   }
   @if (resendMessage(); as message) {
-    <div class="pv-alert pv-alert--success" role="status">{{ message }}</div>
+    <div class="bx-alert bx-alert--info" role="status">{{ message }}</div>
   }
 
-  <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
-    <div class="pv-field">
-      <label for="email">Email</label>
-      <input id="email" class="pv-input" type="email" formControlName="email" autocomplete="email" />
-      @if (form.controls.email.touched && form.controls.email.invalid) {
-        <p class="pv-error">Saisissez une adresse email valide.</p>
+  <form [formGroup]="form" (ngSubmit)="submit()" novalidate aria-label="Connexion à l'espace membre">
+    <div class="bx-field">
+      <label for="login-email">Email <span class="bx-req" aria-hidden="true">*</span></label>
+      <input
+        id="login-email"
+        class="bx-input"
+        type="email"
+        formControlName="email"
+        autocomplete="email"
+        required
+        [attr.aria-invalid]="showError('email')"
+        [attr.aria-describedby]="showError('email') ? 'login-email-error' : null"
+      />
+      @if (showError('email')) {
+        <p class="bx-error" id="login-email-error">Saisissez une adresse email valide.</p>
       }
     </div>
 
-    <div class="pv-field">
-      <label for="password">Mot de passe</label>
+    <div class="bx-field">
+      <label for="login-password">Mot de passe <span class="bx-req" aria-hidden="true">*</span></label>
       <div class="password">
         <input
-          id="password"
-          class="pv-input"
+          id="login-password"
+          class="bx-input"
           [type]="showPassword() ? 'text' : 'password'"
           formControlName="password"
           autocomplete="current-password"
+          required
+          [attr.aria-invalid]="showError('password')"
+          [attr.aria-describedby]="showError('password') ? 'login-password-error' : null"
         />
-        <button type="button" class="password__toggle" (click)="showPassword.set(!showPassword())">
-          {{ showPassword() ? 'Masquer' : 'Afficher' }}
+        <button
+          type="button"
+          class="password__toggle"
+          [attr.aria-pressed]="showPassword()"
+          aria-controls="login-password"
+          (click)="showPassword.set(!showPassword())"
+        >
+          {{ showPassword() ? 'Masquer' : 'Afficher' }}<span class="bx-sr-only"> le mot de passe</span>
         </button>
       </div>
-      @if (form.controls.password.touched && form.controls.password.invalid) {
-        <p class="pv-error">Le mot de passe est obligatoire.</p>
+      @if (showError('password')) {
+        <p class="bx-error" id="login-password-error">Le mot de passe est obligatoire.</p>
       }
     </div>
 
-    <button type="submit" class="pv-btn pv-btn--primary pv-btn--lg pv-btn--block" [disabled]="loading()">
+    <button type="submit" class="bx-btn bx-btn--primary bx-btn--lg bx-btn--block" [disabled]="loading()" [attr.aria-busy]="loading()">
       {{ loading() ? 'Connexion…' : 'Se connecter' }}
       @if (!loading()) {
-        <span class="pv-arrow" aria-hidden="true">→</span>
+        <span class="bx-arrow" aria-hidden="true">→</span>
       }
     </button>
   </form>
 
-  <p class="switch">Pas encore membre ? <a routerLink="/inscription">Créer un compte</a></p>
+  <p class="switch">Pas encore de compte ? <a routerLink="/inscription-compte" [queryParams]="returnUrl() ? { returnUrl: returnUrl() } : {}">Créer un compte</a></p>
+  <p class="switch switch--sub">
+    Vous souhaitez vous inscrire au club ? <a routerLink="/inscription">Formulaire d'adhésion</a>
+  </p>
 </app-auth-shell>
