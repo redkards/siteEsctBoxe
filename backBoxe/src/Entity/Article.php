@@ -2,21 +2,24 @@
 
 namespace App\Entity;
 
-use App\Enum\ArticleScope;
+use App\Entity\Behavior\SluggableInterface;
+use App\Enum\ArticleCategory;
 use App\Repository\ArticleRepository;
+use App\Validator\ImagePath;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Serializer\Attribute\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Actualité. Non publiée tant que publishedAt est vide ou dans le futur.
+ * Actualité du club. Non publiée tant que publishedAt est vide ou dans le futur.
  */
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 #[ORM\Index(name: 'IDX_ARTICLE_PUBLISHED_AT', columns: ['published_at'])]
 #[UniqueEntity(fields: ['slug'], message: 'Ce slug est déjà utilisé.')]
-class Article
+class Article implements SluggableInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -39,20 +42,10 @@ class Article
     #[Groups(['article:list', 'article:read'])]
     private ?string $slug = null;
 
-    /**
-     * Ajout par rapport au dossier de conception : affiché sur les cartes (Stratégie, Tournois…)
-     */
-    #[ORM\Column(length: 50, nullable: true)]
-    #[Assert\Length(max: 50)]
-    #[Groups(['article:list', 'article:read'])]
-    private ?string $category = null;
-
-    /**
-     * France ou International : deux colonnes « actualités » sur l'accueil
-     */
-    #[ORM\Column(length: 20, enumType: ArticleScope::class, options: ['default' => 'france'])]
+    #[ORM\Column(length: 20, enumType: ArticleCategory::class)]
     #[Assert\NotNull]
-    private ArticleScope $scope = ArticleScope::France;
+    #[Groups(['article:list', 'article:read'])]
+    private ArticleCategory $category = ArticleCategory::Club;
 
     #[ORM\Column(length: 400)]
     #[Assert\NotBlank]
@@ -61,7 +54,7 @@ class Article
     private ?string $excerpt = null;
 
     /**
-     * HTML saisi dans le back-office (rédacteurs de confiance)
+     * HTML simple saisi dans le back-office (rédacteurs de confiance)
      */
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank]
@@ -69,9 +62,9 @@ class Article
     private ?string $content = null;
 
     #[ORM\Column(length: 500, nullable: true)]
-    #[Assert\Url(requireTld: true)]
+    #[ImagePath]
     #[Groups(['article:list', 'article:read'])]
-    private ?string $imageUrl = null;
+    private ?string $coverImage = null;
 
     #[ORM\Column(nullable: true)]
     #[Groups(['article:list', 'article:read'])]
@@ -110,40 +103,21 @@ class Article
         return $this;
     }
 
-    public function getCategory(): ?string
+    public function getSlugSource(): string
+    {
+        return (string) $this->title;
+    }
+
+    public function getCategory(): ArticleCategory
     {
         return $this->category;
     }
 
-    public function setCategory(?string $category): static
+    public function setCategory(ArticleCategory $category): static
     {
         $this->category = $category;
 
         return $this;
-    }
-
-    public function getScope(): ArticleScope
-    {
-        return $this->scope;
-    }
-
-    public function setScope(ArticleScope $scope): static
-    {
-        $this->scope = $scope;
-
-        return $this;
-    }
-
-    #[Groups(['article:list', 'article:read'])]
-    public function getScopeValue(): string
-    {
-        return $this->scope->value;
-    }
-
-    #[Groups(['article:list', 'article:read'])]
-    public function getScopeLabel(): string
-    {
-        return $this->scope->label();
     }
 
     public function getExcerpt(): ?string
@@ -170,14 +144,14 @@ class Article
         return $this;
     }
 
-    public function getImageUrl(): ?string
+    public function getCoverImage(): ?string
     {
-        return $this->imageUrl;
+        return $this->coverImage;
     }
 
-    public function setImageUrl(?string $imageUrl): static
+    public function setCoverImage(?string $coverImage): static
     {
-        $this->imageUrl = $imageUrl;
+        $this->coverImage = $coverImage;
 
         return $this;
     }
@@ -194,6 +168,11 @@ class Article
         return $this;
     }
 
+    public function isPublished(): bool
+    {
+        return null !== $this->publishedAt && $this->publishedAt <= new \DateTimeImmutable();
+    }
+
     public function getAuthor(): ?User
     {
         return $this->author;
@@ -207,12 +186,15 @@ class Article
     }
 
     /**
-     * Pseudo public de l'auteur (jamais son email)
+     * Nom public de l'auteur, jamais son email : {firstName, lastName} ou null
+     *
+     * @return array{firstName: ?string, lastName: ?string}|null
      */
-    #[Groups(['article:list', 'article:read'])]
-    public function getAuthorPseudo(): ?string
+    #[Groups(['article:read'])]
+    #[SerializedName('author')]
+    public function getAuthorName(): ?array
     {
-        return $this->author && !$this->author->isAnonymized() ? $this->author->getPseudo() : null;
+        return PublicName::of($this->author);
     }
 
     public function __toString(): string
