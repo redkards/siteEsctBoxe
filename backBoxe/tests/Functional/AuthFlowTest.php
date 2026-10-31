@@ -16,7 +16,8 @@ class AuthFlowTest extends ApiTestCase
     private function register(array $override = []): array
     {
         return $this->jsonRequest('POST', '/api/register', array_merge([
-            'pseudo' => 'joueur_1',
+            'firstName' => 'Alice',
+            'lastName' => 'Démo',
             'email' => 'Joueur@Example.com',
             'password' => self::PASSWORD,
             'acceptCgu' => true,
@@ -78,15 +79,15 @@ class AuthFlowTest extends ApiTestCase
         self::assertResponseStatusCodeSame(422);
     }
 
-    public function testRegisterRejectsDuplicateEmailAndPseudo(): void
+    public function testRegisterRejectsDuplicateEmailButAllowsSharedNames(): void
     {
         $this->register();
-        $data = $this->register(['pseudo' => 'autre']);
+        $data = $this->register(['firstName' => 'Autre']);
         self::assertResponseStatusCodeSame(409);
         self::assertSame('Un compte existe déjà avec cet email.', $data['message']);
 
         $this->register(['email' => 'autre@example.com']);
-        self::assertResponseStatusCodeSame(409);
+        self::assertResponseStatusCodeSame(201);
     }
 
     public function testLoginIsRefusedUntilEmailIsVerified(): void
@@ -117,9 +118,10 @@ class AuthFlowTest extends ApiTestCase
 
         $me = $this->jsonRequest('GET', '/api/me', [], ['Authorization' => 'Bearer '.$auth['token']]);
         self::assertResponseIsSuccessful();
-        self::assertSame('joueur_1', $me['pseudo']);
+        self::assertSame('Alice', $me['firstName']);
+        self::assertSame('Démo', $me['lastName']);
         self::assertSame(['ROLE_USER'], $me['roles']);
-        self::assertNotNull($me['lastLoginAt']);
+        self::assertNotNull($me['createdAt']);
         self::assertArrayNotHasKey('password', $me);
 
         $refreshed = $this->jsonRequest('POST', '/api/token/refresh', ['refresh_token' => $auth['refresh_token']]);

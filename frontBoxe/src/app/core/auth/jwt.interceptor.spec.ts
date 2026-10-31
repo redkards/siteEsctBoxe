@@ -53,6 +53,12 @@ describe('jwtInterceptor', () => {
     expect(http.expectOne(`${api}/token/refresh`).request.headers.has('Authorization')).toBeFalse();
   });
 
+  it("ne transmet pas le jeton à une URL dont le préfixe ressemble à l’API", () => {
+    login();
+    client.get(`${api}-externe/me`).subscribe();
+    expect(http.expectOne(`${api}-externe/me`).request.headers.has('Authorization')).toBeFalse();
+  });
+
   it("laisse passer les visiteurs sans en-tête", () => {
     client.get(`${api}/boxers`).subscribe();
 

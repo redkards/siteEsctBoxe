@@ -10,10 +10,12 @@ BACK="${APP_DIR}/backBoxe"
 PHP_BIN="${PHP_BIN:-php}"
 COMPOSER="${COMPOSER_BIN:-composer}"
 
+SOURCE_BRANCH="${SOURCE_BRANCH:-v2}"
+
 cd "${APP_DIR}"
-echo "🥊 Récupération du code (branche main)"
-git fetch --quiet origin main
-git reset --hard --quiet origin/main
+echo "🥊 Récupération du code (branche ${SOURCE_BRANCH})"
+git fetch --quiet origin "${SOURCE_BRANCH}"
+git reset --hard --quiet "origin/${SOURCE_BRANCH}"
 git log --oneline -1
 
 cd "${BACK}"

@@ -33,3 +33,10 @@ Comptes de démo (mot de passe `Demo1234!`) : `demo@esctboxe.local`, `coach@esct
 - Commit + push à chaque étape validée (tests verts). SemVer : `CHANGELOG.md`, version de `frontBoxe/package.json`, tag `vX.Y.Z`.
 - Photos : uniquement celles du club (`frontBoxe/public/img`). Données de démonstration fictives, marquées comme telles.
 - Décisions et rapports d'étape : format PARADOXX dans `docs/paradoxx/` + page Notion « ESCT Boxe — Site du club » du QG.
+
+## Production rapide et économie de tokens — demande du propriétaire, 31/10/2026
+- Réutiliser la v2 de Claude et la méthode Poker Winners.
+- Lectures ciblées, sorties courtes, bilan dans MEMOIRE.md ; éviter les relectures et tests redondants.
+- Aucun plafond numérique de tokens fourni : ne pas en inventer. Aucun service IA payant ajouté.
+- Trois thèmes conservés pour le choix du propriétaire : Fight Night, Azur, Éditorial.
+- Travail simplifié et efficace ; en fin de lot, bilan Markdown concis plutôt que document supplémentaire.

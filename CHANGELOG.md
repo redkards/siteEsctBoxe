@@ -5,6 +5,15 @@ qui sera la **2.0.0** (après confirmation du propriétaire). Chaque version re�
 
 ## [Non publié]
 
+## [2.0.0-beta.2] — 2026-10-31 — Reprise et stabilisation
+
+- Fixtures boxe à la place des données poker et services inexistants.
+- Tests auth/RGPD adaptés au club, parcours publics, inscriptions, messagerie et accès staff testés.
+- Migration initiale MariaDB ajoutée pour une base dédiée vide ; exécution serveur à valider.
+- Scripts corrigés : base `_esct`, sortie Angular, domaine public dédié, branche v2.
+- Jeton JWT limité aux URL de l'API. Documentation et mémoire de reprise actualisées.
+- Trois thèmes de Claude conservés ; choix final en attente. Aucun déploiement.
+
 ## [2.0.0-beta.1] — 2026-10-31 — Refonte v2 sur le modèle Poker Winners
 
 ### Ajouté

@@ -2,184 +2,98 @@
 
 namespace App\DataFixtures;
 
-use App\Content\DefaultContent;
-use App\Entity\Article;
-use App\Entity\ForumCategory;
-use App\Entity\ForumPost;
-use App\Entity\ForumSubscription;
-use App\Entity\ForumTopic;
-use App\Entity\Product;
-use App\Entity\User;
-use App\Entity\PremiumSubscription;
-use App\Enum\ProductCategory;
-use Symfony\Component\String\Slugger\SluggerInterface;
-use App\Entity\Video;
-use App\Enum\PremiumPlan;
-use App\Enum\PremiumSubscriptionStatus;
-use App\Enum\VideoLevel;
-use App\Service\ArticleImporter;
+use App\Content\ClubInfo;
+use App\Entity\{Article, Boxer, Coach, Discipline, Fight, Gala, Membership, Message, Partner, Pricing, TrainingSlot, User, Venue};
+use App\Enum\{ArticleCategory, Audience, BoxerLevel, FightMethod, FightResult, GalaType, PricingPeriod, Sex};
 use App\Service\GdprService;
-use App\Service\TournamentImporter;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-/**
- * Données de développement uniquement (php bin/console doctrine:fixtures:load).
- */
+/** Données fictives pour le développement. Ne jamais charger sur une base de production. */
 class AppFixtures extends Fixture
 {
-    public const DEMO_PASSWORD = 'Demo-Poker-2026!';
+    public const DEMO_PASSWORD = 'Demo1234!';
 
     public function __construct(
         private readonly UserPasswordHasherInterface $hasher,
         private readonly GdprService $gdpr,
-        private readonly ArticleImporter $importer,
-        private readonly TournamentImporter $tournamentImporter,
-        private readonly SluggerInterface $slugger,
-        #[Autowire('%kernel.project_dir%')]
-        private readonly string $projectDir,
     ) {
     }
 
     public function load(ObjectManager $manager): void
     {
-        $accounts = [
-            ['demo@pokervitrine.local', 'demo', []],
-            ['admin@pokervitrine.local', 'admin', ['ROLE_ADMIN']],
-            ['premium@pokervitrine.local', 'premium', []],
-        ];
-
         $users = [];
-        foreach ($accounts as [$email, $pseudo, $roles]) {
-            $user = (new User())
-                ->setEmail($email)
-                ->setPseudo($pseudo)
-                ->setRoles($roles)
-                ->setIsVerified(true);
+        foreach ([['demo', 'Léa', []], ['coach', 'Camille', ['ROLE_COACH']], ['admin', 'Alex', ['ROLE_ADMIN']]] as [$key, $name, $roles]) {
+            $user = (new User())->setEmail($key.'@esctboxe.local')->setFirstName($name)->setLastName('Démo')
+                ->setBirthDate(new \DateTimeImmutable('2000-05-12'))->setRoles($roles)->setIsVerified(true);
             $user->setPassword($this->hasher->hashPassword($user, self::DEMO_PASSWORD));
             $this->gdpr->recordConsent($user, '127.0.0.1');
-            if ('premium' === $pseudo) {
-                // Compte de démo Premium (1 an) ; « demo » reste non premium
-                $user->setPremiumUntil(new \DateTimeImmutable('+1 year'));
-                $manager->persist((new PremiumSubscription($user, PremiumPlan::Annuel))
-                    ->setStatus(PremiumSubscriptionStatus::Active)
-                    ->setStartedAt(new \DateTimeImmutable())
-                    ->setEndsAt($user->getPremiumUntil()));
-            }
-
             $manager->persist($user);
-            $users[$pseudo] = $user;
+            $users[$key] = $user;
         }
 
-        $this->loadForum($manager, $users);
-
-        // Brouillon : n'apparaît pas dans l'API publique
-        $manager->persist((new Article())
-            ->setTitle('Brouillon : bilan de la saison')
-            ->setCategory('Actualité')
-            ->setExcerpt('Article en cours de rédaction.')
-            ->setContent('<p>À compléter.</p>')
-            ->setAuthor($users['admin']));
-
-        foreach (DefaultContent::VIDEOS as $i => [$title, $url, $category, $level, $description]) {
-            $manager->persist((new Video())
-                ->setTitle($title)
-                ->setYoutubeUrl($url)
-                ->setCategory($category)
-                ->setLevel($level)
-                ->setPremium(VideoLevel::Avance === $level)
-                ->setDescription($description)
-                ->setPublishedAt(new \DateTimeImmutable(sprintf('-%d days', 1 + $i * 3))));
+        $disciplines = [];
+        foreach ([
+            ['boxe-anglaise', 'Boxe anglaise', 'Technique, déplacements et précision.', 14, 'training1.jpg'],
+            ['boxe-educative', 'Boxe éducative', 'Apprendre à boxer dans le respect et sans recherche de puissance.', 6, 'training2.jpg'],
+            ['boxe-loisir', 'Boxe loisir', 'Bouger et progresser à son rythme.', 16, 'training3.jpg'],
+        ] as $i => [$slug, $name, $description, $age, $image]) {
+            $discipline = (new Discipline())->setSlug($slug)->setName($name)->setShortDescription($description)
+                ->setDescription('<p>Démonstration : '.$description.' Les modalités réelles sont à confirmer avec le club.</p>')
+                ->setMinAge($age)->setImage('/img/'.$image)->setPosition($i);
+            $manager->persist($discipline);
+            $disciplines[] = $discipline;
         }
-
-        $this->loadShop($manager);
-
+        $coach = (new Coach())->setFirstName('Camille')->setLastName('Démo')->setSlug('camille-demo')
+            ->setRole('Entraîneur — démonstration')->setBio('Profil fictif pour la présentation du site.');
+        foreach ($disciplines as $discipline) $coach->addDiscipline($discipline);
+        $manager->persist($coach);
+        $venue = (new Venue())->setName('Salle de démonstration')->setAddress('Adresse à confirmer avec le club')
+            ->setPostalCode('02700')->setCity('Tergnier')->setDescription('Salle fictive : ne pas utiliser pour se déplacer.');
+        $manager->persist($venue);
+        foreach ([1, 3, 5] as $i => $day) {
+            $manager->persist((new TrainingSlot())->setDayOfWeek($day)->setStartTime('18:00')->setEndTime('19:30')
+                ->setDiscipline($disciplines[$i])->setAudience(Audience::Tous)->setCoach($coach)->setVenue($venue));
+        }
+        $pricings = [];
+        foreach ([['Jeunes — démonstration', Audience::Enfants, 9000], ['Adultes — démonstration', Audience::Adultes, 15000]] as $i => [$label, $audience, $price]) {
+            $pricing = (new Pricing())->setLabel($label)->setAudience($audience)->setPriceCents($price)
+                ->setPeriod(PricingPeriod::Saison)->setDescription('Tarif fictif, à confirmer avant toute inscription.')
+                ->setHighlighted($i === 1)->setPosition($i);
+            $manager->persist($pricing);
+            $pricings[] = $pricing;
+        }
+        $past = (new Gala())->setTitle('Rencontre de démonstration')->setSlug('rencontre-demo')->setType(GalaType::Competition)
+            ->setStartsAt(new \DateTimeImmutable('-14 days'))->setCity('Tergnier')->setVenue('Salle de démonstration')
+            ->setDescription('<p>Événement fictif pour tester les résultats.</p>')->setPublished(true);
+        $manager->persist($past);
+        $manager->persist((new Gala())->setTitle('Gala — démonstration')->setSlug('gala-demo')->setType(GalaType::Gala)
+            ->setStartsAt(new \DateTimeImmutable('+30 days 19:00'))->setCity('Tergnier')->setVenue('Salle de démonstration')
+            ->setDescription('<p>Événement fictif. Aucune billetterie ni date réelle annoncée.</p>')->setPrice(0)->setPublished(true));
+        foreach ([['Alex', Sex::M], ['Sam', Sex::F]] as $i => [$name, $sex]) {
+            $boxer = (new Boxer())->setFirstName($name)->setLastName('Démo')->setSlug(strtolower($name).'-demo')
+                ->setSex($sex)->setBirthDate(new \DateTimeImmutable('2001-06-15'))->setWeightKg(63.5)
+                ->setWeightClass('-63,5 kg')->setLevel(BoxerLevel::Amateur)->setDiscipline($disciplines[0])
+                ->setBio('Boxeur fictif — palmarès de démonstration.')->setWins(1)->setFeatured(true)->setActive(true);
+            $manager->persist($boxer);
+            $manager->persist((new Fight())->setBoxer($boxer)->setDate(new \DateTimeImmutable('-14 days'))
+                ->setOpponent('Adversaire fictif')->setLocation('Tergnier')->setEvent($past)
+                ->setResult(FightResult::Victoire)->setMethod(FightMethod::Points)->setRounds(3));
+        }
+        foreach (['Bienvenue au club — démonstration', 'Préparer sa première séance — démonstration'] as $i => $title) {
+            $manager->persist((new Article())->setTitle($title)->setSlug('actualite-demo-'.($i + 1))->setCategory(ArticleCategory::Club)
+                ->setExcerpt('Contenu de démonstration à remplacer par les actualités du club.')
+                ->setContent('<p>Cette actualité est fictive et permet de vérifier la présentation du site.</p>')
+                ->setCoverImage('/img/training'.($i + 1).'.jpg')->setPublishedAt(new \DateTimeImmutable('-'.($i + 1).' days'))->setAuthor($users['admin']));
+        }
+        $manager->persist((new Membership())->setUser($users['demo'])->setFirstName('Léa')->setLastName('Démo')
+            ->setEmail('demo@esctboxe.local')->setBirthDate(new \DateTimeImmutable('2000-05-12'))
+            ->setDiscipline($disciplines[0])->setPricing($pricings[1])->setSeason(ClubInfo::currentSeason())
+            ->setConsentAt(new \DateTimeImmutable())->setMessage('Inscription fictive pour tester le suivi.'));
+        $manager->persist((new Message())->setSender($users['coach'])->setRecipient($users['demo'])
+            ->setSubject('Bienvenue — démonstration')->setBody('Message fictif du club pour tester votre messagerie.'));
+        $manager->persist((new Partner())->setName('Partenaire de démonstration')->setPosition(0));
         $manager->flush();
-
-        // Vraies actualités sourcées (docs/actualites/*.json), absentes d'un déploiement sans le dossier docs
-        foreach (glob($this->projectDir.'/../docs/actualites/*.json') ?: [] as $file) {
-            $this->importer->importFile($file, $users['admin']);
-        }
-        // Calendrier des tournois vérifié (docs/calendrier/*.json)
-        foreach (glob($this->projectDir.'/../docs/calendrier/*.json') ?: [] as $file) {
-            $this->tournamentImporter->importFile($file);
-        }
     }
-
-    /**
-     * Boutique v2.0 : produits de démonstration génériques (aucune marque ni titre réel).
-     */
-    private function loadShop(ObjectManager $manager): void
-    {
-        foreach (DefaultContent::SHOP_DEMO_PRODUCTS as [$name, $category, $price, $stock, $description]) {
-            $manager->persist((new Product())
-                ->setName($name)
-                ->setSlug($this->slugger->slug($name)->lower()->toString())
-                ->setCategory($category)
-                ->setPriceCents($price)
-                ->setStock($stock)
-                ->setDescription($description)
-                ->setIsPublished(true));
-        }
-    }
-
-    /**
-     * @param array<string, User> $users
-     */
-    private function loadForum(ObjectManager $manager, array $users): void
-    {
-        $categories = [];
-        foreach (DefaultContent::FORUM_CATEGORIES as $position => [$slug, $name, $description]) {
-            $categories[$slug] = (new ForumCategory())
-                ->setSlug($slug)
-                ->setName($name)
-                ->setDescription($description)
-                ->setPosition($position);
-            $manager->persist($categories[$slug]);
-        }
-
-        foreach (self::FORUM_TOPICS as $i => [$slug, $title, $pinned, $messages]) {
-            $start = new \DateTimeImmutable(sprintf('-%d days', 1 + $i * 2));
-            $topic = (new ForumTopic())
-                ->setCategory($categories[$slug])
-                ->setAuthor($users[$messages[0][0]])
-                ->setTitle($title)
-                ->setIsPinned($pinned)
-                ->setCreatedAt($start);
-
-            foreach ($messages as $j => [$pseudo, $content]) {
-                $topic->addPost((new ForumPost())
-                    ->setAuthor($users[$pseudo])
-                    ->setContent($content)
-                    ->setCreatedAt($start->modify(sprintf('+%d hours', $j * 3))));
-            }
-
-            $manager->persist($topic);
-            $manager->persist(new ForumSubscription($users[$messages[0][0]], $topic));
-        }
-    }
-
-    /**
-     * [catégorie, titre, épinglé, [[pseudo, message], …]]
-     *
-     * @var list<array{string, string, bool, list<array{string, string}>}>
-     */
-    private const FORUM_TOPICS = [
-        ['vie-du-site', 'Bienvenue sur le forum : à lire avant de poster', true, [
-            ['admin', "Bienvenue à toutes et à tous !\n\nQuelques règles simples : on reste courtois, on ne partage pas de contenu illégal ni de liens vers des sites de jeu non agréés, et on évite les doublons.\n\nLa modération peut masquer un message qui ne respecte pas ces règles. Bon jeu !"],
-        ]],
-        ['debutants', 'Quelle est la différence entre une blinde et un ante ?', false, [
-            ['demo', 'Je débute et je confonds encore blindes et antes. Quelqu’un peut m’expliquer simplement ?'],
-            ['admin', "Les blindes (petite et grosse) sont des mises obligatoires payées par les deux joueurs à gauche du bouton.\nL’ante est une petite mise payée par tout le monde (ou par la grosse blinde seule en « big blind ante ») pour enrichir le pot."],
-        ]],
-        ['analyses-de-mains', 'AK en 3-bet hors de position, flop raté : continuer ?', false, [
-            ['demo', "Tournoi, 40 grosses blindes. Je 3-bet AK depuis la grosse blinde, le bouton paie. Flop 7-7-2 arc-en-ciel.\nJe continue en c-bet petit ou je check ?"],
-        ]],
-        ['mental-bankroll', 'Combien de caves prévoir pour jouer sereinement ?', false, [
-            ['demo', 'Vous gardez combien de caves d’avance pour votre limite habituelle ?'],
-            ['admin', "Une règle de prudence courante : au moins 20 à 30 caves pour le cash game, davantage en tournoi car la variance y est plus forte.\nLa leçon « Progresser en tournoi » de la rubrique Leçons détaille le sujet."],
-        ]],
-    ];
 }

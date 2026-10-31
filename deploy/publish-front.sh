@@ -11,15 +11,16 @@ SSH_TARGET="${SSH_TARGET:-bopu6118@redkards-dev.fr}"
 SSH_KEY="${SSH_KEY:-$HOME/.ssh/id_ed25519_o2switch}"
 MODE="beta"; [ "${1:-}" = "--public" ] && MODE="public"
 # Bêta sur esct-beta.redkards-dev.fr, version publique sur redkards-dev.fr
-if [ "${MODE}" = "beta" ]; then WEB_DIR="esct-beta.redkards-dev.fr"; SITE="https://esct-beta.redkards-dev.fr"; else WEB_DIR="esct.redkards-dev.fr"; SITE="https://redkards-dev.fr"; fi
+if [ "${MODE}" = "beta" ]; then WEB_DIR="esct-beta.redkards-dev.fr"; SITE="https://esct-beta.redkards-dev.fr"; else WEB_DIR="esct.redkards-dev.fr"; SITE="https://esct.redkards-dev.fr"; fi
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 ssh_() { ssh -i "${SSH_KEY}" -o BatchMode=yes "${SSH_TARGET}" "$@"; }
 
 echo "🥊 Compilation de production"
 cd "${ROOT}/frontBoxe"
 rm -rf dist
-npx ng build
-OUT="dist/front-poker/browser"
+CONF="$([ "${MODE}" = "beta" ] && echo beta || echo production)"
+npx ng build --configuration="${CONF}"
+OUT="dist/esct-boxe-front/browser"
 [ -f "${OUT}/index.html" ] && [ -f "${OUT}/.htaccess" ] || { echo "Build incomplet (index.html ou .htaccess manquant)"; exit 1; }
 
 echo "🥊 Envoi (${MODE})"

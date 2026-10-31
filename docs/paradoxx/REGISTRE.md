@@ -10,3 +10,5 @@ Statuts : proposition / approuvée / appliquée / testée / publiée. Miroir Not
 | ESCT-004 | 2026-10-31 | Trois directions artistiques, choix final par le propriétaire | en cours |
 | ESCT-005 | 2026-10-31 | Exécution autonome (mode « off ») : aucune mise en ligne, aucune dépense, aucun secret commité | appliquée |
 | ESCT-006 | 2026-10-31 | Uniquement des outils gratuits ou open source (Symfony, Angular, MariaDB, EasyAdmin, OpenStreetMap) | appliquée |
+| ESCT-007 | 2026-10-31 | Reprise de la v2 de Claude par ChatGPT, méthode Poker Winners, économie de tokens, production rapide et simplifiée | approuvée (propriétaire) / appliquée |
+| ESCT-008 | 2026-10-31 | Trois propositions de Claude conservées : Fight Night, Azur, Éditorial ; choix par le propriétaire | en attente du choix |

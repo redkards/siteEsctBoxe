@@ -1,12 +1,12 @@
 # Feuille de route — ESCT Boxe
 
-## 2.0.0-beta.1 — Refonte (en cours)
+## 2.0.0-beta.2 — Stabilisation technique
 - [x] Contrat d'API, squelette Poker Winners, scripts de déploiement adaptés.
-- [ ] API complète + back-office + tests verts.
-- [ ] Front complet + tests verts.
-- [ ] Trois thèmes ; **le propriétaire en choisit un** (ou un mélange).
+- [x] API et back-office : parcours de démonstration et tests verts sous SQLite.
+- [x] Front compilé et 75 tests verts.
+- [x] Trois thèmes implémentés ; **le propriétaire en choisit un** (ou un mélange).
 
-## 2.0.0-beta.2 — Contenus réels (avec le club)
+## 2.0.0-beta.3 — Contenus réels (avec le club)
 - [ ] Remplacer les données de démonstration : vrais boxeurs (avec accord écrit, et accord parental pour les mineurs),
   coachs, horaires, tarifs 2026-2027, adresse exacte des salles, historique du club.
 - [ ] Mentions légales : nom de l'association, RNA/SIRET, président, hébergeur.

@@ -43,7 +43,7 @@ export class ApiService {
   }
 
   isApiUrl(url: string): boolean {
-    return url.startsWith(this.baseUrl);
+    return url === this.baseUrl || url.startsWith(`${this.baseUrl}/`) || url.startsWith(`${this.baseUrl}?`);
   }
 
   /**

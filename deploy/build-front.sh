@@ -19,7 +19,7 @@ rm -rf dist
 # OneDrive verrouille parfois un fichier copié (EBUSY) : une seconde tentative suffit
 CONF="$([ "${MODE}" = "beta" ] && echo beta || echo production)"
 npx ng build --configuration="${CONF}" || { sleep 3; rm -rf dist; npx ng build --configuration="${CONF}"; }
-OUT="dist/front-poker/browser"
+OUT="dist/esct-boxe-front/browser"
 [ -f "${OUT}/index.html" ] && [ -f "${OUT}/.htaccess" ] || { echo "Build incomplet (index.html ou .htaccess manquant)"; exit 1; }
 
 if [ "${MODE}" = "beta" ]; then
