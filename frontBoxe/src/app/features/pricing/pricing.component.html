@@ -1,0 +1,82 @@
+<section class="bx-page-head">
+  <div class="bx-container">
+    <nav class="bx-breadcrumb" aria-label="Fil d'Ariane"><a routerLink="/">Accueil</a><span aria-hidden="true">/</span><span>Tarifs</span></nav>
+    <h1>Tarifs et documents</h1>
+    <p>Cotisation annuelle licence fédérale comprise. Première séance d'essai gratuite, réductions famille sur demande.</p>
+  </div>
+</section>
+
+<section class="bx-section" aria-labelledby="prices-title">
+  <div class="bx-container">
+    <h2 id="prices-title" class="bx-sr-only">Nos formules</h2>
+    @if (pricing.loading() && !pricing.data()) {
+      <app-skeleton-grid [count]="3" ratio="4 / 3" min="260px" />
+    } @else if (pricing.error()) {
+      <app-load-error [message]="pricing.error()!" (retry)="pricing.retry()" />
+    } @else if (pricing.data()?.length) {
+      <div class="prices">
+        @for (p of sorted(pricing.data()!); track p.id) {
+          <article class="price" [class.price--hl]="p.highlighted">
+            @if (p.highlighted) {
+              <span class="price__flag">Le plus choisi</span>
+            }
+            @if (p.audience) {
+              <span class="price__aud">{{ p.audience }}</span>
+            }
+            <h3>{{ p.label }}</h3>
+            <p class="price__amount">
+              <strong>{{ p.priceCents | euros }}</strong>
+              <span>{{ periods[p.period] }}</span>
+            </p>
+            @if (p.description) {
+              <p class="price__desc">{{ p.description }}</p>
+            }
+            <a routerLink="/inscription" [queryParams]="{ tarif: p.id }" class="bx-btn bx-btn--block" [class.bx-btn--primary]="p.highlighted" [class.bx-btn--outline]="!p.highlighted">
+              Choisir cette formule
+            </a>
+          </article>
+        }
+      </div>
+    } @else {
+      <app-empty title="Tarifs bientôt en ligne" text="Contactez le club pour connaître les tarifs de la saison." />
+    }
+    <p class="bx-hint note">
+      Paiement au club (chèque, espèces, coupons sport, Pass'Sport). L'inscription n'est définitive qu'après validation du dossier complet.
+    </p>
+  </div>
+</section>
+
+<section class="bx-section bx-section--surface" aria-labelledby="docs-title">
+  <div class="bx-container">
+    <header class="bx-section-head">
+      <div>
+        <span class="bx-eyebrow">Le dossier d'inscription</span>
+        <h2 id="docs-title">Documents à fournir</h2>
+        <p>À télécharger, compléter et remettre au club (ou apporter à la première séance).</p>
+      </div>
+    </header>
+
+    <ol class="steps">
+      <li><strong>Demande de licence</strong> remplie et signée.</li>
+      <li><strong>Certificat médical</strong> de moins d'un an (modèle selon la pratique).</li>
+      <li><strong>Autorisation parentale</strong> pour les mineurs.</li>
+      <li><strong>Règlement</strong> de la cotisation.</li>
+    </ol>
+
+    <div class="docs">
+      @for (d of documents; track d.file) {
+        <article class="doc">
+          <img [src]="d.image" alt="" loading="lazy" width="96" height="96" />
+          <div class="doc__body">
+            <span class="bx-badge bx-badge--soft">{{ d.who }}</span>
+            <h3>{{ d.title }}</h3>
+            <p>{{ d.text }}</p>
+            <a [href]="d.file" class="bx-link" target="_blank" rel="noopener" download>
+              Télécharger le PDF <span class="bx-arrow" aria-hidden="true">↓</span><span class="bx-sr-only"> : {{ d.title }}</span>
+            </a>
+          </div>
+        </article>
+      }
+    </div>
+  </div>
+</section>

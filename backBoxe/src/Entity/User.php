@@ -15,9 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[ORM\UniqueConstraint(name: 'UNIQ_USER_EMAIL', fields: ['email'])]
-#[ORM\UniqueConstraint(name: 'UNIQ_USER_PSEUDO', fields: ['pseudo'])]
 #[UniqueEntity(fields: ['email'], message: 'Un compte existe déjà avec cet email.')]
-#[UniqueEntity(fields: ['pseudo'], message: 'Ce pseudo est déjà utilisé.')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -39,11 +37,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 80)]
     #[Assert\NotBlank]
-    #[Assert\Length(min: 3, max: 50)]
-    #[Assert\Regex(pattern: '/^[\w\-.]+$/u', message: 'Le pseudo ne peut contenir que lettres, chiffres, tirets, points et underscores.')]
-    private ?string $pseudo = null;
+    #[Assert\Length(max: 80)]
+    private ?string $firstName = null;
+
+    #[ORM\Column(length: 80)]
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 80)]
+    private ?string $lastName = null;
+
+    #[ORM\Column(length: 20, nullable: true)]
+    #[Assert\Length(max: 20)]
+    private ?string $phone = null;
+
+    #[ORM\Column(type: Types::DATE_IMMUTABLE, nullable: true)]
+    private ?\DateTimeImmutable $birthDate = null;
 
     /**
      * @var list<string>
@@ -51,8 +60,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private array $roles = [];
 
-    #[ORM\Column(options: ['default' => false])]
-    private bool $isVerified = false;
+    /**
+     * Date de confirmation de l'adresse email (null = compte non activé)
+     */
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $emailVerifiedAt = null;
 
     /**
      * Empreinte SHA-256 du jeton envoyé par email (le jeton en clair n'est jamais stocké)
@@ -92,12 +104,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $anonymizedAt = null;
-
-    /**
-     * Fin de l'accès Premium (null = jamais abonné ou accès retiré)
-     */
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $premiumUntil = null;
 
     /**
      * @var Collection<int, ConsentLog>
@@ -146,10 +152,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
-        // Rôle dynamique : jamais stocké, déduit de la date de fin d'abonnement
-        if ($this->isPremium()) {
-            $roles[] = 'ROLE_PREMIUM';
-        }
 
         return array_values(array_unique($roles));
     }
@@ -159,7 +161,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function setRoles(array $roles): static
     {
-        $this->roles = array_values(array_diff($roles, ['ROLE_PREMIUM']));
+        $this->roles = array_values(array_unique(array_diff($roles, ['ROLE_USER'])));
 
         return $this;
     }
@@ -179,26 +181,87 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getPseudo(): ?string
+    public function getFirstName(): ?string
     {
-        return $this->pseudo;
+        return $this->firstName;
     }
 
-    public function setPseudo(string $pseudo): static
+    public function setFirstName(string $firstName): static
     {
-        $this->pseudo = trim($pseudo);
+        $this->firstName = trim($firstName);
+
+        return $this;
+    }
+
+    public function getLastName(): ?string
+    {
+        return $this->lastName;
+    }
+
+    public function setLastName(string $lastName): static
+    {
+        $this->lastName = trim($lastName);
+
+        return $this;
+    }
+
+    public function getFullName(): string
+    {
+        return trim($this->firstName.' '.$this->lastName);
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(?string $phone): static
+    {
+        $phone = null === $phone ? null : trim($phone);
+        $this->phone = '' === $phone ? null : $phone;
+
+        return $this;
+    }
+
+    public function getBirthDate(): ?\DateTimeImmutable
+    {
+        return $this->birthDate;
+    }
+
+    public function setBirthDate(?\DateTimeImmutable $birthDate): static
+    {
+        $this->birthDate = $birthDate;
+
+        return $this;
+    }
+
+    public function getEmailVerifiedAt(): ?\DateTimeImmutable
+    {
+        return $this->emailVerifiedAt;
+    }
+
+    public function setEmailVerifiedAt(?\DateTimeImmutable $emailVerifiedAt): static
+    {
+        $this->emailVerifiedAt = $emailVerifiedAt;
 
         return $this;
     }
 
     public function isVerified(): bool
     {
-        return $this->isVerified;
+        return null !== $this->emailVerifiedAt;
     }
 
+    /**
+     * Raccourci : true horodate la vérification (si elle ne l'est pas déjà), false la retire.
+     */
     public function setIsVerified(bool $isVerified): static
     {
-        $this->isVerified = $isVerified;
+        if (!$isVerified) {
+            $this->emailVerifiedAt = null;
+        } elseif (null === $this->emailVerifiedAt) {
+            $this->emailVerifiedAt = new \DateTimeImmutable();
+        }
 
         return $this;
     }
@@ -334,25 +397,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getPremiumUntil(): ?\DateTimeImmutable
-    {
-        return $this->premiumUntil;
-    }
-
-    public function setPremiumUntil(?\DateTimeImmutable $premiumUntil): static
-    {
-        $this->premiumUntil = $premiumUntil;
-
-        return $this;
-    }
-
-    public function isPremium(): bool
-    {
-        return null !== $this->premiumUntil && $this->premiumUntil > new \DateTimeImmutable();
-    }
-
     #[\Deprecated]
     public function eraseCredentials(): void
     {
+    }
+
+    public function __toString(): string
+    {
+        return $this->getFullName() ?: (string) $this->email;
     }
 }

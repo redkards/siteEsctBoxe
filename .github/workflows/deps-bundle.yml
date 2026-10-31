@@ -1,0 +1,33 @@
+# Construit node_modules du front sur un runner GitHub et le publie, découpé, sur la branche orpheline
+# `deps-cache` (l'environnement de développement cloud n'a pas accès au registre npm).
+name: deps-bundle
+on:
+  push:
+    branches: [v2]
+    paths: ['frontBoxe/package.json', '.github/workflows/deps-bundle.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - name: Installer les dépendances
+        working-directory: frontBoxe
+        run: (npm ci || npm install --no-audit --no-fund) 2>&1 | tee ../npm.log
+      - name: Empaqueter et publier
+        run: |
+          set -e
+          mkdir -p /tmp/out
+          tar -C frontBoxe -cJf /tmp/nm.tar.xz node_modules
+          split -b 45m /tmp/nm.tar.xz /tmp/out/nm.tar.xz.part-
+          cp frontBoxe/package.json frontBoxe/package-lock.json npm.log /tmp/out/
+          sha256sum /tmp/nm.tar.xz > /tmp/out/SHA256
+          cd /tmp/out
+          git init -q -b deps-cache
+          git config user.name "deps-bot"; git config user.email "deps-bot@users.noreply.github.com"
+          git add -A && git commit -qm "node_modules du front pour ${GITHUB_SHA}"
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" deps-cache
