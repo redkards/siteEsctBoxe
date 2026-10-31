@@ -1,0 +1,57 @@
+/* ==========================================================================
+   Thème « ring » — FIGHT NIGHT (thème par défaut)
+   Noir profond, rouge sang, blanc os. Affiche de gala : capitales condensées
+   très grasses, grain, diagonales, photos N&B contrastées sous voile rouge,
+   angles vifs. Contrastes vérifiés : docs/design/contrast.py
+   ========================================================================== */
+
+// Grain photographique (SVG feTurbulence) et hachures diagonales
+$ring-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+$ring-stripes: repeating-linear-gradient(-45deg, rgb(255 255 255 / 0.035) 0 2px, transparent 2px 14px);
+
+html[data-theme='ring'],
+html:not([data-theme]) {
+  color-scheme: dark;
+
+  --bx-bg: #0b0b0c;
+  --bx-surface: #111113;
+  --bx-card: #18181b;
+  --bx-card-border: #2b2b30;
+  --bx-ink: #f5f3ef;
+  --bx-ink-soft: #c9c4bc;
+  --bx-muted: #9b958c;
+  --bx-line: #2a2a2f;
+
+  --bx-primary: #d81424;
+  --bx-primary-hover: #b50f1d;
+  --bx-primary-ink: #ffffff;
+  --bx-primary-soft: rgb(216 20 36 / 0.16);
+  --bx-accent: #ff4a4f; // rouge éclairci : texte/liens sur noir (5.9:1)
+  --bx-dark: #000000;
+  --bx-dark-ink: #ffffff;
+  --bx-hero-overlay: linear-gradient(180deg, rgb(11 11 12 / 0.35) 0%, rgb(11 11 12 / 0.55) 55%, #0b0b0c 100%),
+    linear-gradient(110deg, rgb(150 8 20 / 0.55) 0%, rgb(150 8 20 / 0.1) 60%);
+
+  --bx-success: #3fbf7f;
+  --bx-warning: #f2a516;
+  --bx-danger: #ff4a4f;
+
+  --bx-font-display: 'Anton', 'Bebas Neue', Impact, 'Arial Narrow Bold', 'DejaVu Sans Condensed', sans-serif;
+  --bx-font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --bx-display-transform: uppercase;
+  --bx-display-tracking: 0.015em;
+
+  --bx-radius-lg: 4px;
+  --bx-radius: 2px;
+  --bx-radius-sm: 0;
+  --bx-btn-radius: 0;
+  --bx-shadow: 0 30px 60px -30px rgb(0 0 0 / 0.9), 0 0 0 1px rgb(255 255 255 / 0.04);
+  --bx-shadow-sm: 0 10px 24px -12px rgb(0 0 0 / 0.85);
+  --bx-focus: 0 0 0 3px rgb(255 74 79 / 0.6);
+
+  --bx-header-bg: rgb(8 8 9 / 0.92);
+  --bx-header-ink: #f5f3ef;
+  --bx-footer-bg: #050505;
+  --bx-footer-ink: #bdb8b0;
+  --bx-glass: rgb(20 20 22 / 0.72);
+}

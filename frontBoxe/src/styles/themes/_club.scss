@@ -1,0 +1,52 @@
+/* ==========================================================================
+   Thème « club » — ÉDITORIAL SPORT (magazine type L'Équipe / Nike)
+   Blanc cassé, noir, jaune or, gris béton. Grotesque large et lourde,
+   grandes photos, grilles nettes, filets, rayons moyens.
+   ========================================================================== */
+
+html[data-theme='club'] {
+  color-scheme: light;
+
+  --bx-bg: #f6f4ef;
+  --bx-surface: #ece9e2; // gris béton clair
+  --bx-card: #ffffff;
+  --bx-card-border: #e2dfd7;
+  --bx-ink: #111111;
+  --bx-ink-soft: #2b2b2b;
+  --bx-muted: #5c5a55;
+  --bx-line: #d9d5cb;
+
+  // Le jaune ne porte jamais de texte sur fond clair : bouton principal noir,
+  // le jaune or sert d'accent (soulignés, pastilles, blocs, survols).
+  --bx-primary: #111111;
+  --bx-primary-hover: #2e2e2e;
+  --bx-primary-ink: #ffffff;
+  --bx-primary-soft: #fff3cc;
+  --bx-accent: #f5b700;
+  --bx-dark: #111111;
+  --bx-dark-ink: #ffffff;
+  --bx-hero-overlay: linear-gradient(180deg, rgb(17 17 17 / 0) 30%, rgb(17 17 17 / 0.82) 100%);
+
+  --bx-success: #1f7a4d;
+  --bx-warning: #a86b00;
+  --bx-danger: #c8102e;
+
+  --bx-font-display: 'Archivo Black', 'Archivo', 'Arial Black', 'Inter', system-ui, sans-serif;
+  --bx-font-body: 'Archivo', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --bx-display-transform: uppercase;
+  --bx-display-tracking: -0.02em;
+
+  --bx-radius-lg: 10px;
+  --bx-radius: 6px;
+  --bx-radius-sm: 4px;
+  --bx-btn-radius: 6px;
+  --bx-shadow: 0 18px 40px -24px rgb(17 17 17 / 0.35);
+  --bx-shadow-sm: 0 4px 12px -6px rgb(17 17 17 / 0.25);
+  --bx-focus: 0 0 0 3px #f5b700;
+
+  --bx-header-bg: #ffffff;
+  --bx-header-ink: #111111;
+  --bx-footer-bg: #111111;
+  --bx-footer-ink: #c9c6bf;
+  --bx-glass: rgb(246 244 239 / 0.88);
+}

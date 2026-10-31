@@ -1,0 +1,51 @@
+/* ==========================================================================
+   Thème « azur » — PREMIUM LUMINEUX (inspiré de Poker Winners, version boxe)
+   Fonds clairs bleutés, halos azur, cartes en verre dépoli, titres Playfair
+   Display, boutons pilule, ombres douces. Pas de vert.
+   ========================================================================== */
+
+html[data-theme='azur'] {
+  color-scheme: light;
+
+  --bx-bg: #eef4fb;
+  --bx-surface: #f6f9fd;
+  --bx-card: rgb(255 255 255 / 0.72);
+  --bx-card-border: rgb(255 255 255 / 0.85);
+  --bx-ink: #0c1b2e;
+  --bx-ink-soft: #2f4560;
+  --bx-muted: #56677c;
+  --bx-line: #d6e1ee;
+
+  --bx-primary: #1667c2;
+  --bx-primary-hover: #0f56a8;
+  --bx-primary-ink: #ffffff;
+  --bx-primary-soft: #e1eefc;
+  --bx-accent: #1e88e5; // azur vif : décor, dégradés, halos (pas de texte courant)
+  --bx-dark: #0a2342;
+  --bx-dark-ink: #ffffff;
+  --bx-hero-overlay: linear-gradient(180deg, rgb(10 35 66 / 0.15) 0%, rgb(10 35 66 / 0.72) 100%),
+    linear-gradient(120deg, rgb(30 136 229 / 0.45) 0%, rgb(30 136 229 / 0) 55%);
+
+  --bx-success: #1a7f5a;
+  --bx-warning: #b26a00;
+  --bx-danger: #c62828;
+
+  --bx-font-display: 'Playfair Display', Georgia, 'DejaVu Serif', 'Times New Roman', serif;
+  --bx-font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --bx-display-transform: none;
+  --bx-display-tracking: -0.01em;
+
+  --bx-radius-lg: 28px;
+  --bx-radius: 18px;
+  --bx-radius-sm: 12px;
+  --bx-btn-radius: 999px;
+  --bx-shadow: 0 30px 60px -28px rgb(15 60 120 / 0.32), 0 2px 6px -2px rgb(15 60 120 / 0.08);
+  --bx-shadow-sm: 0 10px 24px -14px rgb(15 60 120 / 0.35);
+  --bx-focus: 0 0 0 4px rgb(30 136 229 / 0.35);
+
+  --bx-header-bg: rgb(255 255 255 / 0.7);
+  --bx-header-ink: #0c1b2e;
+  --bx-footer-bg: #0a2342;
+  --bx-footer-ink: #c4d3e6;
+  --bx-glass: rgb(255 255 255 / 0.62);
+}
