@@ -14,9 +14,9 @@ main {
   top: -60px;
   z-index: 100;
   padding: 0.6rem 1rem;
-  border-radius: 999px;
-  background: var(--pv-ink);
-  color: #fff;
+  border-radius: var(--bx-btn-radius);
+  background: var(--bx-primary);
+  color: var(--bx-primary-ink);
   text-decoration: none;
 
   &:focus {

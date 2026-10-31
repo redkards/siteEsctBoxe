@@ -1,66 +1,48 @@
-<header class="header pv-container">
-  <app-logo />
+<header class="header" [class.header--open]="menuOpen()">
+  <div class="bx-container header__bar">
+    <app-logo />
 
-  <button
-    type="button"
-    class="header__burger"
-    [attr.aria-expanded]="menuOpen()"
-    aria-controls="menu-principal"
-    (click)="toggleMenu()"
-  >
-    <span class="pv-sr-only">{{ menuOpen() ? 'Fermer le menu' : 'Ouvrir le menu' }}</span>
-    <span class="header__burger-bar"></span>
-  </button>
+    <button
+      type="button"
+      class="header__burger"
+      [attr.aria-expanded]="menuOpen()"
+      aria-controls="menu-principal"
+      (click)="toggleMenu()"
+    >
+      <span class="bx-sr-only">{{ menuOpen() ? 'Fermer le menu' : 'Ouvrir le menu' }}</span>
+      <span class="header__burger-bar" aria-hidden="true"></span>
+    </button>
 
-  <div id="menu-principal" class="header__menu" [class.header__menu--open]="menuOpen()">
-    <nav class="header__nav" aria-label="Navigation principale">
-      @for (link of links; track link.path) {
-        <a
-          [routerLink]="link.path"
-          routerLinkActive="is-active"
-          [routerLinkActiveOptions]="{ exact: link.exact }"
-          ariaCurrentWhenActive="page"
-          >{{ link.label }}</a
-        >
-      }
-    </nav>
+    <div id="menu-principal" class="header__menu" [class.header__menu--open]="menuOpen()">
+      <nav class="header__nav" aria-label="Navigation principale">
+        @for (link of links; track link.path) {
+          <a
+            [routerLink]="link.path"
+            routerLinkActive="is-active"
+            [routerLinkActiveOptions]="{ exact: link.exact }"
+            ariaCurrentWhenActive="page"
+            >{{ link.label }}</a
+          >
+        }
+      </nav>
 
-    <form class="header__search" role="search" (submit)="search($event, searchInput)">
-      <label for="header-search" class="pv-sr-only">Rechercher sur le site</label>
-      <input
-        #searchInput
-        id="header-search"
-        class="header__search-input"
-        type="search"
-        placeholder="Rechercher…"
-        maxlength="100"
-        autocomplete="off"
-      />
-      <button type="submit" class="header__search-btn" aria-label="Rechercher" title="Rechercher">
-        <span class="header__loupe" aria-hidden="true"></span>
-      </button>
-    </form>
-
-    <div class="header__actions">
-      <a routerLink="/premium" routerLinkActive="is-active" class="header__premium" title="Abonnement Premium">
-        <span aria-hidden="true">★</span> Premium
-      </a>
-      @if (shopEnabled && cart.count() > 0) {
-        <a routerLink="/boutique/panier" class="pv-btn pv-btn--ghost">Panier ({{ cart.count() }})</a>
-      }
-      @if (auth.user(); as user) {
-        <a routerLink="/mon-espace" class="pv-btn pv-btn--ghost header__user" title="Mon espace">
-          <span class="header__avatar" aria-hidden="true">{{ user.pseudo.charAt(0).toUpperCase() }}</span>
-          <span class="header__status"><span class="header__dot" aria-hidden="true"></span>Connecté</span>
-          {{ user.pseudo }}
+      <div class="header__actions">
+        @if (auth.user(); as user) {
+          @if (auth.isStaff()) {
+            <a [href]="adminUrl" class="header__admin" rel="noopener">Admin</a>
+          }
+          <a routerLink="/mon-espace" class="header__user" routerLinkActive="is-active" title="Mon espace">
+            <span class="header__avatar" aria-hidden="true">{{ initials(user) }}</span>
+            <span class="header__user-name">{{ user.firstName }}</span>
+          </a>
+          <button type="button" class="header__link-btn" (click)="auth.logout()">Déconnexion</button>
+        } @else {
+          <a routerLink="/connexion" class="header__login" routerLinkActive="is-active">Connexion</a>
+        }
+        <a routerLink="/inscription" class="bx-btn bx-btn--primary header__cta">
+          S'inscrire <span class="bx-arrow" aria-hidden="true">→</span>
         </a>
-        <button type="button" class="pv-btn pv-btn--outline" (click)="auth.logout()">Déconnexion</button>
-      } @else {
-        <a routerLink="/connexion" class="pv-btn pv-btn--outline">Connexion</a>
-        <a routerLink="/inscription" class="pv-btn pv-btn--primary">
-          Inscription <span class="pv-arrow" aria-hidden="true">→</span>
-        </a>
-      }
+      </div>
     </div>
   </div>
 </header>

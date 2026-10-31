@@ -29,8 +29,8 @@ describe('jwtInterceptor', () => {
   });
 
   const login = () => {
-    localStorage.setItem('pv_access_token', 'access-1');
-    localStorage.setItem('pv_refresh_token', 'refresh-1');
+    localStorage.setItem('esct_access_token', 'access-1');
+    localStorage.setItem('esct_refresh_token', 'refresh-1');
   };
 
   it("ajoute le jeton aux appels de l'API", () => {
@@ -44,19 +44,19 @@ describe('jwtInterceptor', () => {
   it("n'envoie jamais le jeton à un autre site ni aux routes d'authentification", () => {
     login();
 
-    client.get('https://www.youtube.com/oembed').subscribe();
+    client.get('https://tile.openstreetmap.org/x.png').subscribe();
     client.post(`${api}/login`, {}).subscribe();
     client.post(`${api}/token/refresh`, {}).subscribe();
 
-    expect(http.expectOne('https://www.youtube.com/oembed').request.headers.has('Authorization')).toBeFalse();
+    expect(http.expectOne('https://tile.openstreetmap.org/x.png').request.headers.has('Authorization')).toBeFalse();
     expect(http.expectOne(`${api}/login`).request.headers.has('Authorization')).toBeFalse();
     expect(http.expectOne(`${api}/token/refresh`).request.headers.has('Authorization')).toBeFalse();
   });
 
   it("laisse passer les visiteurs sans en-tête", () => {
-    client.get(`${api}/videos`).subscribe();
+    client.get(`${api}/boxers`).subscribe();
 
-    expect(http.expectOne(`${api}/videos`).request.headers.has('Authorization')).toBeFalse();
+    expect(http.expectOne(`${api}/boxers`).request.headers.has('Authorization')).toBeFalse();
   });
 
   it('sur 401, renouvelle le jeton puis rejoue la requête une fois', () => {
@@ -84,20 +84,20 @@ describe('jwtInterceptor', () => {
     http.expectOne(`${api}/token/refresh`).flush({}, { status: 401, statusText: 'Unauthorized' });
 
     expect((error as HttpErrorResponse).status).toBe(401);
-    expect(localStorage.getItem('pv_access_token')).toBeNull();
-    expect(localStorage.getItem('pv_refresh_token')).toBeNull();
+    expect(localStorage.getItem('esct_access_token')).toBeNull();
+    expect(localStorage.getItem('esct_refresh_token')).toBeNull();
     expect(TestBed.inject(Router).navigateByUrl).not.toHaveBeenCalled();
   });
 
-  it('ne tente pas de refresh sur une autre erreur (403 Premium requis)', () => {
+  it('ne tente pas de refresh sur une autre erreur (403 accès refusé)', () => {
     login();
     let error: unknown;
 
-    client.get(`${api}/lessons/expert/x`).subscribe({ error: (e) => (error = e) });
-    http.expectOne(`${api}/lessons/expert/x`).flush({ code: 'premium_required' }, { status: 403, statusText: 'Forbidden' });
+    client.get(`${api}/me/memberships`).subscribe({ error: (e) => (error = e) });
+    http.expectOne(`${api}/me/memberships`).flush({ message: 'Accès refusé' }, { status: 403, statusText: 'Forbidden' });
 
     http.expectNone(`${api}/token/refresh`);
     expect((error as HttpErrorResponse).status).toBe(403);
-    expect(localStorage.getItem('pv_access_token')).toBe('access-1');
+    expect(localStorage.getItem('esct_access_token')).toBe('access-1');
   });
 });

@@ -1,17 +1,17 @@
 import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
+/** Logo du club (photo officielle) + nom */
 @Component({
   selector: 'app-logo',
   imports: [RouterLink],
   template: `
-    <a routerLink="/" class="logo" [class.logo--light]="light()" aria-label="Poker Winners — accueil">
-      <svg class="logo__spade" viewBox="0 0 24 24" aria-hidden="true">
-        <path
-          d="M12 2.2c-.4 0-.8.2-1.1.5C8.6 5.1 3 9.4 3 13.6 3 16.4 5.2 18.4 7.7 18.4c1.2 0 2.3-.4 3.1-1.1-.3 1.6-1 2.9-2.3 4.1-.3.3-.1.8.3.8h6.4c.4 0 .6-.5.3-.8-1.3-1.2-2-2.5-2.3-4.1.8.7 1.9 1.1 3.1 1.1 2.5 0 4.7-2 4.7-4.8 0-4.2-5.6-8.5-7.9-10.9-.3-.3-.7-.5-1.1-.5Z"
-        />
-      </svg>
-      <span class="logo__text">Poker<span>Winners</span></span>
+    <a routerLink="/" class="logo" [class.logo--compact]="compact()" aria-label="ESC Boxe Tergnier — accueil">
+      <img class="logo__mark" src="img/logo.jpg" alt="" width="48" height="51" />
+      <span class="logo__text">
+        <span class="logo__name">ESC Boxe</span>
+        <span class="logo__city">Tergnier</span>
+      </span>
     </a>
   `,
   changeDetection: ChangeDetectionStrategy.Eager,
@@ -19,33 +19,42 @@ import { RouterLink } from '@angular/router';
     .logo {
       display: inline-flex;
       align-items: center;
-      gap: 0.65rem;
-      color: var(--pv-ink);
+      gap: 0.7rem;
+      color: inherit;
       text-decoration: none;
-      border-radius: 8px;
+      border-radius: var(--bx-radius-sm);
     }
-    .logo--light {
-      color: #fff;
-    }
-    .logo__spade {
-      width: 26px;
-      height: 26px;
-      fill: currentColor;
+    .logo__mark {
+      width: 46px;
+      height: 46px;
+      object-fit: cover;
+      border-radius: var(--bx-radius-sm);
+      box-shadow: 0 0 0 1px var(--bx-dark-line);
     }
     .logo__text {
-      font-weight: 700;
-      font-size: 0.95rem;
-      letter-spacing: 0.32em;
+      display: grid;
+      line-height: 1;
+      font-family: var(--bx-font-display);
       text-transform: uppercase;
     }
-    .logo__text span {
-      color: var(--pv-red);
+    .logo__name {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
     }
-    .logo--light .logo__text span {
-      color: #ff5a63;
+    .logo__city {
+      margin-top: 0.15rem;
+      color: var(--bx-primary);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.32em;
+    }
+    .logo--compact .logo__mark {
+      width: 40px;
+      height: 40px;
     }
   `,
 })
 export class LogoComponent {
-  readonly light = input(false);
+  readonly compact = input(false);
 }

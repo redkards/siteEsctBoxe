@@ -31,7 +31,7 @@ html[data-theme='club'] {
   --bx-warning: #a86b00;
   --bx-danger: #c8102e;
 
-  --bx-font-display: 'Archivo Black', 'Archivo', 'Arial Black', 'Inter', system-ui, sans-serif;
+  --bx-font-display: 'Archivo', 'Archivo Black', 'Arial Black', 'Inter', system-ui, sans-serif;
   --bx-font-body: 'Archivo', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --bx-display-transform: uppercase;
   --bx-display-tracking: -0.02em;
@@ -49,4 +49,180 @@ html[data-theme='club'] {
   --bx-footer-bg: #111111;
   --bx-footer-ink: #c9c6bf;
   --bx-glass: rgb(246 244 239 / 0.88);
+
+  // Tokens complémentaires (_tokens.scss)
+  --bx-accent-ink: #111111;
+  --bx-dark-2: #1e1e1e;
+  --bx-dark-muted: #b3b0a8;
+  --bx-dark-line: rgb(255 255 255 / 0.16);
+  --bx-hero-ink: #ffffff;
+  --bx-success-soft: #e3f1e9;
+  --bx-warning-soft: #fff3cc;
+  --bx-danger-soft: #fbe6e9;
+  --bx-info: #1d4f91;
+  --bx-info-soft: #e6edf6;
+  --bx-display-weight: 800; // Archivo variable, largeur 112-125 % (cf. surcharges)
+  --bx-header-muted: #5c5a55;
+  --bx-footer-muted: #9d9a92;
+  --bx-link: #111111;
+}
+
+/* --------------------------------------------------------------------------
+   Surcharges « Éditorial »
+   -------------------------------------------------------------------------- */
+html[data-theme='club'] {
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-stretch: 118%;
+    font-variation-settings: 'wdth' 118;
+    line-height: 0.96;
+  }
+
+  h1 {
+    letter-spacing: -0.035em;
+  }
+
+  a {
+    color: var(--bx-ink);
+    text-decoration-color: var(--bx-accent);
+    text-decoration-thickness: 2px;
+  }
+
+  ::selection {
+    background: var(--bx-accent);
+    color: #111;
+  }
+
+  // Sur-titre : étiquette jaune (rubrique de magazine)
+  .bx-eyebrow {
+    padding: 0.32rem 0.6rem 0.28rem;
+    background: var(--bx-accent);
+    color: #111;
+    letter-spacing: 0.14em;
+    font-weight: 800;
+
+    &::before {
+      display: none;
+    }
+  }
+
+  // Titre de section posé sur un filet noir épais
+  .bx-section-head {
+    padding-top: 1rem;
+    border-top: 5px solid var(--bx-ink);
+
+    h2 {
+      font-size: clamp(2.1rem, 4.6vw, 3.4rem);
+    }
+  }
+
+  .bx-section--dark .bx-section-head {
+    border-top-color: var(--bx-accent);
+  }
+
+  .bx-section--surface {
+    background: var(--bx-surface);
+  }
+
+  .bx-page-head {
+    background: #111;
+    border-bottom: 10px solid var(--bx-accent);
+
+    &::after {
+      display: none;
+    }
+
+    h1 {
+      font-size: clamp(2.8rem, 8vw, 6rem);
+    }
+  }
+
+  .bx-btn {
+    font-weight: 800;
+    letter-spacing: 0.06em;
+
+    &--primary:not(:disabled):hover {
+      background: var(--bx-accent);
+      color: #111;
+    }
+
+    &--outline {
+      border-width: 2px;
+    }
+  }
+
+  // Sur fond sombre, le bouton principal devient jaune
+  .bx-section--dark .bx-btn--primary,
+  .bx-page-head .bx-btn--primary {
+    background: var(--bx-accent);
+    color: #111;
+
+    &:not(:disabled):hover {
+      background: #fff;
+    }
+  }
+
+  .bx-link {
+    background: linear-gradient(var(--bx-accent), var(--bx-accent)) 0 100% / 100% 3px no-repeat;
+    padding-bottom: 2px;
+
+    &:hover {
+      color: var(--bx-ink);
+      background-size: 100% 100%;
+    }
+  }
+
+  .bx-section--dark .bx-link {
+    color: #fff;
+
+    &:hover {
+      color: #111;
+    }
+  }
+
+  .back-link:hover,
+  .bx-req {
+    color: var(--bx-ink);
+  }
+
+  .bx-card,
+  .bx-panel {
+    box-shadow: none;
+  }
+
+  .bx-card {
+    transition: border-color 0.15s;
+  }
+
+  a.bx-card:hover,
+  .bx-card:has(a:hover) {
+    border-color: var(--bx-ink);
+  }
+
+  .bx-badge--soft {
+    background: var(--bx-accent);
+    color: #111;
+  }
+
+  .bx-chip {
+    border-radius: var(--bx-radius-sm);
+    font-weight: 700;
+
+    &[aria-pressed='true'] {
+      background: #111;
+      border-color: #111;
+      color: #fff;
+    }
+  }
+
+  .bx-input:focus {
+    border-color: #111;
+  }
+
+  // Photos : rendu presse, légèrement plus de punch
+  main img:not([src*='logo']) {
+    filter: contrast(1.08) saturate(1.08);
+  }
 }

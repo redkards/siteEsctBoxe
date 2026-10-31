@@ -2,10 +2,10 @@ import { Injectable, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, catchError, finalize, map, of, shareReplay, switchMap, tap, throwError } from 'rxjs';
 import { ApiService } from '../api/api.service';
-import { AuthTokens, CurrentUser, MessageResponse, RegisterPayload } from './auth.models';
+import { AuthTokens, CurrentUser, MessageResponse, RegisterPayload, canAccessAdmin } from './auth.models';
 
-const ACCESS_KEY = 'pv_access_token';
-const REFRESH_KEY = 'pv_refresh_token';
+const ACCESS_KEY = 'esct_access_token';
+const REFRESH_KEY = 'esct_refresh_token';
 
 /**
  * Authentification JWT : access token (1 h) + refresh token à usage unique (7 j).
@@ -18,6 +18,8 @@ export class AuthService {
   private readonly currentUser = signal<CurrentUser | null>(null);
   readonly user = this.currentUser.asReadonly();
   readonly isLoggedIn = computed(() => this.currentUser() !== null);
+  /** Coach ou administrateur : lien vers le back-office */
+  readonly isStaff = computed(() => canAccessAdmin(this.currentUser()));
 
   /** Un seul refresh à la fois : le refresh token ne sert qu'une fois */
   private refreshInFlight$: Observable<string> | null = null;
@@ -27,7 +29,7 @@ export class AuthService {
   }
 
   verifyEmail(token: string): Observable<MessageResponse> {
-    return this.api.get<MessageResponse>('verify-email', { token });
+    return this.api.post<MessageResponse>('verify-email', { token });
   }
 
   resendVerification(email: string): Observable<MessageResponse> {

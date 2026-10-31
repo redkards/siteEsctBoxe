@@ -3,7 +3,7 @@
     "version": 1,
     "newProjectRoot": "projects",
     "projects": {
-        "frontPoker": {
+        "esctBoxeFront": {
             "projectType": "application",
             "schematics": {
                 "@schematics/angular:component": {
@@ -17,7 +17,7 @@
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/front-poker",
+                        "outputPath": "dist/esct-boxe-front",
                         "index": "src/index.html",
                         "browser": "src/main.ts",
                         "polyfills": [
@@ -45,13 +45,13 @@
                             "budgets": [
                                 {
                                     "type": "initial",
-                                    "maximumWarning": "500kB",
+                                    "maximumWarning": "600kB",
                                     "maximumError": "1MB"
                                 },
                                 {
                                     "type": "anyComponentStyle",
-                                    "maximumWarning": "8kB",
-                                    "maximumError": "16kB"
+                                    "maximumWarning": "12kB",
+                                    "maximumError": "20kB"
                                 }
                             ],
                             "outputHashing": "all",
@@ -79,13 +79,13 @@
                             "budgets": [
                                 {
                                     "type": "initial",
-                                    "maximumWarning": "500kB",
+                                    "maximumWarning": "600kB",
                                     "maximumError": "1MB"
                                 },
                                 {
                                     "type": "anyComponentStyle",
-                                    "maximumWarning": "8kB",
-                                    "maximumError": "16kB"
+                                    "maximumWarning": "12kB",
+                                    "maximumError": "20kB"
                                 }
                             ],
                             "outputHashing": "all",
@@ -109,12 +109,15 @@
                 },
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                        "port": 4300
+                    },
                     "configurations": {
                         "production": {
-                            "buildTarget": "frontPoker:build:production"
+                            "buildTarget": "esctBoxeFront:build:production"
                         },
                         "development": {
-                            "buildTarget": "frontPoker:build:development"
+                            "buildTarget": "esctBoxeFront:build:development"
                         }
                     },
                     "defaultConfiguration": "development"

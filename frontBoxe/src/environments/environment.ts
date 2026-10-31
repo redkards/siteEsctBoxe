@@ -1,7 +1,7 @@
-// Production (o2switch) : URL de l'API a ajuster au deploiement
+// Production : URL de l'API à ajuster au déploiement (sous-domaine provisoire, cf. deploy/)
 export const environment = {
   production: true,
-  apiUrl: 'https://api.redkards-dev.fr/api',
-  // Boutique v2.0 en préparation : reste masquée tant que ce drapeau vaut false (voir docs/boutique/README.md)
-  shopEnabled: false,
+  apiUrl: 'https://esct-api.redkards-dev.fr/api',
+  /** Back-office EasyAdmin (lien « Admin » pour ROLE_COACH / ROLE_ADMIN) */
+  adminUrl: 'https://esct-api.redkards-dev.fr/admin',
 };

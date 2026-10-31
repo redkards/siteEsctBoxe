@@ -1,9 +1,9 @@
 {
-  "name": "front-poker",
-  "version": "0.8.1",
+  "name": "esct-boxe-front",
+  "version": "2.0.0-beta.1",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --port 4300",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",

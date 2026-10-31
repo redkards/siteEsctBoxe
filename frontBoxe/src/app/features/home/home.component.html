@@ -1,0 +1,256 @@
+<!-- HERO -------------------------------------------------------------- -->
+<section class="hero" aria-labelledby="hero-title">
+  <img class="hero__photo" src="img/training2.jpg" alt="" fetchpriority="high" />
+  <div class="hero__overlay" aria-hidden="true"></div>
+  <div class="bx-container hero__inner">
+    <div class="hero__content">
+      <span class="bx-eyebrow hero__eyebrow">Boxe anglaise · Tergnier (02700)</span>
+      <h1 id="hero-title" class="hero__title">
+        <span class="hero__club">{{ club.data()?.name ?? 'ESC Boxe Tergnier' }}</span>
+        Forge ton mental.<br /><em>Monte sur le ring.</em>
+      </h1>
+      <p class="hero__lead">
+        {{ club.data()?.tagline ?? 'Boxe éducative, loisir, amateur et professionnelle : un club familial et exigeant, ouvert à tous dès 7 ans.' }}
+      </p>
+      <div class="hero__actions">
+        <a routerLink="/inscription" class="bx-btn bx-btn--primary bx-btn--lg">
+          Essai gratuit / S'inscrire <span class="bx-arrow" aria-hidden="true">→</span>
+        </a>
+        <a routerLink="/planning" class="bx-btn bx-btn--light bx-btn--lg">Voir le planning</a>
+      </div>
+    </div>
+
+    <div class="hero__stats" aria-label="Le club en chiffres">
+      @if (club.loading() && !club.data()) {
+        @for (i of [1, 2, 3, 4]; track i) {
+          <div class="stat"><span class="bx-skeleton stat__sk"></span></div>
+        }
+      } @else {
+        @for (s of stats(); track s.label) {
+          <div class="stat">
+            <span class="stat__value">{{ s.value }}</span>
+            <span class="stat__label">{{ s.label }}</span>
+          </div>
+        }
+        @if (years(); as y) {
+          <div class="stat">
+            <span class="stat__value">{{ y }}<small> ans</small></span>
+            <span class="stat__label">depuis {{ club.data()?.foundedYear }}</span>
+          </div>
+        }
+      }
+    </div>
+  </div>
+</section>
+
+<!-- PROCHAIN GALA ------------------------------------------------------ -->
+@if (galas.loading() && !galas.data()) {
+  <section class="gala gala--loading" aria-hidden="true">
+    <div class="bx-container"><span class="bx-skeleton gala__sk"></span></div>
+  </section>
+} @else if (nextGala(); as g) {
+  <section class="gala" aria-labelledby="gala-title">
+    <div class="bx-container gala__inner">
+      <div class="gala__poster">
+        <img [src]="g.poster | media: 'img/afficheGala2024.jpg'" [alt]="'Affiche : ' + g.title" loading="lazy" />
+      </div>
+      <div class="gala__content">
+        <span class="bx-eyebrow">Prochain rendez-vous · {{ nextGalaType() }}</span>
+        <h2 id="gala-title" class="gala__title">{{ g.title }}</h2>
+        <p class="gala__when">
+          <time [attr.datetime]="g.startsAt">{{ g.startsAt | date: "EEEE d MMMM y 'à' HH'h'mm" }}</time>
+          @if (g.venue || g.city) {
+            <span> · {{ g.venue }}{{ g.venue && g.city ? ', ' : '' }}{{ g.city }}</span>
+          }
+        </p>
+        <app-countdown [target]="g.startsAt" />
+        <div class="gala__actions">
+          <a [routerLink]="['/evenements', g.slug]" class="bx-btn bx-btn--primary">Programme <span class="bx-arrow" aria-hidden="true">→</span></a>
+          @if (g.ticketUrl) {
+            <a [href]="g.ticketUrl" class="bx-btn bx-btn--light" target="_blank" rel="noopener">Billetterie<span class="bx-sr-only"> (nouvel onglet)</span></a>
+          }
+          <a routerLink="/evenements" class="bx-btn bx-btn--light">Tous les événements</a>
+        </div>
+      </div>
+    </div>
+  </section>
+}
+
+<!-- DISCIPLINES -------------------------------------------------------- -->
+<section class="bx-section" aria-labelledby="disc-title">
+  <div class="bx-container">
+    <header class="bx-section-head">
+      <div>
+        <span class="bx-eyebrow">Nos disciplines</span>
+        <h2 id="disc-title">Une boxe pour chacun</h2>
+        <p>Des premiers pas des enfants en boxe éducative jusqu'aux combats pros : chaque pratique a ses coachs et ses créneaux.</p>
+      </div>
+      <a routerLink="/disciplines" class="bx-link">Toutes les disciplines <span class="bx-arrow" aria-hidden="true">→</span></a>
+    </header>
+
+    @if (disciplines.loading() && !disciplines.data()) {
+      <app-skeleton-grid [count]="4" ratio="4 / 3" min="240px" />
+    } @else if (disciplines.error()) {
+      <app-load-error [message]="disciplines.error()!" (retry)="disciplines.retry()" />
+    } @else {
+      <div class="disc-grid">
+        @for (d of disciplines.data(); track d.id; let i = $index) {
+          <a class="disc" [routerLink]="['/disciplines', d.slug]">
+            <img [src]="d.image | media: fallbackPhotos[i % fallbackPhotos.length]" alt="" loading="lazy" />
+            <span class="disc__shade" aria-hidden="true"></span>
+            <span class="disc__num" aria-hidden="true">{{ (i + 1).toString().padStart(2, '0') }}</span>
+            <span class="disc__body">
+              <span class="disc__name">{{ d.name }}</span>
+              @if (d.shortDescription) {
+                <span class="disc__text">{{ d.shortDescription }}</span>
+              }
+              @if (d.minAge) {
+                <span class="disc__age">Dès {{ d.minAge }} ans</span>
+              }
+            </span>
+          </a>
+        }
+      </div>
+    }
+  </div>
+</section>
+
+<!-- BOXEURS À L'AFFICHE ------------------------------------------------- -->
+<section class="bx-section bx-section--dark fighters" aria-labelledby="boxers-title">
+  <div class="bx-container">
+    <header class="bx-section-head">
+      <div>
+        <span class="bx-eyebrow">À l'affiche</span>
+        <h2 id="boxers-title">Nos boxeurs</h2>
+        <p>Ils portent les couleurs de Tergnier sur les rings de la région et au-delà.</p>
+      </div>
+      <a routerLink="/boxeurs" class="bx-btn bx-btn--light">Tous les boxeurs <span class="bx-arrow" aria-hidden="true">→</span></a>
+    </header>
+
+    @if (boxers.loading() && !boxers.data()) {
+      <app-skeleton-grid [count]="4" ratio="4 / 5" min="230px" />
+    } @else if (boxers.error()) {
+      <app-load-error [message]="boxers.error()!" (retry)="boxers.retry()" />
+    } @else if (boxers.data()?.length) {
+      <div class="bx-grid fighters__grid">
+        @for (b of boxers.data()!.slice(0, 4); track b.id) {
+          <app-boxer-card [boxer]="b" />
+        }
+      </div>
+    } @else {
+      <p class="bx-muted">Les fiches de nos boxeurs arrivent bientôt.</p>
+    }
+  </div>
+</section>
+
+<!-- PLANNING DU JOUR --------------------------------------------------- -->
+<section class="bx-section" aria-labelledby="today-title">
+  <div class="bx-container today">
+    <div class="today__photos" aria-hidden="true">
+      <img src="img/training3.jpg" alt="" loading="lazy" />
+      <img src="img/eduTergnier1.jpg" alt="" loading="lazy" />
+    </div>
+    <div class="today__content">
+      <span class="bx-eyebrow">Planning du jour</span>
+      <h2 id="today-title">{{ today.label }} à la salle</h2>
+
+      @if (planning.loading() && !planning.data()) {
+        <div class="today__list" aria-hidden="true">
+          @for (i of [1, 2, 3]; track i) {
+            <span class="bx-skeleton today__sk"></span>
+          }
+        </div>
+      } @else if (planning.error()) {
+        <app-load-error [message]="planning.error()!" (retry)="planning.retry()" />
+      } @else if (todaySlots().length) {
+        <ul class="today__list">
+          @for (s of todaySlots(); track s.id) {
+            <li class="slot">
+              <span class="slot__time">{{ s.startTime | hour }}<small>– {{ s.endTime | hour }}</small></span>
+              <span class="slot__info">
+                <strong>{{ s.discipline.name }}</strong>
+                <span>{{ audience(s.audience) }} · {{ s.venue.name }}</span>
+              </span>
+            </li>
+          }
+        </ul>
+      } @else {
+        <p class="today__none">Pas d'entraînement aujourd'hui.</p>
+        @if (nextDay(); as next) {
+          <p class="bx-muted">Prochains cours : <strong>{{ next.day.label }}</strong></p>
+          <ul class="today__list">
+            @for (s of next.slots.slice(0, 3); track s.id) {
+              <li class="slot">
+                <span class="slot__time">{{ s.startTime | hour }}<small>– {{ s.endTime | hour }}</small></span>
+                <span class="slot__info">
+                  <strong>{{ s.discipline.name }}</strong>
+                  <span>{{ audience(s.audience) }} · {{ s.venue.name }}</span>
+                </span>
+              </li>
+            }
+          </ul>
+        }
+      }
+      <a routerLink="/planning" class="bx-btn bx-btn--dark">Planning de la semaine <span class="bx-arrow" aria-hidden="true">→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ACTUALITÉS --------------------------------------------------------- -->
+<section class="bx-section bx-section--surface" aria-labelledby="news-title">
+  <div class="bx-container">
+    <header class="bx-section-head">
+      <div>
+        <span class="bx-eyebrow">Actualités</span>
+        <h2 id="news-title">La vie du club</h2>
+      </div>
+      <a routerLink="/actualites" class="bx-link">Toutes les actus <span class="bx-arrow" aria-hidden="true">→</span></a>
+    </header>
+    @if (articles.loading() && !articles.data()) {
+      <app-skeleton-grid [count]="3" ratio="16 / 10" min="280px" />
+    } @else if (articles.error()) {
+      <app-load-error [message]="articles.error()!" (retry)="articles.retry()" />
+    } @else if (articles.data()?.items?.length) {
+      <div class="bx-grid news-grid">
+        @for (a of articles.data()!.items; track a.id) {
+          <app-article-card [article]="a" />
+        }
+      </div>
+    } @else {
+      <p class="bx-muted">Aucune actualité publiée pour le moment.</p>
+    }
+  </div>
+</section>
+
+<!-- PARTENAIRES -------------------------------------------------------- -->
+@if (partners.data()?.length) {
+  <section class="bx-section bx-section--tight partners" aria-labelledby="partners-title">
+    <div class="bx-container">
+      <h2 id="partners-title" class="partners__title">Ils soutiennent le club</h2>
+      <ul class="partners__list">
+        @for (p of partners.data(); track p.id) {
+          <li>
+            @if (p.url) {
+              <a [href]="p.url" target="_blank" rel="noopener" class="partner">
+                @if (p.logo | media; as logo) {
+                  <img [src]="logo" [alt]="p.name" loading="lazy" />
+                } @else {
+                  <span>{{ p.name }}</span>
+                }
+                <span class="bx-sr-only"> (nouvel onglet)</span>
+              </a>
+            } @else {
+              <span class="partner">
+                @if (p.logo | media; as logo) {
+                  <img [src]="logo" [alt]="p.name" loading="lazy" />
+                } @else {
+                  <span>{{ p.name }}</span>
+                }
+              </span>
+            }
+          </li>
+        }
+      </ul>
+    </div>
+  </section>
+}

@@ -1,4 +1,4 @@
-# Poker Winners — application Angular (redkards-dev.fr), Apache / o2switch
+# ESC Boxe Tergnier — application Angular (esct-beta.redkards-dev.fr), Apache / o2switch
 # Le script de deploiement ajoute en tete la protection par mot de passe de la beta.
 
 Options -Indexes -MultiViews
@@ -24,8 +24,8 @@ DirectoryIndex index.html
     Header always set X-Frame-Options "DENY"
     Header always set Referrer-Policy "strict-origin-when-cross-origin"
     Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
-    # CSP : scripts du site uniquement ; polices Google ; videos via youtube-nocookie apres clic ; API dediee
-    Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://api.redkards-dev.fr; frame-src https://www.youtube-nocookie.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
+    # CSP : scripts du site uniquement ; polices Google ; cartes OpenStreetMap ; API dediee
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://esct-api.redkards-dev.fr; frame-src https://www.openstreetmap.org; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
 
     # index.html jamais en cache (nouvelle version visible tout de suite) ; fichiers hashes en cache long
     <FilesMatch "^index\.html$">

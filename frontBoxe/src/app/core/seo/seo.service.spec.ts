@@ -16,12 +16,12 @@ describe('SeoService', () => {
   });
 
   it('pose le titre, la meta description et l’Open Graph', () => {
-    service.update({ title: 'Forum — Poker Winners', description: 'Analyses de mains.', type: 'article' });
+    service.update({ title: 'Boxeurs — ESC Boxe Tergnier', description: 'Nos boxeurs et leur palmarès.', type: 'article' });
 
-    expect(title.getTitle()).toBe('Forum — Poker Winners');
-    expect(content('name="description"')).toBe('Analyses de mains.');
-    expect(content('property="og:title"')).toBe('Forum — Poker Winners');
-    expect(content('property="og:description"')).toBe('Analyses de mains.');
+    expect(title.getTitle()).toBe('Boxeurs — ESC Boxe Tergnier');
+    expect(content('name="description"')).toBe('Nos boxeurs et leur palmarès.');
+    expect(content('property="og:title"')).toBe('Boxeurs — ESC Boxe Tergnier');
+    expect(content('property="og:description"')).toBe('Nos boxeurs et leur palmarès.');
     expect(content('property="og:type"')).toBe('article');
     expect(content('property="og:locale"')).toBe('fr_FR');
   });
@@ -35,7 +35,7 @@ describe('SeoService', () => {
   });
 
   it('résume un texte long en moins de 160 caractères', () => {
-    const long = 'Le poker est un jeu de décisions. '.repeat(10);
+    const long = 'La boxe est un sport de décisions. '.repeat(10);
     const summary = summarize(long);
 
     expect(summary.length).toBeLessThanOrEqual(160);

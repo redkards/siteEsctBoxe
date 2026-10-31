@@ -13,7 +13,7 @@ module.exports = function (config) {
     ],
     jasmineHtmlReporter: { suppressAll: true },
     coverageReporter: {
-      dir: require("path").join(__dirname, "./coverage/front-poker"),
+      dir: require("path").join(__dirname, "./coverage/esct-boxe-front"),
       subdir: ".",
       reporters: [{ type: "html" }, { type: "text-summary" }],
     },

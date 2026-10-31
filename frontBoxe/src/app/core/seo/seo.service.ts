@@ -1,19 +1,23 @@
 import { Injectable, inject } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 
-export type OgType = 'website' | 'article' | 'profile' | 'video.other';
+export type OgType = 'website' | 'article' | 'profile';
 
 export interface SeoData {
   /** Titre complet de la page (balise <title> et og:title) */
   title?: string;
   description?: string | null;
   type?: OgType;
+  /** Image Open Graph (URL absolue ou chemin) */
+  image?: string | null;
 }
 
-export const SITE_NAME = 'Poker Winners';
-export const DEFAULT_TITLE = 'Poker Winners — La communauté poker francophone';
+export const DEFAULT_IMAGE = 'img/training2.jpg';
+
+export const SITE_NAME = 'ESC Boxe Tergnier';
+export const DEFAULT_TITLE = 'ESC Boxe Tergnier — Club de boxe anglaise à Tergnier (Aisne)';
 export const DEFAULT_DESCRIPTION =
-  "Poker Winners : actualités, forum d'entraide, vidéos pédagogiques et leçons pour progresser au poker, du débutant au joueur confirmé.";
+  'ESC Boxe Tergnier, club de boxe anglaise à Tergnier (02700) : boxe éducative, loisir, amateur et pro, planning des cours, tarifs, boxeurs, galas et inscriptions en ligne.';
 
 /** Longueur conseillée d'une meta description */
 const DESCRIPTION_MAX = 160;
@@ -21,7 +25,7 @@ const DESCRIPTION_MAX = 160;
 /**
  * SEO — meta description et balises Open Graph de la page courante.
  * Appelé par SeoTitleStrategy à chaque navigation (données de route),
- * puis par les pages dynamiques (article, vidéo, sujet, profil) une fois le contenu chargé.
+ * puis par les pages dynamiques (actualité, boxeur, événement, discipline) une fois le contenu chargé.
  * Le noindex de la bêta reste porté par index.html (meta robots) et robots.txt.
  */
 @Injectable({ providedIn: 'root' })
@@ -29,7 +33,7 @@ export class SeoService {
   private readonly title = inject(Title);
   private readonly meta = inject(Meta);
 
-  update({ title, description, type = 'website' }: SeoData): void {
+  update({ title, description, type = 'website', image }: SeoData): void {
     const pageTitle = title?.trim() || DEFAULT_TITLE;
     const pageDescription = summarize(description) || DEFAULT_DESCRIPTION;
 
@@ -40,6 +44,7 @@ export class SeoService {
     this.meta.updateTag({ property: 'og:type', content: type });
     this.meta.updateTag({ property: 'og:site_name', content: SITE_NAME });
     this.meta.updateTag({ property: 'og:locale', content: 'fr_FR' });
+    this.meta.updateTag({ property: 'og:image', content: image || DEFAULT_IMAGE });
   }
 }
 

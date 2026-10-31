@@ -20,7 +20,7 @@ html[data-theme='azur'] {
   --bx-primary-hover: #0f56a8;
   --bx-primary-ink: #ffffff;
   --bx-primary-soft: #e1eefc;
-  --bx-accent: #1e88e5; // azur vif : décor, dégradés, halos (pas de texte courant)
+  --bx-accent: #8fbbea;
   --bx-dark: #0a2342;
   --bx-dark-ink: #ffffff;
   --bx-hero-overlay: linear-gradient(180deg, rgb(10 35 66 / 0.15) 0%, rgb(10 35 66 / 0.72) 100%),
@@ -48,4 +48,189 @@ html[data-theme='azur'] {
   --bx-footer-bg: #0a2342;
   --bx-footer-ink: #c4d3e6;
   --bx-glass: rgb(255 255 255 / 0.62);
+
+  // Tokens complémentaires (_tokens.scss)
+  --bx-accent-ink: #0c1b2e;
+  --bx-dark-2: #123259;
+  --bx-dark-muted: #a9bdd6;
+  --bx-dark-line: rgb(255 255 255 / 0.14);
+  --bx-hero-ink: #ffffff;
+  --bx-success-soft: #e2f3ec;
+  --bx-warning-soft: #fdf0dc;
+  --bx-danger-soft: #fdecec;
+  --bx-info: #1667c2;
+  --bx-info-soft: #e1eefc;
+  --bx-display-weight: 700;
+  --bx-header-muted: #4a5d73;
+  --bx-footer-muted: #9fb3cc;
+  --bx-link: #1667c2;
+}
+
+/* --------------------------------------------------------------------------
+   Surcharges « Azur »
+   -------------------------------------------------------------------------- */
+html[data-theme='azur'] {
+  body {
+    background:
+      radial-gradient(1100px 620px at 8% -8%, rgb(30 136 229 / 0.2), transparent 62%),
+      radial-gradient(900px 560px at 100% 4%, rgb(143 187 234 / 0.4), transparent 60%),
+      radial-gradient(900px 700px at 50% 110%, rgb(30 136 229 / 0.12), transparent 60%),
+      var(--bx-bg);
+    background-attachment: fixed;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-weight: 700;
+    line-height: 1.12;
+  }
+
+  ::selection {
+    background: #cfe4fb;
+    color: var(--bx-ink);
+  }
+
+  // Sur-titre : pastille
+  .bx-eyebrow {
+    padding: 0.35rem 0.85rem;
+    border-radius: 999px;
+    background: var(--bx-primary-soft);
+    color: var(--bx-primary);
+    letter-spacing: 0.16em;
+    font-size: 0.72rem;
+
+    &::before {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+  }
+
+  // Verre dépoli
+  .bx-card,
+  .bx-panel {
+    background: var(--bx-card);
+    border: 1px solid var(--bx-card-border);
+    box-shadow: var(--bx-shadow-sm);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+  }
+
+  .bx-card {
+    border-radius: var(--bx-radius-lg);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  a.bx-card:hover,
+  .bx-card:has(a:hover) {
+    transform: translateY(-3px);
+    box-shadow: var(--bx-shadow);
+  }
+
+  // Boutons pilule
+  .bx-btn {
+    border-radius: 999px;
+    text-transform: none;
+    letter-spacing: 0.01em;
+    font-weight: 600;
+    font-size: 0.95rem;
+
+    &--primary {
+      background: linear-gradient(135deg, #1976d2 0%, #1258a8 100%);
+      box-shadow: 0 12px 24px -12px rgb(22 103 194 / 0.7);
+
+      &:not(:disabled):hover {
+        background: linear-gradient(135deg, #1667c2 0%, #0d4a90 100%);
+      }
+    }
+
+    &--dark {
+      background: var(--bx-dark);
+      color: #fff;
+    }
+
+    &--outline {
+      border-color: rgb(22 103 194 / 0.35);
+      color: var(--bx-primary);
+      background: rgb(255 255 255 / 0.55);
+      backdrop-filter: blur(8px);
+
+      &:not(:disabled):hover {
+        background: var(--bx-primary);
+        border-color: var(--bx-primary);
+        color: #fff;
+      }
+    }
+
+    &--light {
+      border-color: rgb(255 255 255 / 0.6);
+      background: rgb(255 255 255 / 0.12);
+      backdrop-filter: blur(8px);
+    }
+
+    &--ghost:not(:disabled):hover {
+      background: var(--bx-primary-soft);
+    }
+  }
+
+  .bx-link {
+    color: var(--bx-primary);
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  .bx-section--surface {
+    background: rgb(255 255 255 / 0.45);
+    border-block: 1px solid rgb(255 255 255 / 0.7);
+  }
+
+  .bx-section--dark,
+  .bx-page-head {
+    background:
+      radial-gradient(700px 380px at 85% 0%, rgb(30 136 229 / 0.45), transparent 65%),
+      radial-gradient(600px 400px at 0% 100%, rgb(143 187 234 / 0.18), transparent 60%),
+      linear-gradient(160deg, #0a2342 0%, #0b2f5c 100%);
+
+    .bx-eyebrow {
+      background: rgb(255 255 255 / 0.1);
+      color: #bcd8f6;
+    }
+  }
+
+  .bx-page-head {
+    border-radius: 0 0 var(--bx-radius-lg) var(--bx-radius-lg);
+
+    &::after {
+      width: 420px;
+      height: 420px;
+      right: -120px;
+      bottom: -200px;
+      border: 0;
+      background: radial-gradient(circle, rgb(30 136 229 / 0.55), transparent 70%);
+      opacity: 1;
+    }
+
+    h1 {
+      font-weight: 800;
+    }
+  }
+
+  .bx-badge {
+    border-radius: 999px;
+    padding-inline: 0.75rem;
+    text-transform: none;
+    letter-spacing: 0.01em;
+    font-weight: 600;
+  }
+
+  .bx-input {
+    background: rgb(255 255 255 / 0.8);
+    border-color: #cddcec;
+  }
+
+  // Photos : légère clarté, coins arrondis
+  main img:not([src*='logo']) {
+    filter: saturate(1.05) contrast(1.02);
+  }
 }

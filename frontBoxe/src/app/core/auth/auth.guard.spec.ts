@@ -7,7 +7,7 @@ import { AuthService } from './auth.service';
 describe('authGuard / guestGuard', () => {
   const loggedIn = signal(false);
   const route = {} as ActivatedRouteSnapshot;
-  const state = { url: '/forum/nouveau' } as RouterStateSnapshot;
+  const state = { url: '/mon-espace/messages' } as RouterStateSnapshot;
 
   beforeEach(() => {
     loggedIn.set(false);
@@ -26,7 +26,7 @@ describe('authGuard / guestGuard', () => {
   });
 
   it('renvoie un visiteur vers /connexion en mémorisant la page demandée', () => {
-    expect(url(run(authGuard))).toBe('/connexion?returnUrl=%2Fforum%2Fnouveau');
+    expect(url(run(authGuard))).toBe('/connexion?returnUrl=%2Fmon-espace%2Fmessages');
   });
 
   it("guestGuard : ouvre connexion/inscription aux visiteurs, renvoie les membres vers « Mon espace »", () => {

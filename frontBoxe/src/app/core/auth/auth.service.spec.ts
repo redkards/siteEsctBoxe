@@ -8,15 +8,13 @@ import { AuthService } from './auth.service';
 
 const DEMO_USER: CurrentUser = {
   id: 1,
-  email: 'demo@pokervitrine.local',
-  pseudo: 'Demo',
+  email: 'demo@esctboxe.local',
+  firstName: 'Léa',
+  lastName: 'Démo',
+  phone: null,
+  birthDate: '2000-05-12',
   roles: ['ROLE_USER'],
-  isVerified: true,
   createdAt: '2026-10-01T10:00:00+00:00',
-  lastLoginAt: null,
-  consentVersion: '1.0',
-  premium: false,
-  premiumUntil: null,
 };
 
 describe('AuthService', () => {
@@ -43,18 +41,18 @@ describe('AuthService', () => {
   it('se connecte : enregistre les jetons puis charge le profil', () => {
     let user: CurrentUser | undefined;
 
-    service.login('demo@pokervitrine.local', 'secret').subscribe((u) => (user = u));
+    service.login('demo@esctboxe.local', 'secret').subscribe((u) => (user = u));
 
     const login = http.expectOne(`${environment.apiUrl}/login`);
     expect(login.request.method).toBe('POST');
-    expect(login.request.body).toEqual({ email: 'demo@pokervitrine.local', password: 'secret' });
+    expect(login.request.body).toEqual({ email: 'demo@esctboxe.local', password: 'secret' });
     login.flush({ token: 'access-1', refresh_token: 'refresh-1' });
 
     http.expectOne(`${environment.apiUrl}/me`).flush(DEMO_USER);
 
     expect(user).toEqual(DEMO_USER);
     expect(service.getAccessToken()).toBe('access-1');
-    expect(localStorage.getItem('pv_refresh_token')).toBe('refresh-1');
+    expect(localStorage.getItem('esct_refresh_token')).toBe('refresh-1');
     expect(service.isLoggedIn()).toBeTrue();
   });
 
@@ -68,7 +66,7 @@ describe('AuthService', () => {
   });
 
   it('restaure la session à null si /me échoue (jeton expiré et refresh refusé)', () => {
-    localStorage.setItem('pv_access_token', 'expire');
+    localStorage.setItem('esct_access_token', 'expire');
     let result: CurrentUser | null | undefined;
 
     service.restoreSession().subscribe((u) => (result = u));
@@ -79,7 +77,7 @@ describe('AuthService', () => {
   });
 
   it("partage un seul refresh entre plusieurs appels simultanés (refresh token à usage unique)", () => {
-    localStorage.setItem('pv_refresh_token', 'refresh-1');
+    localStorage.setItem('esct_refresh_token', 'refresh-1');
     const tokens: string[] = [];
 
     service.refreshAccessToken().subscribe((t) => tokens.push(t));
@@ -90,7 +88,7 @@ describe('AuthService', () => {
     req.flush({ token: 'access-2', refresh_token: 'refresh-2' });
 
     expect(tokens).toEqual(['access-2', 'access-2']);
-    expect(localStorage.getItem('pv_refresh_token')).toBe('refresh-2');
+    expect(localStorage.getItem('esct_refresh_token')).toBe('refresh-2');
 
     // Le refresh suivant repart du nouveau refresh token
     service.refreshAccessToken().subscribe();
@@ -107,8 +105,8 @@ describe('AuthService', () => {
   });
 
   it("se déconnecte : efface les jetons et l'utilisateur, redirige vers l'accueil", () => {
-    localStorage.setItem('pv_access_token', 'a');
-    localStorage.setItem('pv_refresh_token', 'r');
+    localStorage.setItem('esct_access_token', 'a');
+    localStorage.setItem('esct_refresh_token', 'r');
     service.loadCurrentUser().subscribe();
     http.expectOne(`${environment.apiUrl}/me`).flush(DEMO_USER);
 
@@ -116,8 +114,28 @@ describe('AuthService', () => {
 
     expect(service.isLoggedIn()).toBeFalse();
     expect(service.getAccessToken()).toBeNull();
-    expect(localStorage.getItem('pv_refresh_token')).toBeNull();
+    expect(localStorage.getItem('esct_refresh_token')).toBeNull();
     expect(router.navigateByUrl).toHaveBeenCalledWith('/');
+  });
+
+  it("vérifie l'email par POST /verify-email avec le jeton", () => {
+    service.verifyEmail('tok-123').subscribe();
+
+    const req = http.expectOne(`${environment.apiUrl}/verify-email`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual({ token: 'tok-123' });
+    req.flush({ message: 'ok' });
+  });
+
+  it('isStaff : vrai pour un coach ou un admin, faux pour un membre', () => {
+    localStorage.setItem('esct_access_token', 'a');
+    service.loadCurrentUser().subscribe();
+    http.expectOne(`${environment.apiUrl}/me`).flush(DEMO_USER);
+    expect(service.isStaff()).toBeFalse();
+
+    service.loadCurrentUser().subscribe();
+    http.expectOne(`${environment.apiUrl}/me`).flush({ ...DEMO_USER, roles: ['ROLE_USER', 'ROLE_COACH'] });
+    expect(service.isStaff()).toBeTrue();
   });
 
   it('se déconnecte sans redirection quand demandé', () => {
