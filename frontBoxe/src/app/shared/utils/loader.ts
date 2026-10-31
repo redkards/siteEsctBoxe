@@ -1,4 +1,4 @@
-import { DestroyRef, inject, signal } from '@angular/core';
+import { DestroyRef, inject, signal, untracked } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { apiErrorMessage } from '../../core/api/api.service';
@@ -16,7 +16,12 @@ export class Loader<T> {
   private sub: Subscription | null = null;
   private last: (() => Observable<T>) | null = null;
 
+  /** Exécuté hors suivi des signals : appelable depuis un effect() sans créer de dépendance */
   run(source: () => Observable<T>): void {
+    untracked(() => this.start(source));
+  }
+
+  private start(source: () => Observable<T>): void {
     this.last = source;
     this.sub?.unsubscribe();
     this.loading.set(true);

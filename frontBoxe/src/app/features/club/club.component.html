@@ -1,0 +1,188 @@
+<section class="bx-page-head">
+  <div class="bx-container">
+    <nav class="bx-breadcrumb" aria-label="Fil d'Ariane"><a routerLink="/">Accueil</a><span aria-hidden="true">/</span><span>Le club</span></nav>
+    <h1>Le club</h1>
+    <p>{{ club.data()?.tagline ?? 'Un club de boxe anglaise ancré à Tergnier, ouvert à tous les âges et à tous les niveaux.' }}</p>
+  </div>
+</section>
+
+<!-- Histoire -->
+<section class="bx-section" aria-labelledby="story-title">
+  <div class="bx-container story">
+    <div class="story__text">
+      <span class="bx-eyebrow">Notre histoire</span>
+      <h2 id="story-title">
+        @if (club.data()?.foundedYear; as y) {
+          Depuis {{ y }}, la boxe au cœur de Tergnier
+        } @else {
+          La boxe au cœur de Tergnier
+        }
+      </h2>
+      <p>
+        Au cœur de notre club, nous cultivons une passion profonde pour la boxe sous toutes ses formes : loisir, boxe
+        éducative, amateur et professionnelle. Que vous soyez un boxeur chevronné ou un débutant enthousiaste, l'ESC Boxe
+        Tergnier est l'endroit idéal pour progresser.
+      </p>
+      <p>
+        Notre mission : offrir un environnement sécurisé et stimulant où chaque membre développe ses compétences, renforce
+        sa condition physique et atteint ses objectifs, sous la supervision de coachs expérimentés et passionnés.
+      </p>
+      @if (club.data()?.stats; as s) {
+        <dl class="story__stats">
+          <div><dt>Licenciés</dt><dd>{{ s.members }}</dd></div>
+          <div><dt>Boxeurs</dt><dd>{{ s.boxers }}</dd></div>
+          <div><dt>Coachs</dt><dd>{{ s.coaches }}</dd></div>
+          <div><dt>Titres</dt><dd>{{ s.titles }}</dd></div>
+        </dl>
+      }
+    </div>
+    <figure class="story__photo">
+      <img src="img/stmichel1.jpg" alt="Les boxeurs et coachs de l'ESC Boxe Tergnier réunis au bord du ring" loading="lazy" />
+      <figcaption>L'équipe du club lors d'un gala.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- Valeurs -->
+<section class="bx-section bx-section--dark" aria-labelledby="values-title">
+  <div class="bx-container">
+    <header class="bx-section-head">
+      <div>
+        <span class="bx-eyebrow">Nos valeurs</span>
+        <h2 id="values-title">Ce qui nous fait avancer</h2>
+      </div>
+    </header>
+    <ol class="values">
+      @for (v of values; track v.title; let i = $index) {
+        <li class="value">
+          <span class="value__num" aria-hidden="true">0{{ i + 1 }}</span>
+          <h3>{{ v.title }}</h3>
+          <p>{{ v.text }}</p>
+        </li>
+      }
+    </ol>
+  </div>
+</section>
+
+<!-- Coachs -->
+<section class="bx-section" aria-labelledby="coaches-title">
+  <div class="bx-container">
+    <header class="bx-section-head">
+      <div>
+        <span class="bx-eyebrow">L'encadrement</span>
+        <h2 id="coaches-title">Nos coachs</h2>
+        <p>Des entraîneurs diplômés et bénévoles, présents à chaque séance.</p>
+      </div>
+    </header>
+    @if (coaches.loading() && !coaches.data()) {
+      <app-skeleton-grid [count]="3" ratio="1 / 1" min="240px" />
+    } @else if (coaches.error()) {
+      <app-load-error [message]="coaches.error()!" (retry)="coaches.retry()" />
+    } @else if (coaches.data()?.length) {
+      <div class="bx-grid coaches">
+        @for (c of coaches.data(); track c.id) {
+          <article class="coach">
+            <div class="coach__photo">
+              @if (c.photo | media; as src) {
+                <img [src]="src" [alt]="'Portrait de ' + c.firstName + ' ' + c.lastName" loading="lazy" />
+              } @else {
+                <span aria-hidden="true">{{ c.firstName.charAt(0) }}{{ c.lastName.charAt(0) }}</span>
+              }
+            </div>
+            <div class="coach__body">
+              <h3>{{ c.firstName }} {{ c.lastName }}</h3>
+              @if (c.role) {
+                <p class="coach__role">{{ c.role }}</p>
+              }
+              @if (c.diplomas) {
+                <p class="coach__diplomas">{{ c.diplomas }}</p>
+              }
+              @if (c.bio) {
+                <p class="coach__bio">{{ c.bio }}</p>
+              }
+              @if (c.disciplines.length) {
+                <ul class="coach__tags" aria-label="Disciplines encadrées">
+                  @for (d of c.disciplines; track d.slug) {
+                    <li><a [routerLink]="['/disciplines', d.slug]" class="bx-badge bx-badge--soft">{{ d.name }}</a></li>
+                  }
+                </ul>
+              }
+            </div>
+          </article>
+        }
+      </div>
+    } @else {
+      <p class="bx-muted">La présentation de nos coachs arrive bientôt.</p>
+    }
+  </div>
+</section>
+
+<!-- Salles -->
+<section class="bx-section bx-section--surface" aria-labelledby="venues-title">
+  <div class="bx-container">
+    <header class="bx-section-head">
+      <div>
+        <span class="bx-eyebrow">Où s'entraîner</span>
+        <h2 id="venues-title">Nos salles</h2>
+      </div>
+      <a routerLink="/planning" class="bx-link">Voir les horaires <span class="bx-arrow" aria-hidden="true">→</span></a>
+    </header>
+    @if (venues.loading() && !venues.data()) {
+      <app-skeleton-grid [count]="2" ratio="16 / 9" min="320px" />
+    } @else if (venues.error()) {
+      <app-load-error [message]="venues.error()!" (retry)="venues.retry()" />
+    } @else {
+      <div class="venues">
+        @for (v of venues.data(); track v.id) {
+          <article class="venue">
+            @if (mapUrl(v); as map) {
+              <iframe class="venue__map" [src]="map" [title]="'Carte : ' + v.name" loading="lazy"></iframe>
+            } @else if (v.photo | media; as src) {
+              <img class="venue__map" [src]="src" alt="" loading="lazy" />
+            }
+            <div class="venue__body">
+              <h3>{{ v.name }}</h3>
+              <address>{{ v.address }}<br />{{ v.postalCode }} {{ v.city }}</address>
+              @if (v.description) {
+                <p class="bx-muted">{{ v.description }}</p>
+              }
+              <a class="bx-link" [href]="osmLink(v.latitude, v.longitude, v.address + ' ' + v.postalCode + ' ' + v.city)" target="_blank" rel="noopener">
+                Ouvrir dans OpenStreetMap <span class="bx-arrow" aria-hidden="true">→</span><span class="bx-sr-only"> (nouvel onglet)</span>
+              </a>
+            </div>
+          </article>
+        } @empty {
+          <p class="bx-muted">Adresse des salles bientôt disponible.</p>
+        }
+      </div>
+    }
+  </div>
+</section>
+
+<!-- Partenaires -->
+@if (partners.data()?.length) {
+  <section class="bx-section" aria-labelledby="partners-title">
+    <div class="bx-container">
+      <header class="bx-section-head">
+        <div>
+          <span class="bx-eyebrow">Merci à eux</span>
+          <h2 id="partners-title">Nos partenaires</h2>
+        </div>
+      </header>
+      <ul class="partners">
+        @for (p of partners.data(); track p.id) {
+          <li class="partner">
+            @if (p.logo | media; as logo) {
+              <img [src]="logo" alt="" loading="lazy" />
+            }
+            @if (p.url) {
+              <a [href]="p.url" target="_blank" rel="noopener">{{ p.name }}<span class="bx-sr-only"> (nouvel onglet)</span></a>
+            } @else {
+              <span>{{ p.name }}</span>
+            }
+          </li>
+        }
+      </ul>
+    </div>
+  </section>
+}

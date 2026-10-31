@@ -1,0 +1,482 @@
+/* HERO ------------------------------------------------------------------ */
+.hero {
+  position: relative;
+  display: flex;
+  min-height: min(92vh, 860px);
+  overflow: hidden;
+  background: var(--bx-dark);
+  color: var(--bx-hero-ink);
+}
+
+.hero__photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 60% 35%;
+}
+
+.hero__overlay {
+  position: absolute;
+  inset: 0;
+  background: var(--bx-hero-overlay);
+}
+
+.hero__inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 3rem;
+  padding-block: clamp(3.5rem, 10vh, 7rem) 2.5rem;
+}
+
+.hero__content {
+  display: grid;
+  justify-items: start;
+  gap: 1.3rem;
+  max-width: 720px;
+}
+
+.hero__eyebrow {
+  color: var(--bx-hero-ink);
+
+  &::before {
+    background: var(--bx-primary);
+  }
+}
+
+.hero__title {
+  font-size: clamp(2.8rem, 8vw, 6rem);
+  line-height: 0.95;
+
+  em {
+    color: var(--bx-primary);
+    font-style: normal;
+  }
+}
+
+.hero__club {
+  display: block;
+  margin-bottom: 0.8rem;
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  letter-spacing: 0.3em;
+  opacity: 0.85;
+}
+
+.hero__lead {
+  max-width: 52ch;
+  margin: 0;
+  font-size: clamp(1.02rem, 1.6vw, 1.2rem);
+  opacity: 0.92;
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 0.4rem;
+
+  .bx-btn--light {
+    color: var(--bx-hero-ink);
+  }
+}
+
+.hero__stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  border-top: 1px solid rgb(255 255 255 / 0.22);
+}
+
+.stat {
+  display: grid;
+  gap: 0.2rem;
+  padding: 1.2rem 1rem 0 0;
+
+  & + & {
+    padding-left: 1.2rem;
+    border-left: 1px solid rgb(255 255 255 / 0.18);
+  }
+}
+
+.stat__value {
+  font-family: var(--bx-font-display);
+  font-size: clamp(2rem, 4.5vw, 3.2rem);
+  font-weight: 700;
+  line-height: 1;
+
+  small {
+    font-size: 0.45em;
+  }
+}
+
+.stat__label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.82;
+}
+
+.stat__sk {
+  height: 3rem;
+  opacity: 0.25;
+}
+
+@media (max-width: 640px) {
+  .hero {
+    min-height: auto;
+  }
+
+  .hero__photo {
+    object-position: 65% 30%;
+  }
+
+  .hero__actions .bx-btn {
+    width: 100%;
+  }
+
+  .hero__stats {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .stat {
+    padding: 1rem 0.5rem 0.4rem 0;
+
+    & + & {
+      padding-left: 0;
+      border-left: 0;
+    }
+  }
+}
+
+/* PROCHAIN GALA ----------------------------------------------------------- */
+.gala {
+  position: relative;
+  overflow: hidden;
+  padding-block: clamp(3rem, 6vw, 4.5rem);
+  background:
+    linear-gradient(115deg, var(--bx-dark) 0 55%, transparent 55%),
+    linear-gradient(115deg, var(--bx-primary) 0 100%);
+  color: var(--bx-dark-ink);
+}
+
+.gala__sk {
+  height: 280px;
+  opacity: 0.2;
+}
+
+.gala__inner {
+  display: grid;
+  grid-template-columns: minmax(200px, 300px) 1fr;
+  align-items: center;
+  gap: clamp(1.5rem, 5vw, 4rem);
+}
+
+.gala__poster img {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border-radius: var(--bx-radius);
+  box-shadow: 0 30px 60px -20px rgb(0 0 0 / 0.7);
+  transform: rotate(-2deg);
+}
+
+.gala__content {
+  display: grid;
+  justify-items: start;
+  gap: 1rem;
+
+  .bx-eyebrow {
+    color: var(--bx-dark-ink);
+
+    &::before {
+      background: var(--bx-primary);
+    }
+  }
+}
+
+.gala__title {
+  font-size: clamp(2rem, 5vw, 3.6rem);
+}
+
+.gala__when {
+  margin: 0;
+  color: var(--bx-dark-muted);
+  font-size: 1.05rem;
+
+  time {
+    color: var(--bx-dark-ink);
+    font-weight: 600;
+  }
+}
+
+.gala__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 760px) {
+  .gala {
+    background: var(--bx-dark);
+  }
+
+  .gala__inner {
+    grid-template-columns: 1fr;
+  }
+
+  .gala__poster {
+    max-width: 240px;
+  }
+}
+
+/* DISCIPLINES -------------------------------------------------------------- */
+.disc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  gap: 1rem;
+}
+
+.disc {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-height: 340px;
+  overflow: hidden;
+  border-radius: var(--bx-radius);
+  background: var(--bx-dark);
+  color: var(--bx-hero-ink);
+  text-decoration: none;
+
+  img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s;
+  }
+
+  &:hover img {
+    transform: scale(1.06);
+  }
+}
+
+.disc__shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgb(0 0 0 / 0.05) 20%, rgb(0 0 0 / 0.88) 100%);
+}
+
+.disc__num {
+  position: absolute;
+  top: 0.9rem;
+  right: 1rem;
+  font-family: var(--bx-font-display);
+  font-size: 2.6rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--bx-primary);
+}
+
+.disc__body {
+  position: relative;
+  display: grid;
+  gap: 0.4rem;
+  padding: 1.3rem;
+}
+
+.disc__name {
+  font-family: var(--bx-font-display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: var(--bx-display-tracking);
+  text-transform: var(--bx-display-transform);
+}
+
+.disc__text {
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.disc__age {
+  justify-self: start;
+  margin-top: 0.3rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--bx-radius-sm);
+  background: var(--bx-primary);
+  color: var(--bx-primary-ink);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* BOXEURS --------------------------------------------------------------------- */
+.fighters .bx-eyebrow::before {
+  background: var(--bx-primary);
+}
+
+.fighters__grid {
+  --bx-grid-min: 230px;
+}
+
+/* PLANNING DU JOUR -------------------------------------------------------------- */
+.today {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: clamp(2rem, 5vw, 4rem);
+}
+
+.today__photos {
+  position: relative;
+  min-height: 420px;
+
+  img {
+    position: absolute;
+    object-fit: cover;
+    border-radius: var(--bx-radius);
+    box-shadow: var(--bx-shadow);
+  }
+
+  img:first-child {
+    top: 0;
+    left: 0;
+    width: 78%;
+    height: 72%;
+  }
+
+  img:last-child {
+    right: 0;
+    bottom: 0;
+    width: 58%;
+    height: 52%;
+    border: 6px solid var(--bx-bg);
+  }
+}
+
+.today__content {
+  display: grid;
+  justify-items: start;
+  gap: 1rem;
+
+  h2 {
+    font-size: clamp(1.9rem, 4vw, 2.8rem);
+  }
+}
+
+.today__list {
+  display: grid;
+  gap: 0.6rem;
+  width: 100%;
+  margin: 0 0 0.5rem;
+  padding: 0;
+  list-style: none;
+}
+
+.today__sk {
+  height: 64px;
+}
+
+.today__none {
+  margin: 0;
+  font-weight: 600;
+}
+
+.slot {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--bx-card-border);
+  border-left: 4px solid var(--bx-primary);
+  border-radius: var(--bx-radius-sm);
+  background: var(--bx-card);
+}
+
+.slot__time {
+  display: grid;
+  font-family: var(--bx-font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.05;
+
+  small {
+    color: var(--bx-muted);
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+}
+
+.slot__info {
+  display: grid;
+
+  span {
+    color: var(--bx-muted);
+    font-size: 0.88rem;
+  }
+}
+
+@media (max-width: 860px) {
+  .today {
+    grid-template-columns: 1fr;
+  }
+
+  .today__photos {
+    min-height: 280px;
+  }
+}
+
+/* ACTUS / PARTENAIRES --------------------------------------------------------- */
+.news-grid {
+  --bx-grid-min: 280px;
+}
+
+.partners__title {
+  margin-bottom: 1.5rem;
+  color: var(--bx-muted);
+  font-size: 1rem;
+  letter-spacing: 0.16em;
+  text-align: center;
+}
+
+.partners__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem 2.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.partner {
+  display: grid;
+  place-items: center;
+  min-height: 64px;
+  color: var(--bx-ink-soft);
+  font-weight: 700;
+  text-decoration: none;
+
+  img {
+    max-width: 150px;
+    max-height: 64px;
+    object-fit: contain;
+    filter: grayscale(1);
+    opacity: 0.8;
+    transition: filter 0.2s, opacity 0.2s;
+  }
+
+  &:hover img {
+    filter: none;
+    opacity: 1;
+  }
+}

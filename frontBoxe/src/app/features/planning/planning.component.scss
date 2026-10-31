@@ -1,0 +1,184 @@
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.2rem 2rem;
+  padding: 1.2rem;
+  border: 1px solid var(--bx-card-border);
+  border-radius: var(--bx-radius);
+  background: var(--bx-card);
+}
+
+.filters__group {
+  display: grid;
+  gap: 0.5rem;
+
+  &--select {
+    min-width: 220px;
+  }
+}
+
+.filters__label {
+  color: var(--bx-ink-soft);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.count {
+  min-height: 1.5rem;
+  margin: 1.2rem 0;
+  color: var(--bx-muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(var(--days, 5), minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.day {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+  padding: 0.6rem;
+  border-radius: var(--bx-radius);
+  background: var(--bx-surface);
+
+  &--today {
+    background: var(--bx-primary-soft);
+    box-shadow: inset 0 0 0 2px var(--bx-primary);
+  }
+}
+
+.day__title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.3rem 0.6rem;
+  border-bottom: 3px solid var(--bx-ink);
+  font-size: 1.15rem;
+}
+
+.day--today .day__title {
+  border-bottom-color: var(--bx-primary);
+}
+
+.day__slots {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.day__empty {
+  margin: 0;
+  padding: 1rem 0.3rem;
+  color: var(--bx-muted);
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+.slot {
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.7rem 0.75rem;
+  border: 1px solid var(--bx-card-border);
+  border-left: 4px solid var(--bx-primary);
+  border-radius: var(--bx-radius-sm);
+  background: var(--bx-card);
+  font-size: 0.85rem;
+
+  &[data-audience='enfants'],
+  &[data-audience='ados'] {
+    border-left-color: var(--bx-accent);
+  }
+
+  &[data-audience='competiteurs'] {
+    border-left-color: var(--bx-ink);
+  }
+}
+
+.slot__time {
+  font-family: var(--bx-font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.slot__disc {
+  font-size: 0.92rem;
+  line-height: 1.25;
+}
+
+.slot__aud {
+  justify-self: start;
+  padding: 0.05rem 0.45rem;
+  border-radius: var(--bx-radius-sm);
+  background: var(--bx-surface);
+  color: var(--bx-ink-soft);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.slot__meta {
+  color: var(--bx-muted);
+  font-size: 0.78rem;
+}
+
+.sk-head {
+  height: 2rem;
+}
+
+.sk-slot {
+  height: 92px;
+}
+
+.note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 2.5rem;
+
+  h2 {
+    font-size: 1.6rem;
+  }
+
+  p {
+    margin: 0.3rem 0 0;
+  }
+}
+
+/* Vue liste en mobile / tablette */
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .day {
+    padding: 0.8rem;
+  }
+
+  .day__slots {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
+  }
+
+  .day__empty {
+    padding: 0.2rem 0.3rem;
+  }
+
+  .filters__group--select {
+    width: 100%;
+  }
+}

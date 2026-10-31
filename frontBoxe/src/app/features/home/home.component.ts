@@ -62,6 +62,8 @@ export class HomeComponent implements OnInit {
   protected readonly nextGala = computed(() => this.galas.data()?.items[0] ?? null);
   protected readonly nextGalaType = computed(() => labelOf(GALA_TYPES, this.nextGala()?.type));
   protected readonly today = DAYS[isoDay() - 1];
+  /** Photos du club utilisées si une discipline n'a pas d'image */
+  protected readonly fallbackPhotos = ['img/eduTergnier2.jpg', 'img/training1.jpg', 'img/champtergnier2.jpg', 'img/galaAmaPro3.jpg', 'img/festi2.jpeg'];
   protected readonly todaySlots = computed(() => slotsOfDay(this.planning.data() ?? []));
   /** S'il n'y a pas cours aujourd'hui : prochain jour avec des créneaux */
   protected readonly nextDay = computed(() => {

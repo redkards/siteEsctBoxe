@@ -1,0 +1,96 @@
+<section class="bx-page-head">
+  <div class="bx-container">
+    <nav class="bx-breadcrumb" aria-label="Fil d'Ariane"><a routerLink="/">Accueil</a><span aria-hidden="true">/</span><span>Planning</span></nav>
+    <h1>Planning des entraînements</h1>
+    <p>Tous les créneaux de la semaine. Filtrez par discipline ou par public pour trouver votre cours.</p>
+  </div>
+</section>
+
+<section class="bx-section">
+  <div class="bx-container">
+    <div class="filters" role="group" aria-label="Filtres du planning">
+      <div class="filters__group">
+        <span class="filters__label" id="f-disc">Discipline</span>
+        <div class="bx-chips" aria-labelledby="f-disc">
+          <button type="button" class="bx-chip" [attr.aria-pressed]="discipline() === null" (click)="discipline.set(null)">Toutes</button>
+          @for (d of disciplines(); track d.slug) {
+            <button type="button" class="bx-chip" [attr.aria-pressed]="discipline() === d.slug" (click)="discipline.set(d.slug)">{{ d.name }}</button>
+          }
+        </div>
+      </div>
+      <div class="filters__group filters__group--select">
+        <label for="f-aud" class="filters__label">Public</label>
+        <select id="f-aud" class="bx-input" [value]="audience() ?? ''" (change)="setAudience($event)">
+          <option value="">Tous les publics</option>
+          @for (a of audiences; track a.value) {
+            <option [value]="a.value">{{ a.label }}</option>
+          }
+        </select>
+      </div>
+    </div>
+
+    <p class="count" role="status" aria-live="polite">
+      @if (!slots.loading()) {
+        {{ total() }} créneau{{ total() > 1 ? 'x' : '' }} cette semaine
+      }
+    </p>
+
+    @if (slots.loading() && !slots.data()) {
+      <div class="grid" aria-hidden="true">
+        @for (i of [1, 2, 3, 4, 5]; track i) {
+          <div class="day">
+            <span class="bx-skeleton sk-head"></span>
+            <span class="bx-skeleton sk-slot"></span>
+            <span class="bx-skeleton sk-slot"></span>
+          </div>
+        }
+      </div>
+    } @else if (slots.error()) {
+      <app-load-error [message]="slots.error()!" (retry)="slots.retry()" />
+    } @else if (total() === 0) {
+      <app-empty title="Aucun créneau" text="Aucun cours ne correspond à ces filtres.">
+        <button type="button" class="bx-btn bx-btn--outline bx-btn--sm" (click)="reset()">Réinitialiser les filtres</button>
+      </app-empty>
+    } @else {
+      <div class="grid" [style.--days]="visibleDays().length">
+        @for (day of visibleDays(); track day.value) {
+          <section class="day" [class.day--today]="day.value === today" [attr.aria-labelledby]="'day-' + day.value">
+            <h2 class="day__title" [id]="'day-' + day.value">
+              {{ day.label }}
+              @if (day.value === today) {
+                <span class="bx-badge bx-badge--primary">Aujourd'hui</span>
+              }
+            </h2>
+            @if (day.slots.length) {
+              <ul class="day__slots">
+                @for (s of day.slots; track s.id) {
+                  <li class="slot" [attr.data-audience]="s.audience">
+                    <span class="slot__time">{{ s.startTime | hour }} – {{ s.endTime | hour }}</span>
+                    <strong class="slot__disc">{{ s.discipline.name }}</strong>
+                    <span class="slot__aud">{{ audienceLabel(s.audience) }}</span>
+                    <span class="slot__meta">
+                      {{ s.venue.name }}
+                      @if (s.coach) {
+                        · {{ fullName(s.coach) }}
+                      }
+                    </span>
+                  </li>
+                }
+              </ul>
+            } @else {
+              <p class="day__empty">Repos</p>
+            }
+          </section>
+        }
+      </div>
+    }
+
+    <aside class="note bx-panel">
+      <div>
+        <h2>Première séance offerte</h2>
+        <p class="bx-muted">Venez avec une tenue de sport et une bouteille d'eau : gants prêtés pour l'essai.</p>
+      </div>
+      <a routerLink="/inscription" class="bx-btn bx-btn--primary">Essai gratuit / S'inscrire <span class="bx-arrow" aria-hidden="true">→</span></a>
+    </aside>
+  </div>
+</section>
