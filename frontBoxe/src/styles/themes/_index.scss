@@ -1,6 +1,5 @@
-/* Directions artistiques sélectionnables (data-theme sur <html>).
-   Importé dans styles.scss APRÈS les tokens par défaut : chaque thème
-   redéfinit toutes les variables --bx-* et ajoute ses surcharges ciblées. */
-@use 'ring';
-@use 'azur';
-@use 'club';
+// Thèmes visuels : chaque thème redéfinit les variables --bx-* sur html[data-theme="…"].
+// Importé APRÈS _tokens.scss dans styles.scss.
+@use './ring';
+@use './azur';
+@use './club';

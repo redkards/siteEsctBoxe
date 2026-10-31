@@ -1,0 +1,83 @@
+/* ==========================================================================
+   ESC Boxe Tergnier — design tokens (thème par défaut)
+   --------------------------------------------------------------------------
+   TOUT le visuel passe par ces variables sémantiques `--bx-*`.
+   Les thèmes (src/styles/themes/*) les redéfinissent sur html[data-theme="…"].
+   Direction par défaut : sobre noir / gris / blanc (couleurs du logo) + accent rouge.
+   ========================================================================== */
+
+:root {
+  /* Fonds et surfaces */
+  --bx-bg: #f3f3f1;
+  --bx-surface: #e8e8e5;
+  --bx-card: #ffffff;
+  --bx-card-border: #dcdcd8;
+  --bx-glass: rgb(255 255 255 / 0.86);
+
+  /* Texte */
+  --bx-ink: #121212;
+  --bx-ink-soft: #34353a;
+  --bx-muted: #5c5e63;
+  --bx-line: #d6d6d2;
+
+  /* Couleur principale (rouge) */
+  --bx-primary: #c4122f;
+  --bx-primary-hover: #9e0e26;
+  --bx-primary-ink: #ffffff;
+  --bx-primary-soft: #fbe7ea;
+
+  /* Accent secondaire (gris acier du logo) */
+  --bx-accent: #8d8f94;
+  --bx-accent-ink: #ffffff;
+
+  /* Blocs sombres (bandeaux, hero, chiffres clés) */
+  --bx-dark: #0e0e0f;
+  --bx-dark-2: #1b1b1d;
+  --bx-dark-ink: #f4f4f4;
+  --bx-dark-muted: #b4b5b9;
+  --bx-dark-line: rgb(255 255 255 / 0.14);
+
+  /* Superposition sur les photos du hero */
+  --bx-hero-overlay: linear-gradient(100deg, rgb(8 8 9 / 0.92) 0%, rgb(8 8 9 / 0.72) 45%, rgb(8 8 9 / 0.25) 100%);
+  --bx-hero-ink: #ffffff;
+
+  /* États */
+  --bx-success: #17703f;
+  --bx-success-soft: #e4f3ea;
+  --bx-warning: #8a5300;
+  --bx-warning-soft: #fdf1dc;
+  --bx-danger: #b3261e;
+  --bx-danger-soft: #fbe7e5;
+  --bx-info: #1f4f86;
+  --bx-info-soft: #e5eef8;
+
+  /* Typographie */
+  --bx-font-display: 'Oswald', 'Arial Narrow', Impact, sans-serif;
+  --bx-font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --bx-display-transform: uppercase;
+  --bx-display-tracking: 0.02em;
+  --bx-display-weight: 700;
+
+  /* Formes */
+  --bx-radius-lg: 18px;
+  --bx-radius: 12px;
+  --bx-radius-sm: 8px;
+  --bx-btn-radius: 6px;
+
+  /* Ombres et focus */
+  --bx-shadow: 0 22px 50px -24px rgb(0 0 0 / 0.35);
+  --bx-shadow-sm: 0 6px 16px -8px rgb(0 0 0 / 0.25);
+  --bx-focus: 0 0 0 3px rgb(196 18 47 / 0.45);
+
+  /* En-tête / pied de page */
+  --bx-header-bg: rgb(14 14 15 / 0.96);
+  --bx-header-ink: #f4f4f4;
+  --bx-header-muted: #b4b5b9;
+  --bx-footer-bg: #0e0e0f;
+  --bx-footer-ink: #e9e9ea;
+  --bx-footer-muted: #a9aaae;
+
+  /* Mise en page */
+  --bx-container: 1240px;
+  --bx-header-h: 72px;
+}
