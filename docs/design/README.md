@@ -1,3 +1,9 @@
+> **Habillage provisoire simplifié — 31/10/2026.** Le propriétaire reporte le travail graphique.
+> Les trois thèmes ci-dessous sont conservés dans les sources, sans être chargés actuellement.
+> Le sélecteur est masqué ; les fonctions et la navigation restent disponibles.
+> Pour reprendre les comparaisons : remplacer l’import et l’inclusion de `simple` dans `src/styles.scss`
+> par l’import de `themes/index`, puis rétablir les polices choisies si nécessaire.
+
 # ESC Boxe Tergnier — directions artistiques (site v2)
 
 Trois thèmes complets, sélectionnables à la volée. Tout le visuel du site passe par les variables CSS

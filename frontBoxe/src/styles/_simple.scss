@@ -1,0 +1,89 @@
+/* Habillage provisoire. Les directions artistiques de Claude restent dans themes/. */
+@mixin apply {
+html[data-theme] {
+  color-scheme: light;
+  --bx-bg: #ffffff;
+  --bx-surface: #f4f5f6;
+  --bx-card: #ffffff;
+  --bx-card-border: #d8dce0;
+  --bx-glass: #ffffff;
+  --bx-ink: #20252b;
+  --bx-ink-soft: #3f4750;
+  --bx-muted: #5e6670;
+  --bx-line: #d8dce0;
+  --bx-primary: #b8172d;
+  --bx-primary-hover: #941225;
+  --bx-primary-soft: #fcecef;
+  --bx-font-display: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --bx-font-body: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --bx-display-transform: none;
+  --bx-display-tracking: normal;
+  --bx-radius-lg: 8px;
+  --bx-radius: 6px;
+  --bx-radius-sm: 4px;
+  --bx-btn-radius: 4px;
+  --bx-shadow: none;
+  --bx-shadow-sm: none;
+  --bx-header-bg: #20252b;
+  --bx-footer-bg: #20252b;
+
+// Masquer uniquement les éléments de décoration et de choix graphique reporté.
+app-theme-switcher,
+.bx-page-head::after,
+.bx-eyebrow::before,
+.footer__cta,
+.hero__photo,
+.hero__overlay {
+  display: none;
+}
+
+.hero {
+  min-height: auto;
+  background: #20252b;
+}
+
+.hero__inner {
+  padding-block: 2.5rem 1.5rem;
+  gap: 2rem;
+}
+
+.hero__title {
+  font-size: clamp(2rem, 5vw, 3rem);
+  line-height: 1.15;
+
+  em {
+    color: inherit;
+    text-shadow: none;
+  }
+}
+
+.hero__club {
+  letter-spacing: normal;
+}
+
+.bx-section {
+  padding-block: 2.5rem;
+}
+
+.bx-page-head {
+  padding-block: 2rem;
+
+  h1 {
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+  }
+}
+
+.bx-btn,
+.bx-link,
+.bx-eyebrow {
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.bx-skeleton {
+  animation: none;
+  background: var(--bx-surface);
+}
+
+}
+}

@@ -5,7 +5,8 @@
    ========================================================================== */
 
 @use './styles/tokens';
-@use './styles/themes/index' as themes;
+// Les trois thèmes sont conservés pour la future passe graphique.
+@use './styles/simple';
 
 *,
 *::before,
@@ -771,3 +772,6 @@ select.bx-input {
 .bx-badge.bx-badge--primary {
   color: var(--bx-primary-ink);
 }
+
+// Appliqué en dernier pour simplifier aussi les styles des composants.
+@include simple.apply;

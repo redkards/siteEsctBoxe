@@ -37,3 +37,9 @@ Version : **2.0.0-beta.2**, stabilisation. Pas de déploiement. `main` et `legac
 4. Hébergement, emails réels, HTTPS et restauration de sauvegarde à tester après GO de déploiement.
 
 Le fichier de mémoire est une passation consultable ; aucune synchronisation automatique avec Claude n'est prouvée.
+
+## Dernière consigne — design provisoire simplifié
+Le propriétaire reporte la refonte graphique. Habillage clair, police système, cartes et boutons sobres,
+accueil compact, effets décoratifs retirés. Les thèmes ring/azur/club restent dans les sources mais
+ne sont plus chargés ; leur sélecteur est masqué. Réactiver l'import des thèmes lors de la passe design.
+Le choix parmi les trois propositions est reporté, pas requis pour continuer les fonctions.

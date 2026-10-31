@@ -5,6 +5,8 @@ qui sera la **2.0.0** (après confirmation du propriétaire). Chaque version re�
 
 ## [Non publié]
 
+- Design provisoire simplifié à la demande du propriétaire : style clair, police système, accueil compact, sans effets décoratifs ni chargement Google Fonts. Trois thèmes conservés dans les sources pour une reprise ultérieure ; sélecteur masqué.
+
 ## [2.0.0-beta.2] — 2026-10-31 — Reprise et stabilisation
 
 - Fixtures boxe à la place des données poker et services inexistants.
