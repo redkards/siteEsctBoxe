@@ -1,0 +1,62 @@
+<section class="pv-container page-head">
+  <span class="pv-eyebrow">Cours structurés en 3 niveaux</span>
+  <h1>Apprendre et se perfectionner</h1>
+  <p>
+    Des leçons courtes, interactives et animées pour comprendre le Texas Hold'em, des règles de base au jeu de tournoi.
+    Chaque leçon se termine par un quiz de cinq questions.
+  </p>
+  <a routerLink="/lecons/ranges" class="ranges-link">
+    <span class="ranges-link__title">Tableaux de ranges</span>
+    <span class="ranges-link__desc">Les mains à jouer selon votre place, en Débutant, Intermédiaire et Expert (Premium).</span>
+    <span class="pv-arrow" aria-hidden="true">→</span>
+  </a>
+</section>
+
+<div class="pv-container">
+  @for (section of sections; track section.value) {
+    <section class="level" [attr.aria-labelledby]="'niveau-' + section.value">
+      <header class="level__head" [attr.data-level]="section.value">
+        <h2 [id]="'niveau-' + section.value">{{ section.label }}</h2>
+        <p>{{ section.description }}</p>
+      </header>
+
+      <ol class="grid">
+        @for (lesson of section.lessons; track lesson.slug) {
+          <li>
+            <a class="lesson-card" [class.lesson-card--locked]="isLocked(lesson)" [routerLink]="['/lecons', lesson.slug]">
+              <span class="lesson-card__cover" aria-hidden="true">
+                <span class="lesson-card__num">{{ lesson.order }}</span>
+                <span class="lesson-card__cards">
+                  <app-playing-card [code]="lesson.cover[0]" />
+                  <app-playing-card [code]="lesson.cover[1]" />
+                </span>
+              </span>
+              <span class="lesson-card__body">
+                <span class="lesson-card__tags">
+                  <span class="badge" [attr.data-level]="lesson.level">{{ lesson.levelLabel }}</span>
+                  @if (lesson.premium) {
+                    <span class="premium-badge">
+                      @if (isLocked(lesson)) {
+                        <span aria-hidden="true">🔒</span>
+                      }
+                      Premium
+                      @if (isLocked(lesson)) {
+                        <span class="pv-sr-only">(réservée aux membres Premium)</span>
+                      }
+                    </span>
+                  }
+                  <span class="lesson-card__meta">{{ lesson.duration }} min · {{ lesson.stepCount }} étapes + quiz</span>
+                </span>
+                <span class="lesson-card__title">{{ lesson.title }}</span>
+                <span class="lesson-card__desc">{{ lesson.summary }}</span>
+                <span class="lesson-card__status">{{ status(lesson) }}</span>
+              </span>
+            </a>
+          </li>
+        }
+      </ol>
+    </section>
+  }
+
+  <p class="origin">Contenus originaux Poker Winners · Le poker est réservé aux personnes majeures.</p>
+</div>

@@ -5,116 +5,110 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\Groups;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+#[ORM\Table(name: '`user`')]
+#[ORM\UniqueConstraint(name: 'UNIQ_USER_EMAIL', fields: ['email'])]
+#[ORM\UniqueConstraint(name: 'UNIQ_USER_PSEUDO', fields: ['pseudo'])]
+#[UniqueEntity(fields: ['email'], message: 'Un compte existe déjà avec cet email.')]
+#[UniqueEntity(fields: ['pseudo'], message: 'Ce pseudo est déjà utilisé.')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[groups(['getUsers'])]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 180)]
-    #[groups(['getUsers'])]
+    /**
+     * Null une fois le compte anonymisé (RGPD, droit à l'effacement)
+     */
+    #[ORM\Column(length: 180, nullable: true)]
+    #[Assert\NotBlank]
+    #[Assert\Email]
     private ?string $email = null;
 
     /**
-     * @var list<string> The user roles
+     * Hash argon2id (voir security.yaml)
      */
-    #[ORM\Column]
-    #[groups(['getUsers'])]
-    private array $roles = [];
-
-    private ?string $plainPassword = null;
-
-    /**
-     * @var string The hashed password
-     */
-    // Jamais sérialisé : le hash ne doit pas sortir de l'API
     #[ORM\Column]
     private ?string $password = null;
 
-    #[ORM\Column(length: 120)]
-    #[groups(['getUsers'])]
-    private ?string $nom = null;
-
-    #[ORM\Column(length: 120)]
-    #[groups(['getUsers'])]
-    private ?string $prenom = null;
-
     #[ORM\Column(length: 50)]
-    #[groups(['getUsers'])]
-    private ?string $tel = null;
-
-    #[ORM\Column]
-    #[groups(['getUsers'])]
-    private ?\DateTimeImmutable $dateNaissance = null;
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 3, max: 50)]
+    #[Assert\Regex(pattern: '/^[\w\-.]+$/u', message: 'Le pseudo ne peut contenir que lettres, chiffres, tirets, points et underscores.')]
+    private ?string $pseudo = null;
 
     /**
-     * @var Collection<int, adresse>
+     * @var list<string>
      */
-    #[ORM\OneToMany(targetEntity: Adresse::class, mappedBy: 'user', orphanRemoval: true)]
-    #[groups(['getAdresses'])]
-    private Collection $userAdresse;
+    #[ORM\Column]
+    private array $roles = [];
 
-    #[ORM\ManyToOne(inversedBy: 'messagerieUser')]
-    #[groups(['getMessageries'])]
-    #[ORM\JoinColumn(nullable: true)]
-    private ?Messagerie $messagerie = null;
+    #[ORM\Column(options: ['default' => false])]
+    private bool $isVerified = false;
+
+    /**
+     * Empreinte SHA-256 du jeton envoyé par email (le jeton en clair n'est jamais stocké)
+     */
+    #[ORM\Column(length: 64, nullable: true)]
+    private ?string $verificationToken = null;
 
     #[ORM\Column(nullable: true)]
-    #[groups(['getUsers'])]
-    private ?string $profilePicture = null;
+    private ?\DateTimeImmutable $verificationTokenExpiresAt = null;
 
-    // Preuve du consentement RGPD (date + version de la politique acceptée)
-    #[ORM\Column(nullable: true)]
-    #[groups(['getUsers'])]
-    private ?\DateTimeImmutable $consentAt = null;
-
-    #[ORM\Column(length: 20, nullable: true)]
-    #[groups(['getUsers'])]
+    /**
+     * Version des CGU acceptée lors du dernier consentement
+     */
+    #[ORM\Column(length: 20)]
     private ?string $consentVersion = null;
 
-    public function getConsentAt(): ?\DateTimeImmutable
-    {
-        return $this->consentAt;
-    }
+    #[ORM\Column]
+    private ?\DateTimeImmutable $consentAt = null;
 
-    public function getConsentVersion(): ?string
-    {
-        return $this->consentVersion;
-    }
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
 
-    public function giveConsent(string $version): static
-    {
-        $this->consentAt = new \DateTimeImmutable();
-        $this->consentVersion = $version;
-        return $this;
-    }
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $lastLoginAt = null;
 
+    /**
+     * Empreinte SHA-256 du jeton de confirmation de suppression envoyé par email (1 h)
+     */
+    #[ORM\Column(length: 64, nullable: true)]
+    private ?string $deletionToken = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $deletionTokenExpiresAt = null;
+
+    /**
+     * Date d'anonymisation : le compte n'est plus rattaché à une personne
+     */
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $anonymizedAt = null;
+
+    /**
+     * Fin de l'accès Premium (null = jamais abonné ou accès retiré)
+     */
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $premiumUntil = null;
+
+    /**
+     * @var Collection<int, ConsentLog>
+     */
+    #[ORM\OneToMany(targetEntity: ConsentLog::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $consentLogs;
 
     public function __construct()
     {
-        $this->userAdresse = new ArrayCollection();
-
-
-    }
-
-    public function getProfilePicture(): ?string
-    {
-        return $this->profilePicture;
-    }
-
-    public function setProfilePicture(?string $profilePicture): static
-    {
-        $this->profilePicture = $profilePicture;
-        return $this;
+        $this->consentLogs = new ArrayCollection();
+        $this->createdAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -127,9 +121,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->email;
     }
 
-    public function setEmail(string $email): static
+    public function setEmail(?string $email): static
     {
-        $this->email = $email;
+        $this->email = null === $email ? null : mb_strtolower(trim($email));
 
         return $this;
     }
@@ -146,16 +140,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @see UserInterface
-     *
-     * @return list<string>
      */
     public function getRoles(): array
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
+        // Rôle dynamique : jamais stocké, déduit de la date de fin d'abonnement
+        if ($this->isPremium()) {
+            $roles[] = 'ROLE_PREMIUM';
+        }
 
-        return array_unique($roles);
+        return array_values(array_unique($roles));
     }
 
     /**
@@ -163,7 +159,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function setRoles(array $roles): static
     {
-        $this->roles = $roles;
+        $this->roles = array_values(array_diff($roles, ['ROLE_PREMIUM']));
 
         return $this;
     }
@@ -183,126 +179,180 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getPseudo(): ?string
+    {
+        return $this->pseudo;
+    }
+
+    public function setPseudo(string $pseudo): static
+    {
+        $this->pseudo = trim($pseudo);
+
+        return $this;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): static
+    {
+        $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    public function getVerificationToken(): ?string
+    {
+        return $this->verificationToken;
+    }
+
+    public function setVerificationToken(?string $verificationToken): static
+    {
+        $this->verificationToken = $verificationToken;
+
+        return $this;
+    }
+
+    public function getVerificationTokenExpiresAt(): ?\DateTimeImmutable
+    {
+        return $this->verificationTokenExpiresAt;
+    }
+
+    public function setVerificationTokenExpiresAt(?\DateTimeImmutable $verificationTokenExpiresAt): static
+    {
+        $this->verificationTokenExpiresAt = $verificationTokenExpiresAt;
+
+        return $this;
+    }
+
+    public function getConsentVersion(): ?string
+    {
+        return $this->consentVersion;
+    }
+
+    public function setConsentVersion(string $consentVersion): static
+    {
+        $this->consentVersion = $consentVersion;
+
+        return $this;
+    }
+
+    public function getConsentAt(): ?\DateTimeImmutable
+    {
+        return $this->consentAt;
+    }
+
+    public function setConsentAt(\DateTimeImmutable $consentAt): static
+    {
+        $this->consentAt = $consentAt;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function getLastLoginAt(): ?\DateTimeImmutable
+    {
+        return $this->lastLoginAt;
+    }
+
+    public function setLastLoginAt(?\DateTimeImmutable $lastLoginAt): static
+    {
+        $this->lastLoginAt = $lastLoginAt;
+
+        return $this;
+    }
+
+    public function getDeletionToken(): ?string
+    {
+        return $this->deletionToken;
+    }
+
+    public function setDeletionToken(?string $deletionToken): static
+    {
+        $this->deletionToken = $deletionToken;
+
+        return $this;
+    }
+
+    public function getDeletionTokenExpiresAt(): ?\DateTimeImmutable
+    {
+        return $this->deletionTokenExpiresAt;
+    }
+
+    public function setDeletionTokenExpiresAt(?\DateTimeImmutable $deletionTokenExpiresAt): static
+    {
+        $this->deletionTokenExpiresAt = $deletionTokenExpiresAt;
+
+        return $this;
+    }
+
+    public function getAnonymizedAt(): ?\DateTimeImmutable
+    {
+        return $this->anonymizedAt;
+    }
+
+    public function isAnonymized(): bool
+    {
+        return null !== $this->anonymizedAt;
+    }
+
+    public function setAnonymizedAt(?\DateTimeImmutable $anonymizedAt): static
+    {
+        $this->anonymizedAt = $anonymizedAt;
+
+        return $this;
+    }
+
     /**
-     * @see UserInterface
+     * @return Collection<int, ConsentLog>
      */
+    public function getConsentLogs(): Collection
+    {
+        return $this->consentLogs;
+    }
+
+    public function addConsentLog(ConsentLog $consentLog): static
+    {
+        if (!$this->consentLogs->contains($consentLog)) {
+            $this->consentLogs->add($consentLog);
+            $consentLog->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeConsentLog(ConsentLog $consentLog): static
+    {
+        $this->consentLogs->removeElement($consentLog);
+
+        return $this;
+    }
+
+    public function getPremiumUntil(): ?\DateTimeImmutable
+    {
+        return $this->premiumUntil;
+    }
+
+    public function setPremiumUntil(?\DateTimeImmutable $premiumUntil): static
+    {
+        $this->premiumUntil = $premiumUntil;
+
+        return $this;
+    }
+
+    public function isPremium(): bool
+    {
+        return null !== $this->premiumUntil && $this->premiumUntil > new \DateTimeImmutable();
+    }
+
+    #[\Deprecated]
     public function eraseCredentials(): void
     {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
     }
-
-    public function getNom(): ?string
-    {
-        return $this->nom;
-    }
-
-    public function setNom(string $nom): static
-    {
-        $this->nom = $nom;
-
-        return $this;
-    }
-
-    public function getPrenom(): ?string
-    {
-        return $this->prenom;
-    }
-
-    public function setPrenom(string $prenom): static
-    {
-        $this->prenom = $prenom;
-
-        return $this;
-    }
-
-    public function getTel(): ?string
-    {
-        return $this->tel;
-    }
-
-    public function setTel(string $tel): static
-    {
-        $this->tel = $tel;
-
-        return $this;
-    }
-
-    public function getDateNaissance(): ?\DateTimeImmutable
-    {
-        return $this->dateNaissance;
-    }
-
-    public function setDateNaissance(\DateTimeImmutable $dateNaissance): static
-    {
-        $this->dateNaissance = $dateNaissance;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, adresse>
-     */
-    public function getUserAdresse(): Collection
-    {
-        return $this->userAdresse;
-    }
-
-    public function addUserAdresse(Adresse $userAdresse): void
-    {
-        if (!$this->userAdresse->contains($userAdresse)) {
-            $this->userAdresse->add($userAdresse);
-            $userAdresse->setUser($this);
-        }
-
-    }
-
-    public function removeUserAdresse(Adresse $userAdresse): static
-    {
-        if ($this->userAdresse->removeElement($userAdresse)) {
-            // set the owning side to null (unless already changed)
-            if ($userAdresse->getUser() === $this) {
-                $userAdresse->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getMessagerie(): ?Messagerie
-    {
-        return $this->messagerie;
-    }
-
-    public function setMessagerie(?Messagerie $messagerie): static
-    {
-        $this->messagerie = $messagerie;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of plainPassword
-     */
-    public function getPlainPassword()
-    {
-        return $this->plainPassword;
-    }
-
-    /**
-     * Set the value of plainPassword
-     *
-     * @return self
-     */
-
-    public function setPlainPassword($plainPassword)
-    {
-        $this->plainPassword = $plainPassword;
-
-        return $this;
-    }
-
-
-
-
 }

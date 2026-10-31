@@ -1,0 +1,14 @@
+# Secrets : ne jamais versionner
+.env.local
+.env.*.local
+*.pem
+
+# Images de reference design (droits de leurs auteurs)
+docs/design/*.png
+docs/design/*.jpg
+docs/design/*.webp
+
+# Editeurs / OS
+.idea/
+Thumbs.db
+.DS_Store

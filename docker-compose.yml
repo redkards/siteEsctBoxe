@@ -1,0 +1,33 @@
+services:
+  # MariaDB 10.6 : meme moteur que l'hebergement o2switch (leur PostgreSQL 9.6 est trop ancien pour Doctrine DBAL 4)
+  database:
+    image: mariadb:10.6
+    container_name: esctboxe_db
+    environment:
+      MARIADB_DATABASE: ${DB_NAME:-esctboxe}
+      MARIADB_USER: ${DB_USER:-esct}
+      # A changer en production
+      MARIADB_PASSWORD: ${DB_PASSWORD:-esct}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
+    command: ['--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
+    ports:
+      # 3307 cote hote : le 3306 est reserve au MySQL de WAMP
+      - "3307:3306"
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    volumes:
+      - mariadb_data:/var/lib/mysql:rw
+
+  mailhog:
+    image: mailhog/mailhog:v1.0.1
+    container_name: esctboxe_mailhog
+    ports:
+      - "1025:1025" # SMTP
+      - "8025:8025" # Interface web : http://localhost:8025
+
+volumes:
+  mariadb_data:

@@ -2,299 +2,184 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Adresse;
-use App\Entity\BoxeType;
-use App\Entity\Boxeur;
-use App\Entity\Categorie;
-use App\Entity\Entrainement;
-use App\Entity\Entraineur;
-use App\Entity\Gala;
-use App\Entity\Message;
-use App\Entity\Messagerie;
-use App\Entity\Salle;
+use App\Content\DefaultContent;
+use App\Entity\Article;
+use App\Entity\ForumCategory;
+use App\Entity\ForumPost;
+use App\Entity\ForumSubscription;
+use App\Entity\ForumTopic;
+use App\Entity\Product;
 use App\Entity\User;
-use App\Entity\News;
+use App\Entity\PremiumSubscription;
+use App\Enum\ProductCategory;
+use Symfony\Component\String\Slugger\SluggerInterface;
+use App\Entity\Video;
+use App\Enum\PremiumPlan;
+use App\Enum\PremiumSubscriptionStatus;
+use App\Enum\VideoLevel;
+use App\Service\ArticleImporter;
+use App\Service\GdprService;
+use App\Service\TournamentImporter;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
+/**
+ * Données de développement uniquement (php bin/console doctrine:fixtures:load).
+ */
 class AppFixtures extends Fixture
 {
-    private $userPasswordHasher;
+    public const DEMO_PASSWORD = 'Demo-Poker-2026!';
 
-    public function __construct(UserPasswordHasherInterface $userPasswordHasher)
-    {
-        $this->userPasswordHasher = $userPasswordHasher;
+    public function __construct(
+        private readonly UserPasswordHasherInterface $hasher,
+        private readonly GdprService $gdpr,
+        private readonly ArticleImporter $importer,
+        private readonly TournamentImporter $tournamentImporter,
+        private readonly SluggerInterface $slugger,
+        #[Autowire('%kernel.project_dir%')]
+        private readonly string $projectDir,
+    ) {
     }
 
     public function load(ObjectManager $manager): void
     {
-
-          // Création des messages
-        $listMessages = [];
-        for ($i = 0; $i < 5; $i++) {
-            $message = new Message();
-            $message->setExpediteur('expediteur' . $i);
-            $message->setDestinataire('destinataire' . $i);
-            $message->setContenu('hello world boxe is very amazing' . $i);
-            $message->setMsgDate(new \DateTimeImmutable());
-
-            $manager->persist($message);
-            $listMessages[] = $message;
-        }
-
-        // Création des messageries
-        $listMessagerie = [];
-        for ($i = 0; $i < 5; $i++) {
-            $messagerie = new Messagerie();
-
-            // Associer une messagerie à un utilisateur
-            if (!empty($listUsers)) {
-                $user = $listUsers[$i % count($listUsers)];
-                $messagerie->addMessagerieUser($user);
-                $user->setMessagerie($messagerie);
-            }
-
-            // Associer des messages à la messagerie
-            $numMessages = rand(1, 3); // Nombre aléatoire de messages associés à la messagerie
-            $selectedMessages = array_rand($listMessages, min($numMessages, count($listMessages)));
-            if (!is_array($selectedMessages)) {
-                $selectedMessages = [$selectedMessages];
-            }
-            foreach ($selectedMessages as $messageIndex) {
-                $message = $listMessages[$messageIndex];
-                $messagerie->addMessagerieMsg($message);
-                $message->setMessagerie($messagerie); // Assurez-vous que la méthode setMessagerie est correcte dans Message
-            }
-
-            $manager->persist($messagerie);
-            $listMessagerie[] = $messagerie;
-        }
-        // Création des utilisateurs
-        $baseEmails = [
-            'user0@api.com',
-            'user1@api.com',
-            'user2@api.com',
-            'user3@api.com',
+        $accounts = [
+            ['demo@pokervitrine.local', 'demo', []],
+            ['admin@pokervitrine.local', 'admin', ['ROLE_ADMIN']],
+            ['premium@pokervitrine.local', 'premium', []],
         ];
 
-        $roles = ['ROLE_USER', 'ROLE_ADMIN'];
-        $listUsers = [];
+        $users = [];
+        foreach ($accounts as [$email, $pseudo, $roles]) {
+            $user = (new User())
+                ->setEmail($email)
+                ->setPseudo($pseudo)
+                ->setRoles($roles)
+                ->setIsVerified(true);
+            $user->setPassword($this->hasher->hashPassword($user, self::DEMO_PASSWORD));
+            $this->gdpr->recordConsent($user, '127.0.0.1');
+            if ('premium' === $pseudo) {
+                // Compte de démo Premium (1 an) ; « demo » reste non premium
+                $user->setPremiumUntil(new \DateTimeImmutable('+1 year'));
+                $manager->persist((new PremiumSubscription($user, PremiumPlan::Annuel))
+                    ->setStatus(PremiumSubscriptionStatus::Active)
+                    ->setStartedAt(new \DateTimeImmutable())
+                    ->setEndsAt($user->getPremiumUntil()));
+            }
 
-        for ($i = 0; $i < count($baseEmails); $i++) {
-            $email = $baseEmails[$i];
-
-            $user = new User();
-            $user->setNom('nom' . $i);
-            $user->setPrenom('prenom' . $i);
-            $user->setEmail($email);
-            $user->setTel('0123456789');
-            $user->setPassword($this->userPasswordHasher->hashPassword($user, 'password'));
-            $user->setDateNaissance(new \DateTimeImmutable('1990-01-01'));
-            $user->setRoles([$roles[$i % count($roles)]]);
-            $user->setMessagerie($listMessagerie[array_rand($listMessagerie)]);
             $manager->persist($user);
-            $listUsers[] = $user;
-            echo "Insère utilisateur avec l'email : " . $email . "\n";
+            $users[$pseudo] = $user;
         }
 
-            // Création des galas
-        $listGalas = [];
-        for ($i = 0; $i < 5; $i++) {
-            $gala = new Gala();
-            $gala->setNom('gala' . $i);
-            $gala->setLieu('lieu' . $i);
-            $gala->setGalaDate(new \DateTimeImmutable());
-            $gala->setGalaTime(new \DateTimeImmutable());
+        $this->loadForum($manager, $users);
 
-            $manager->persist($gala);
-            $listGalas[] = $gala;
+        // Brouillon : n'apparaît pas dans l'API publique
+        $manager->persist((new Article())
+            ->setTitle('Brouillon : bilan de la saison')
+            ->setCategory('Actualité')
+            ->setExcerpt('Article en cours de rédaction.')
+            ->setContent('<p>À compléter.</p>')
+            ->setAuthor($users['admin']));
+
+        foreach (DefaultContent::VIDEOS as $i => [$title, $url, $category, $level, $description]) {
+            $manager->persist((new Video())
+                ->setTitle($title)
+                ->setYoutubeUrl($url)
+                ->setCategory($category)
+                ->setLevel($level)
+                ->setPremium(VideoLevel::Avance === $level)
+                ->setDescription($description)
+                ->setPublishedAt(new \DateTimeImmutable(sprintf('-%d days', 1 + $i * 3))));
         }
 
-                // Création des salles
- $listSalles = [];
- $salles = ['salle1', 'salle2', 'salle3'];
-
- for ($i = 0; $i < 10; $i++) {
-     $salle = new Salle();
-     $salleName = $salles[$i % count($salles)];
-     $salle->setNom($salleName);
-     $salle->setGala($gala);
-
-     // Associer une adresse à chaque salle
-     if (!empty($listAdresse)) {
-         $adresse = $listAdresse[$i % count($listAdresse)];
-         $salle->addSalleAdresse($adresse);
-     }
-     $manager->persist($salle);
-     //
-     $listSalles[] = $salle;
-    }
-
-        // Création des adresses
-        $listAdresse = [];
-        $listVoies = ['chemin', 'rue', 'boulevard', 'avenue'];
-
-        for ($i = 0; $i < 5; $i++) {
-            $adresse = new Adresse();
-            $adresse->setNumero(sprintf('%03d', $i));
-            $adresse->setTypeVoie($listVoies[$i % count($listVoies)]);
-            $adresse->setNomVoie('victor hugo ' . $i);
-            $adresse->setComplementAdresse('complement ' . $i);
-            $adresse->setVille('ville ' . $i);
-            $adresse->setCodePostal(sprintf('%05d', $i));
-            $adresse->setPays('pays ' . $i);
-
-            // Associer une adresse à un utilisateur
-            $adresse->setUser($listUsers[$i % count($listUsers)]);
-            $adresse->setSalle($salle);
-
-            $manager->persist($adresse);
-            $listAdresse[] = $adresse;
-        }
-
-            //Création des boxeurs
-        $listBoxeurs = [];
-        for ($i = 0; $i < 5; $i++) {
-            $boxeur = new Boxeur();
-            $boxeur->setBoxeurNom('nom' . $i);
-            $boxeur->setBoxeurPrenom('prenom' . $i);
-            $boxeur->setBoxeurDateNaissance(new \DateTimeImmutable('2000-01-01'));
-            $boxeur->setPoids(55 + $i);
-
-            // Associer une catégorie et un type de boxe au boxeur
-            if (!empty($listCategories)) {
-                $boxeur->addBoxeurCategorie($listCategories[$i % count($listCategories)]);
-            }
-            if (!empty($listBoxeType)) {
-                $boxeur->addBoxeurTypeBoxe($listBoxeType[$i % count($listBoxeType)]);
-            }
-
-            $manager->persist($boxeur);
-            $listBoxeurs[] = $boxeur;
-        }
-
-
-
-
-
-
-        // Création des types de boxe
-        $typesOfBoxes = ['amateur', 'pro', 'educatif'];
-        $listBoxeType = [];
-
-        for ($i = 0; $i < 5; $i++) {
-            $boxeType = new BoxeType();
-            $boxeTypeName = $typesOfBoxes[$i % count($typesOfBoxes)];
-            $boxeType->setTypeBoxeNom($boxeTypeName);
-            $boxeType->setBoxeur($listBoxeurs[array_rand($listBoxeurs)]);
-            $manager->persist($boxeType);
-            $listBoxeType[] = $boxeType;
-        }
-
-        // Création des catégories
-        $listCategories = [];
-        $categories = ['amateur', 'pro', 'educatif'];
-
-        for ($i = 0; $i < 5; $i++) {
-            $categorie = new Categorie();
-            $categorieName = $categories[$i % count($categories)];
-            $categorie->setCategorieNom($categorieName);
-            $categorie->setBoxeur($listBoxeurs[array_rand($listBoxeurs)]);
-
-            $manager->persist($categorie);
-            $listCategories[] = $categorie;
-        }
-
-
-
-        // Création des entraîneurs
-        $listEntraineurs = [];
-        for ($i = 0; $i < 5; $i++) {
-            $entraineur = new Entraineur();
-            $entraineur->setTrainerNom('nom' . $i);
-            $entraineur->setTrainerPrenom('prenom' . $i);
-
-            $manager->persist($entraineur);
-            $listEntraineurs[] = $entraineur;
-        }
-
-        // Associer des entraîneurs aux boxeurs
-        foreach ($listBoxeurs as $boxeur) {
-            $numEntraineurs = rand(1, 3); // Nombre aléatoire d'entraîneurs associés au boxeur
-            $selectedEntraineurs = array_rand($listEntraineurs, min($numEntraineurs, count($listEntraineurs)));
-            if (!is_array($selectedEntraineurs)) {
-                $selectedEntraineurs = [$selectedEntraineurs];
-            }
-            foreach ($selectedEntraineurs as $entraineurIndex) {
-                $entraineur = $listEntraineurs[$entraineurIndex];
-                $boxeur->addEntraineur($entraineur);
-                $entraineur->addEntraineurBoxeur($boxeur);
-            }
-        }
-
-        // Création des entraînements
-        $listEntrainements = [];
-        for ($i = 0; $i < 5; $i++) {
-            $entrainement = new Entrainement();
-            $entrainement->setTrainingDate(new \DateTimeImmutable());
-            $entrainement->setStartTime(new \DateTimeImmutable());
-            $entrainement->setEndTime(new \DateTimeImmutable());
-            $entrainement->setLieu('lieu' . $i);
-
-
-
-            // Associer des entraîneurs à l'entraînement
-            if (!empty($listEntraineurs)) {
-                $numEntraineurs = rand(1, 3); // Nombre aléatoire d'entraîneurs associés à l'entraînement
-                $selectedEntraineurs = array_rand($listEntraineurs, min($numEntraineurs, count($listEntraineurs)));
-                if (!is_array($selectedEntraineurs)) {
-                    $selectedEntraineurs = [$selectedEntraineurs];
-                }
-                foreach ($selectedEntraineurs as $entraineurIndex) {
-                    $entraineur = $listEntraineurs[$entraineurIndex];
-                    $entrainement->addEntraineur($entraineur);
-                    $entraineur->addEntraineurTraining($entrainement);
-                }
-            }
-
-            // Associer des salles à l'entraînement
-            $numSalles = rand(1, 3); // Nombre aléatoire de salles associées à l'entraînement
-            $selectedSalles = array_rand($listSalles, min($numSalles, count($listSalles)));
-            if (!is_array($selectedSalles)) {
-                $selectedSalles = [$selectedSalles];
-            }
-            foreach ($selectedSalles as $salleIndex) {
-                $salle = $listSalles[$salleIndex];
-                $entrainement->addTrainingSalle($salle);
-                $salle->addEntrainement($entrainement);
-            }
-
-            $manager->persist($entrainement);
-            $listEntrainements[] = $entrainement;
-        }
-
-        $listNews= [];
-        for ($i = 1; $i <= 3; $i++) {
-            $news = new News();
-            $news->setTitre('Titre de l\'actualité ' . $i)
-                 ->setNewsContent('Ceci est le contenu de l\'actualité ' . $i)
-                 ->setNewsPictures("cuba-66f45d7c80ee2.jpg")
-                 ->setPublishedAt(new \DateTimeImmutable());
-
-            $manager->persist($news);
-            $listNews[]= $news;
-
-        }
+        $this->loadShop($manager);
 
         $manager->flush();
+
+        // Vraies actualités sourcées (docs/actualites/*.json), absentes d'un déploiement sans le dossier docs
+        foreach (glob($this->projectDir.'/../docs/actualites/*.json') ?: [] as $file) {
+            $this->importer->importFile($file, $users['admin']);
+        }
+        // Calendrier des tournois vérifié (docs/calendrier/*.json)
+        foreach (glob($this->projectDir.'/../docs/calendrier/*.json') ?: [] as $file) {
+            $this->tournamentImporter->importFile($file);
+        }
     }
 
+    /**
+     * Boutique v2.0 : produits de démonstration génériques (aucune marque ni titre réel).
+     */
+    private function loadShop(ObjectManager $manager): void
+    {
+        foreach (DefaultContent::SHOP_DEMO_PRODUCTS as [$name, $category, $price, $stock, $description]) {
+            $manager->persist((new Product())
+                ->setName($name)
+                ->setSlug($this->slugger->slug($name)->lower()->toString())
+                ->setCategory($category)
+                ->setPriceCents($price)
+                ->setStock($stock)
+                ->setDescription($description)
+                ->setIsPublished(true));
+        }
+    }
 
+    /**
+     * @param array<string, User> $users
+     */
+    private function loadForum(ObjectManager $manager, array $users): void
+    {
+        $categories = [];
+        foreach (DefaultContent::FORUM_CATEGORIES as $position => [$slug, $name, $description]) {
+            $categories[$slug] = (new ForumCategory())
+                ->setSlug($slug)
+                ->setName($name)
+                ->setDescription($description)
+                ->setPosition($position);
+            $manager->persist($categories[$slug]);
+        }
 
+        foreach (self::FORUM_TOPICS as $i => [$slug, $title, $pinned, $messages]) {
+            $start = new \DateTimeImmutable(sprintf('-%d days', 1 + $i * 2));
+            $topic = (new ForumTopic())
+                ->setCategory($categories[$slug])
+                ->setAuthor($users[$messages[0][0]])
+                ->setTitle($title)
+                ->setIsPinned($pinned)
+                ->setCreatedAt($start);
 
+            foreach ($messages as $j => [$pseudo, $content]) {
+                $topic->addPost((new ForumPost())
+                    ->setAuthor($users[$pseudo])
+                    ->setContent($content)
+                    ->setCreatedAt($start->modify(sprintf('+%d hours', $j * 3))));
+            }
+
+            $manager->persist($topic);
+            $manager->persist(new ForumSubscription($users[$messages[0][0]], $topic));
+        }
+    }
+
+    /**
+     * [catégorie, titre, épinglé, [[pseudo, message], …]]
+     *
+     * @var list<array{string, string, bool, list<array{string, string}>}>
+     */
+    private const FORUM_TOPICS = [
+        ['vie-du-site', 'Bienvenue sur le forum : à lire avant de poster', true, [
+            ['admin', "Bienvenue à toutes et à tous !\n\nQuelques règles simples : on reste courtois, on ne partage pas de contenu illégal ni de liens vers des sites de jeu non agréés, et on évite les doublons.\n\nLa modération peut masquer un message qui ne respecte pas ces règles. Bon jeu !"],
+        ]],
+        ['debutants', 'Quelle est la différence entre une blinde et un ante ?', false, [
+            ['demo', 'Je débute et je confonds encore blindes et antes. Quelqu’un peut m’expliquer simplement ?'],
+            ['admin', "Les blindes (petite et grosse) sont des mises obligatoires payées par les deux joueurs à gauche du bouton.\nL’ante est une petite mise payée par tout le monde (ou par la grosse blinde seule en « big blind ante ») pour enrichir le pot."],
+        ]],
+        ['analyses-de-mains', 'AK en 3-bet hors de position, flop raté : continuer ?', false, [
+            ['demo', "Tournoi, 40 grosses blindes. Je 3-bet AK depuis la grosse blinde, le bouton paie. Flop 7-7-2 arc-en-ciel.\nJe continue en c-bet petit ou je check ?"],
+        ]],
+        ['mental-bankroll', 'Combien de caves prévoir pour jouer sereinement ?', false, [
+            ['demo', 'Vous gardez combien de caves d’avance pour votre limite habituelle ?'],
+            ['admin', "Une règle de prudence courante : au moins 20 à 30 caves pour le cash game, davantage en tournoi car la variance y est plus forte.\nLa leçon « Progresser en tournoi » de la rubrique Leçons détaille le sujet."],
+        ]],
+    ];
 }
-
-
-
-

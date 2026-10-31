@@ -1,28 +1,31 @@
+# yaml-language-server: $schema=../vendor/symfony/dependency-injection/Loader/schema/services.schema.json
+
 # This file is the entry point to configure your own services.
 # Files in the packages/ subdirectory configure your dependencies.
+# See also https://symfony.com/doc/current/service_container/import.html
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
-  uploads_directory: "%kernel.project_dir%/public/uploads"
 
 services:
-  # Default configuration for services in *this* file
-  _defaults:
-    autowire: true # Automatically injects dependencies in your services.
-    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
-    public: false # Services are private by default (you can override this per service if necessary).
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
-  # Makes classes in src/ available to be used as services
-  # This creates a service per class whose id is the fully-qualified class name
-  App\:
-    resource: "../src/"
-    exclude:
-      - "../src/DependencyInjection/"
-      - "../src/Entity/"
-      - "../src/Kernel.php"
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/'
 
-  # Specifically register the controllers as services
-  App\Controller\:
-    resource: "../src/Controller"
-    tags: ["controller.service_arguments"]
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones
+
+    # Paiement Premium : factice en dev/test (refusé en prod).
+    # Quand Stripe sera branché : '@App\Service\Premium\StripePremiumPaymentProvider'
+    App\Service\Premium\PremiumPaymentProvider: '@App\Service\Premium\FakePremiumPaymentProvider'
+    # Boutique (v2.0) : prestataire de paiement actif. Factice tant que la boutique est en attente
+    # (aucun appel réseau, la commande reste « en attente »). Pour ouvrir la boutique, pointer vers
+    # App\Service\Payment\StripeCheckoutPaymentProvider (voir docs/boutique/README.md).
+    App\Service\Payment\PaymentProviderInterface: '@App\Service\Payment\FakePaymentProvider'
