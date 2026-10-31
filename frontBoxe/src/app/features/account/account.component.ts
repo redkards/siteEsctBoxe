@@ -7,13 +7,15 @@ import { ProfileTabComponent } from './profile-tab/profile-tab.component';
 import { MembershipsTabComponent } from './memberships-tab/memberships-tab.component';
 import { MessagesTabComponent } from './messages-tab/messages-tab.component';
 import { DataTabComponent } from './data-tab/data-tab.component';
+import { LessonsTabComponent } from './lessons-tab/lessons-tab.component';
 
-export type AccountTab = 'profil' | 'inscriptions' | 'messagerie' | 'donnees';
+export type AccountTab = 'profil' | 'inscriptions' | 'messagerie' | 'lecons' | 'donnees';
 
 export const ACCOUNT_TABS: readonly { id: AccountTab; label: string }[] = [
   { id: 'profil', label: 'Profil' },
   { id: 'inscriptions', label: 'Mes inscriptions' },
   { id: 'messagerie', label: 'Messagerie' },
+  { id: 'lecons', label: 'Mes leçons' },
   { id: 'donnees', label: 'Mes données' },
 ];
 
@@ -22,12 +24,12 @@ function isTab(value: string | null | undefined): value is AccountTab {
 }
 
 /**
- * /mon-espace — Espace membre en onglets (?onglet=profil|inscriptions|messagerie|donnees).
+ * /mon-espace — Espace membre en onglets (?onglet=profil|inscriptions|messagerie|lecons|donnees).
  * Onglets ARIA : flèches gauche/droite, Début/Fin ; un seul onglet monté à la fois.
  */
 @Component({
   selector: 'app-account',
-  imports: [DatePipe, ProfileTabComponent, MembershipsTabComponent, MessagesTabComponent, DataTabComponent],
+  imports: [DatePipe, ProfileTabComponent, MembershipsTabComponent, MessagesTabComponent, LessonsTabComponent, DataTabComponent],
   templateUrl: './account.component.html',
   styleUrl: './account.component.scss',
   changeDetection: ChangeDetectionStrategy.Eager,

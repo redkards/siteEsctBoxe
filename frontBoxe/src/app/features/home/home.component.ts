@@ -19,6 +19,7 @@ import {
 } from '../../core/api/models';
 import { ArticleCardComponent } from '../../shared/components/article-card/article-card.component';
 import { BoxerCardComponent } from '../../shared/components/boxer-card/boxer-card.component';
+import { QuoteOfDayComponent } from '../../shared/components/quote-of-day/quote-of-day.component';
 import { CountdownComponent } from '../../shared/components/countdown/countdown.component';
 import { LoadErrorComponent, SkeletonGridComponent } from '../../shared/components/state/state.component';
 import { HourPipe } from '../../shared/pipes/time.pipe';
@@ -31,6 +32,7 @@ import { DAYS, isoDay, slotsOfDay } from '../../shared/utils/planning.utils';
 @Component({
   selector: 'app-home',
   imports: [
+    QuoteOfDayComponent,
     RouterLink,
     DatePipe,
     HourPipe,

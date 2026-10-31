@@ -90,6 +90,36 @@ export const routes: Routes = [
     data: { description: 'Actualité de l’ESC Boxe Tergnier.', ogType: 'article' },
   },
   {
+    path: 'lecons',
+    loadComponent: () => import('./features/lessons/lesson-list.component').then((m) => m.LessonListComponent),
+    title: `Les 50 leçons de boxe — ${SITE}`,
+    data: { description: 'Bibliothèque de 50 leçons de boxe éducative sans contact : appuis, enchaînements, défense, distance et transmission, adaptées aux enfants, ados et jeunes adultes.' },
+  },
+  {
+    path: 'lecons/seance',
+    loadComponent: () => import('./features/lessons/lesson-session.component').then((m) => m.LessonSessionComponent),
+    title: `Ma séance — ${SITE}`,
+    data: { description: 'Composez votre séance de boxe à partir des leçons du club : ordre, durée totale, échauffement et retour au calme, version imprimable.' },
+  },
+  {
+    path: 'lecons/:slug',
+    loadComponent: () => import('./features/lessons/lesson-detail.component').then((m) => m.LessonDetailComponent),
+    title: `Leçon — ${SITE}`,
+    data: { description: 'Fiche d’une leçon de boxe éducative : objectif, organisation, schéma, déroulé, corrections et adaptations par âge.', ogType: 'article' },
+  },
+  {
+    path: 'chrono',
+    loadComponent: () => import('./features/chrono/chrono.component').then((m) => m.ChronoComponent),
+    title: `Chrono de rounds — ${SITE}`,
+    data: { description: 'Chronomètre de rounds de boxe : préréglages éducative, loisir et amateur, temps de repos, décompte et bip sonore.' },
+  },
+  {
+    path: 'agenda',
+    loadComponent: () => import('./features/agenda/agenda.component').then((m) => m.AgendaComponent),
+    title: `Agenda des galas de boxe — ${SITE}`,
+    data: { description: 'Agenda des prochains galas de boxe en France (Hauts-de-France, Grand Est, Île-de-France…) avec export vers votre calendrier.' },
+  },
+  {
     path: 'contact',
     loadComponent: () => import('./features/contact/contact.component').then((m) => m.ContactComponent),
     title: `Contact — ${SITE}`,

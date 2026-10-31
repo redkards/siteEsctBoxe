@@ -1,0 +1,42 @@
+<section class="bx-page-head">
+  <div class="bx-container">
+    <nav class="bx-breadcrumb" aria-label="Fil d'Ariane"><a routerLink="/">Accueil</a><span aria-hidden="true">/</span><span>Chrono</span></nav>
+    <h1>Chrono de rounds</h1>
+    <p>Rounds, repos et décompte de préparation de 10 secondes, avec bip sonore. Espace : démarrer / pause · R : réinitialiser.</p>
+  </div>
+</section>
+
+<section class="bx-section bx-section--tight">
+  <div class="bx-container ch">
+    <div class="ch__display" [attr.data-phase]="state().phase" role="timer" aria-live="off">
+      <span class="ch__phase">{{ phaseLabel() }}@if (state().round && state().phase !== 'done') { <span> {{ state().round }}/{{ rounds() }}</span> }</span>
+      <span class="ch__clock">{{ clock() }}</span>
+      <span class="bx-sr-only" aria-live="polite">{{ phaseLabel() }} {{ state().phase === 'round' || state().phase === 'rest' ? state().round : '' }}</span>
+    </div>
+
+    <div class="ch__controls">
+      <button type="button" class="bx-btn bx-btn--primary bx-btn--lg ch__main" (click)="toggle()">
+        {{ running() ? 'Pause' : started() && state().phase !== 'done' ? 'Reprendre' : 'Démarrer' }}
+      </button>
+      <button type="button" class="bx-btn bx-btn--outline bx-btn--lg" (click)="reset()" [disabled]="!started()">Réinitialiser</button>
+    </div>
+
+    <fieldset class="ch__settings bx-card" [disabled]="started()">
+      <legend>Réglages <small>(durée totale {{ total() }})</small></legend>
+      <div class="bx-chips" role="group" aria-label="Préréglages">
+        @for (p of presets; track p.id) {
+          <button type="button" class="bx-chip" [attr.aria-pressed]="preset() === p.id" (click)="applyPreset(p)">
+            {{ p.label }} · {{ p.rounds }}×{{ p.roundSec / 60 }} min / {{ p.restSec / 60 }} min
+          </button>
+        }
+      </div>
+      <div class="ch__fields">
+        <label>Rounds <input class="bx-input" type="number" min="1" max="15" [value]="rounds()" (change)="setNumber('rounds', $event)" /></label>
+        <label>Round (min) <input class="bx-input" type="number" min="0" max="10" [value]="minutes(roundSec())" (change)="setNumber('roundMin', $event)" /></label>
+        <label>Round (s) <input class="bx-input" type="number" min="0" max="59" step="5" [value]="seconds(roundSec())" (change)="setNumber('roundS', $event)" /></label>
+        <label>Repos (s) <input class="bx-input" type="number" min="0" max="300" step="5" [value]="restSec()" (change)="setNumber('rest', $event)" /></label>
+      </div>
+      <p class="bx-hint">Le son démarre au premier clic. L'écran reste allumé pendant le chrono si votre navigateur le permet.</p>
+    </fieldset>
+  </div>
+</section>
