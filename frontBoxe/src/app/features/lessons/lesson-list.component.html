@@ -1,0 +1,100 @@
+<section class="bx-page-head">
+  <div class="bx-container">
+    <nav class="bx-breadcrumb" aria-label="Fil d'Ariane"><a routerLink="/">Accueil</a><span aria-hidden="true">/</span><span>Leçons</span></nav>
+    <h1>Les 50 leçons du club</h1>
+    <p>Des ateliers sans contact ni impact, en cinq modules, adaptés aux enfants, aux ados et aux jeunes adultes. Cochez vos leçons faites et composez votre séance.</p>
+  </div>
+</section>
+
+<section class="bx-section bx-section--tight">
+  <div class="bx-container">
+    <div class="lx-progress bx-card" aria-label="Ma progression">
+      <div class="lx-progress__global">
+        <strong>Ma progression : {{ globalDone() }}/{{ total }}</strong>
+        <progress class="lx-bar" [value]="globalDone()" [max]="total" aria-label="Leçons faites sur 50">{{ globalDone() }}/{{ total }}</progress>
+      </div>
+      <ul class="lx-progress__modules">
+        @for (m of moduleStats(); track m.id) {
+          <li>
+            <span class="lx-progress__label">M{{ m.id }} · {{ m.title }}</span>
+            <progress class="lx-bar lx-bar--sm" [value]="m.done" max="10" [attr.aria-label]="'Module ' + m.id + ' : ' + m.done + ' sur 10'"></progress>
+            <span class="lx-progress__count">{{ m.done }}/10</span>
+          </li>
+        }
+      </ul>
+      <a routerLink="/lecons/seance" class="bx-btn bx-btn--dark bx-btn--sm">Ma séance ({{ progress.session().length }})</a>
+    </div>
+
+    <div class="lx-filters" role="group" aria-label="Filtres des leçons">
+      <div class="lx-filters__group">
+        <span class="lx-filters__label" id="lx-f-mod">Module</span>
+        <div class="bx-chips" aria-labelledby="lx-f-mod">
+          <button type="button" class="bx-chip" [attr.aria-pressed]="module() === null" (click)="module.set(null)">Tous</button>
+          @for (m of modules; track m.id) {
+            <button type="button" class="bx-chip" [attr.aria-pressed]="module() === m.id" [attr.title]="m.summary" (click)="module.set(m.id)">M{{ m.id }} · {{ m.title }}</button>
+          }
+        </div>
+      </div>
+      <div class="lx-filters__row">
+        <label class="lx-filters__field">
+          <span class="lx-filters__label">Recherche</span>
+          <input class="bx-input" type="search" placeholder="garde, esquive, rythme…" [value]="query()" (input)="setQuery($event)" />
+        </label>
+        <label class="lx-filters__field">
+          <span class="lx-filters__label">Niveau</span>
+          <select class="bx-input" [value]="level() ?? ''" (change)="setLevel($event)">
+            <option value="">Tous les niveaux</option>
+            @for (lv of levels; track lv) {
+              <option [value]="lv">{{ lv }}</option>
+            }
+          </select>
+        </label>
+        <div class="lx-filters__field">
+          <span class="lx-filters__label" id="lx-f-aud">Public</span>
+          <div class="bx-chips" aria-labelledby="lx-f-aud">
+            @for (a of audiences; track a.value) {
+              <button type="button" class="bx-chip" [attr.aria-pressed]="audience() === a.value" (click)="audience.set(a.value)">{{ a.label }} <small>{{ a.ages }}</small></button>
+            }
+          </div>
+        </div>
+        <label class="lx-check">
+          <input type="checkbox" [checked]="onlyFavorites()" (change)="onlyFavorites.set(!onlyFavorites())" /> Favoris seulement
+        </label>
+      </div>
+    </div>
+
+    <p class="lx-count" role="status" aria-live="polite">
+      {{ lessons().length }} leçon{{ lessons().length > 1 ? 's' : '' }}
+      @if (module() || level() || query() || onlyFavorites()) {
+        · <button type="button" class="bx-link lx-linkbtn" (click)="reset()">Réinitialiser les filtres</button>
+      }
+    </p>
+
+    @if (lessons().length) {
+      <ul class="lx-grid">
+        @for (l of lessons(); track l.id) {
+          <li class="lx-card bx-card" [class.lx-card--done]="progress.isDone(l.id)">
+            <div class="lx-card__meta">
+              <span class="lx-tag">M{{ l.module }} · n°{{ l.id }}</span>
+              <span class="lx-tag lx-tag--level">{{ l.level }}</span>
+              <span class="lx-tag">{{ l.durationMin }} min</span>
+            </div>
+            <h2 class="lx-card__title"><a [routerLink]="['/lecons', l.slug]">{{ l.title }}</a></h2>
+            <p class="lx-card__obj">{{ l.objective }}</p>
+            <p class="lx-card__adapt"><strong>{{ audienceLabel() }} :</strong> {{ l.adaptations[audience()] }}</p>
+            <div class="lx-card__actions">
+              <button type="button" class="lx-toggle" [attr.aria-pressed]="progress.isDone(l.id)" (click)="progress.toggleDone(l.id)">
+                <span aria-hidden="true">{{ progress.isDone(l.id) ? '✔' : '○' }}</span> Faite<span class="bx-sr-only"> : {{ l.title }}</span>
+              </button>
+              <button type="button" class="lx-toggle" [attr.aria-pressed]="progress.isFavorite(l.id)" (click)="progress.toggleFavorite(l.id)">
+                <span aria-hidden="true">{{ progress.isFavorite(l.id) ? '★' : '☆' }}</span> Favori<span class="bx-sr-only"> : {{ l.title }}</span>
+              </button>
+            </div>
+          </li>
+        }
+      </ul>
+    } @else {
+      <div class="bx-empty"><strong>Aucune leçon ne correspond</strong><p>Modifiez les filtres ou la recherche.</p></div>
+    }
+  </div>
+</section>
