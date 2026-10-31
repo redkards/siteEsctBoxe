@@ -12,3 +12,6 @@ Statuts : proposition / approuvée / appliquée / testée / publiée. Miroir Not
 | ESCT-006 | 2026-10-31 | Uniquement des outils gratuits ou open source (Symfony, Angular, MariaDB, EasyAdmin, OpenStreetMap) | appliquée |
 | ESCT-007 | 2026-10-31 | Reprise de la v2 de Claude par ChatGPT, méthode Poker Winners, économie de tokens, production rapide et simplifiée | approuvée (propriétaire) / appliquée |
 | ESCT-008 | 2026-10-31 | Trois propositions de Claude conservées : Fight Night, Azur, Éditorial ; choix par le propriétaire | en attente du choix |
+| ESCT-009 | 2026-10-31 | Trois démos aux fonctions différentes avec choix d'un modèle ou synthèse mixte ; liens bêta préparés | implémentée / essais de présentation effectués |
+| ESCT-010 | 2026-10-31 | PARADOXX DÉVELOPPEMENT : un expert par grande famille, six agents pour les revues, skills et outils libres selon besoin | appliquée dans le lot / pas de services permanents |
+| ESCT-011 | 2026-10-31 | Conversation de coordination ChatGPT–Claude via Notion QG et Git, sans supposer de réception automatique | espace créé / message à lire |

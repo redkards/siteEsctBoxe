@@ -29,3 +29,9 @@ qui sera la **2.0.0** (après confirmation du propriétaire). Chaque version re�
 
 ### Modifié
 - L'ancienne version (Symfony 6.4 / Angular 18 / PostgreSQL) est déplacée dans `legacy/` sur la branche `v2`.
+
+### Présentation et organisation
+- Trois démonstrations autonomes distinctes (compétition, adhérents, vie du club) dans `/demos/`.
+- Comparateur avec choix mixte et export TXT ; exports et formulaires sans envoi distant.
+- PARADOXX DÉVELOPPEMENT : six familles d'expertise, revues réalisées par six agents et passation Notion pour Claude.
+- Liens bêta préparés ; aucun déploiement distant dans ce lot.

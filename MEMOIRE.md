@@ -43,3 +43,12 @@ Le propriétaire reporte la refonte graphique. Habillage clair, police système,
 accueil compact, effets décoratifs retirés. Les thèmes ring/azur/club restent dans les sources mais
 ne sont plus chargés ; leur sélecteur est masqué. Réactiver l'import des thèmes lors de la passe design.
 Le choix parmi les trois propositions est reporté, pas requis pour continuer les fonctions.
+
+## Présentation et pôle de développement
+
+- Trois démos distinctes dans public/demos : compétition, adhérents, vie du club.
+- Comparateur pour retenir une base et mélanger les fonctions ; synthèse TXT téléchargeable.
+- Liens bêta préparés /demos/?theme=ring|azur|club, non activés sur l'hébergement par cette session.
+- PARADOXX DÉVELOPPEMENT : six experts par grande famille ; six revues bornées réalisées par agents.
+- Rapports EXPERT-*.md, organisation DEVELOPPEMENT.md, parcours et liens docs/design/DEMOS.md.
+- Passation avec Claude organisée dans Notion ; réception et synchronisation automatiques non établies.
