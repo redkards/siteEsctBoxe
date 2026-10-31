@@ -1,0 +1,92 @@
+@if (article.loading() && !article.data()) {
+  <div class="bx-container wrap" aria-busy="true">
+    <span class="bx-skeleton sk-t"></span>
+    <span class="bx-skeleton sk-img"></span>
+  </div>
+} @else if (article.notFound()) {
+  <section class="bx-section">
+    <div class="bx-container bx-empty">
+      <strong>Actualité introuvable</strong>
+      <p>Cet article n'existe pas ou a été retiré.</p>
+      <a routerLink="/actualites" class="bx-btn bx-btn--primary">Toutes les actualités</a>
+    </div>
+  </section>
+} @else if (article.error()) {
+  <section class="bx-section"><div class="bx-container"><app-load-error [message]="article.error()!" (retry)="article.retry()" /></div></section>
+} @else if (article.data(); as a) {
+  <article class="bx-container wrap">
+    <header class="head">
+      <a routerLink="/actualites" class="back-link"><span aria-hidden="true">←</span> Actualités</a>
+      <span class="bx-badge bx-badge--primary">{{ category() }}</span>
+      <h1>{{ a.title }}</h1>
+      <p class="meta">
+        <time [attr.datetime]="a.publishedAt">{{ a.publishedAt | date: 'd MMMM y' }}</time>
+        @if (author(); as name) {
+          · par {{ name }}
+        }
+      </p>
+      @if (a.excerpt) {
+        <p class="lead">{{ a.excerpt }}</p>
+      }
+    </header>
+    @if (a.coverImage | media; as cover) {
+      <img class="cover" [src]="cover" alt="" />
+    }
+    <div class="bx-prose content" [innerHTML]="a.content"></div>
+  </article>
+
+  <section class="bx-container wrap comments" aria-labelledby="comments-title">
+    <h2 id="comments-title">
+      Commentaires
+      @if (comments.data()?.length) {
+        <span class="count">({{ comments.data()!.length }})</span>
+      }
+    </h2>
+
+    @if (comments.loading() && !comments.data()) {
+      <span class="bx-skeleton sk-c"></span>
+    } @else if (comments.error()) {
+      <app-load-error [message]="comments.error()!" (retry)="comments.retry()" />
+    } @else if (comments.data()?.length) {
+      <ol class="list">
+        @for (c of comments.data(); track c.id) {
+          <li class="comment">
+            <span class="comment__avatar" aria-hidden="true">{{ authorName(c).charAt(0) }}</span>
+            <div>
+              <p class="comment__head"><strong>{{ authorName(c) }}</strong> · <time [attr.datetime]="c.createdAt">{{ c.createdAt | date: "d MMM y 'à' HH'h'mm" }}</time></p>
+              <p class="comment__body">{{ c.body }}</p>
+            </div>
+          </li>
+        }
+      </ol>
+    } @else {
+      <p class="bx-muted">Aucun commentaire pour le moment. Soyez le premier !</p>
+    }
+
+    @if (pending()) {
+      <div class="bx-alert bx-alert--info" role="status">Merci ! Votre commentaire est <strong>en attente de modération</strong> et sera visible après validation par le club.</div>
+    }
+
+    @if (auth.isLoggedIn()) {
+      <form [formGroup]="form" (ngSubmit)="submitComment()" novalidate class="bx-panel form">
+        <div class="bx-field">
+          <label for="comment">Votre commentaire</label>
+          <textarea id="comment" class="bx-input" formControlName="body" maxlength="2000" [attr.aria-invalid]="form.controls.body.touched && form.controls.body.invalid"></textarea>
+          @if (form.controls.body.touched && form.controls.body.invalid) {
+            <p class="bx-error">Votre commentaire doit contenir entre 3 et 2000 caractères.</p>
+          } @else {
+            <p class="bx-hint">Publié après modération. Restez courtois et sportif.</p>
+          }
+        </div>
+        @if (commentError(); as e) {
+          <div class="bx-alert bx-alert--error" role="alert">{{ e }}</div>
+        }
+        <button type="submit" class="bx-btn bx-btn--primary" [disabled]="sending()">{{ sending() ? 'Envoi…' : 'Publier' }}</button>
+      </form>
+    } @else {
+      <p class="login">
+        <a routerLink="/connexion" [queryParams]="{ returnUrl: router.url }">Connectez-vous</a> pour commenter cette actualité.
+      </p>
+    }
+  </section>
+}

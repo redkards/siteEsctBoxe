@@ -16,10 +16,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * Donne un rôle à un compte existant (inscrit et email vérifié), sans requête SQL manuelle :
  *   php bin/console app:user:promote vous@exemple.fr --role=ROLE_ADMIN
  */
-#[AsCommand(name: 'app:user:promote', description: 'Attribue le rôle Modérateur ou Administrateur à un compte')]
+#[AsCommand(name: 'app:user:promote', description: 'Attribue le rôle Coach ou Administrateur à un compte')]
 class PromoteUserCommand extends Command
 {
-    private const ALLOWED = ['ROLE_MODERATOR', 'ROLE_ADMIN'];
+    private const ALLOWED = ['ROLE_COACH', 'ROLE_ADMIN'];
 
     public function __construct(
         private readonly UserRepository $users,
@@ -32,7 +32,7 @@ class PromoteUserCommand extends Command
     {
         $this
             ->addArgument('email', InputArgument::REQUIRED, 'Email du compte')
-            ->addOption('role', null, InputOption::VALUE_REQUIRED, 'ROLE_MODERATOR ou ROLE_ADMIN', 'ROLE_ADMIN')
+            ->addOption('role', null, InputOption::VALUE_REQUIRED, 'ROLE_COACH ou ROLE_ADMIN', 'ROLE_ADMIN')
             ->addOption('revoke', null, InputOption::VALUE_NONE, 'Retirer le rôle au lieu de l’attribuer');
     }
 

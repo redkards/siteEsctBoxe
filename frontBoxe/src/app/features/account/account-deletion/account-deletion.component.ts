@@ -14,30 +14,35 @@ type State = 'confirm' | 'loading' | 'done' | 'error';
   selector: 'app-account-deletion',
   imports: [RouterLink, AuthShellComponent],
   template: `
-    <app-auth-shell eyebrow="Mes données" [heading]="state() === 'done' ? 'Compte supprimé' : 'Supprimer mon compte'" quote="Merci d’avoir fait partie de la communauté.">
+    <app-auth-shell
+      eyebrow="Mes données"
+      [heading]="state() === 'done' ? 'Compte supprimé' : 'Supprimer mon compte'"
+      quote="Merci d’avoir porté les couleurs de l’ESC Boxe Tergnier."
+    >
       @switch (state()) {
         @case ('done') {
-          <div class="pv-alert pv-alert--success" role="status">{{ message() }}</div>
-          <a routerLink="/" class="pv-btn pv-btn--primary">Retour à l'accueil <span class="pv-arrow" aria-hidden="true">→</span></a>
+          <div class="bx-alert bx-alert--success" role="status">{{ message() }}</div>
+          <a routerLink="/" class="bx-btn bx-btn--primary">Retour à l'accueil <span class="bx-arrow" aria-hidden="true">→</span></a>
         }
         @case ('error') {
-          <div class="pv-alert pv-alert--error" role="alert">{{ message() }}</div>
-          <a routerLink="/mon-espace" class="pv-btn pv-btn--outline">Aller à mon espace</a>
+          <div class="bx-alert bx-alert--error" role="alert">{{ message() }}</div>
+          <a routerLink="/mon-espace" [queryParams]="{ onglet: 'donnees' }" class="bx-btn bx-btn--outline">Aller à mon espace</a>
         }
         @default {
           @if (!token()) {
-            <div class="pv-alert pv-alert--error" role="alert">Ce lien est incomplet. Recommencez depuis votre espace.</div>
+            <div class="bx-alert bx-alert--error" role="alert">Ce lien est incomplet. Recommencez depuis votre espace, onglet « Mes données ».</div>
           } @else {
             <p>
-              En confirmant, vos données personnelles sont <strong>effacées immédiatement et définitivement</strong> :
-              email, pseudo, mot de passe, favoris et abonnements. Vos messages du forum restent visibles sous le nom
-              « Utilisateur supprimé ».
+              En confirmant, votre compte est <strong>supprimé immédiatement et définitivement</strong> : identité, email,
+              mot de passe, téléphone, date de naissance et messages échangés avec le club. Les dossiers d'adhésion déjà
+              validés restent conservés par l'association pour la durée légale indiquée dans la
+              <a routerLink="/confidentialite">politique de confidentialité</a>.
             </p>
             <div class="actions">
-              <button type="button" class="pv-btn pv-btn--primary" [disabled]="state() === 'loading'" (click)="confirm()">
+              <button type="button" class="bx-btn bx-btn--primary" [disabled]="state() === 'loading'" [attr.aria-busy]="state() === 'loading'" (click)="confirm()">
                 {{ state() === 'loading' ? 'Suppression…' : 'Supprimer définitivement mon compte' }}
               </button>
-              <a routerLink="/" class="pv-btn pv-btn--outline">Annuler</a>
+              <a routerLink="/" class="bx-btn bx-btn--outline">Annuler</a>
             </div>
           }
         }
@@ -48,7 +53,7 @@ type State = 'confirm' | 'loading' | 'done' | 'error';
   styles: `
     p {
       margin: 0 0 1.5rem;
-      color: var(--pv-ink-soft);
+      color: var(--bx-ink-soft);
     }
     .actions {
       display: flex;
@@ -69,7 +74,7 @@ export class AccountDeletionComponent {
     this.state.set('loading');
     this.account.confirmDeletion(this.token()).subscribe({
       next: (res) => {
-        this.message.set(res.message);
+        this.message.set(res.message || 'Votre compte a été supprimé.');
         this.state.set('done');
       },
       error: (err: unknown) => {

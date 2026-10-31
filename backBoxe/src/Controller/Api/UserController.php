@@ -9,7 +9,6 @@ use App\Dto\RegisterRequest;
 use App\Entity\RefreshToken;
 use App\Entity\User;
 use App\Repository\UserRepository;
-use App\Repository\VideoFavoriteRepository;
 use App\Service\GdprService;
 use App\Service\MailService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -18,7 +17,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -30,6 +28,8 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route('/api')]
 class UserController extends AbstractController
 {
+    use PublicCache;
+
     private const VERIFICATION_TTL = '+24 hours';
 
     public function __construct(
@@ -41,7 +41,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * UC4 — S'inscrire
+     * Créer un compte membre
      */
     #[Route('/register', name: 'api_register', methods: ['POST'])]
     public function register(
@@ -58,13 +58,12 @@ class UserController extends AbstractController
         if ($this->users->findOneBy(['email' => mb_strtolower(trim($payload->email))])) {
             return $this->json(['message' => 'Un compte existe déjà avec cet email.'], Response::HTTP_CONFLICT);
         }
-        if ($this->users->findOneBy(['pseudo' => trim($payload->pseudo)])) {
-            return $this->json(['message' => 'Ce pseudo est déjà utilisé.'], Response::HTTP_CONFLICT);
-        }
-
         $user = (new User())
             ->setEmail($payload->email)
-            ->setPseudo($payload->pseudo);
+            ->setFirstName($payload->firstName)
+            ->setLastName($payload->lastName)
+            ->setPhone($payload->phone)
+            ->setBirthDate(self::date($payload->birthDate));
         $user->setPassword($hasher->hashPassword($user, $payload->password));
 
         $gdpr->recordConsent($user, $request->getClientIp());
@@ -81,11 +80,17 @@ class UserController extends AbstractController
     }
 
     /**
-     * Activation du compte depuis le lien reçu par email.
+     * Activation du compte depuis le lien reçu par email : POST {"token": "..."}
+     * (GET ?token=... reste accepté pour les liens ouverts directement).
      */
-    #[Route('/verify-email', name: 'api_verify_email', methods: ['GET'])]
-    public function verifyEmail(#[MapQueryParameter] string $token = ''): JsonResponse
+    #[Route('/verify-email', name: 'api_verify_email', methods: ['POST', 'GET'])]
+    public function verifyEmail(Request $request): JsonResponse
     {
+        $token = (string) $request->query->get('token', '');
+        if ('' === $token && $request->isMethod('POST') && '' !== $request->getContent()) {
+            $token = (string) ($request->toArray()['token'] ?? '');
+        }
+
         $user = '' !== $token ? $this->users->findOneByVerificationToken(hash('sha256', $token)) : null;
 
         if (!$user) {
@@ -131,32 +136,29 @@ class UserController extends AbstractController
 
     #[Route('/me', name: 'api_me', methods: ['GET'])]
     #[IsGranted('ROLE_USER')]
-    public function me(#[CurrentUser] User $user): JsonResponse
+    public function me(#[CurrentUser] User $user): Response
     {
-        return $this->json($this->meData($user));
+        return $this->noStore($this->json($this->meData($user)));
     }
 
     /**
-     * UC6 — Modifier son pseudo
+     * Modifier son profil (prénom, nom, téléphone, date de naissance)
      */
     #[Route('/me', name: 'api_me_update', methods: ['PATCH'])]
     #[IsGranted('ROLE_USER')]
-    public function updateProfile(#[MapRequestPayload] ProfileUpdateRequest $payload, #[CurrentUser] User $user): JsonResponse
+    public function updateProfile(#[MapRequestPayload] ProfileUpdateRequest $payload, #[CurrentUser] User $user): Response
     {
-        $pseudo = trim($payload->pseudo);
-        $existing = $this->users->findOneBy(['pseudo' => $pseudo]);
-        if ($existing && $existing !== $user) {
-            return $this->json(['message' => 'Ce pseudo est déjà utilisé.'], Response::HTTP_CONFLICT);
-        }
-
-        $user->setPseudo($pseudo);
+        $user->setFirstName($payload->firstName)
+            ->setLastName($payload->lastName)
+            ->setPhone($payload->phone)
+            ->setBirthDate(self::date($payload->birthDate));
         $this->em->flush();
 
-        return $this->json($this->meData($user));
+        return $this->noStore($this->json($this->meData($user)));
     }
 
     /**
-     * UC6 — Changer son mot de passe : les autres sessions (refresh tokens) sont révoquées.
+     * Changer son mot de passe : les autres sessions (refresh tokens) sont révoquées.
      */
     #[Route('/me/password', name: 'api_me_password', methods: ['POST'])]
     #[IsGranted('ROLE_USER')]
@@ -178,21 +180,21 @@ class UserController extends AbstractController
     }
 
     /**
-     * UC13 — Exporter ses données (RGPD, droit d'accès et de portabilité)
+     * Exporter ses données (RGPD, droit d'accès et de portabilité)
      */
     #[Route('/me/export', name: 'api_me_export', methods: ['GET'])]
     #[IsGranted('ROLE_USER')]
     public function export(#[CurrentUser] User $user, GdprService $gdpr): JsonResponse
     {
         $response = $this->json($gdpr->export($user), context: ['json_encode_options' => \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE | \JSON_UNESCAPED_SLASHES]);
-        $response->headers->set('Content-Disposition', sprintf('attachment; filename="pokervitrine-mes-donnees-%s.json"', date('Y-m-d')));
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="esctboxe-mes-donnees-%s.json"', date('Y-m-d')));
         $response->headers->set('Cache-Control', 'no-store');
 
         return $response;
     }
 
     /**
-     * UC14 — Supprimer son compte, étape 1 : mot de passe puis email de confirmation.
+     * Supprimer son compte, étape 1 : mot de passe puis email de confirmation.
      */
     #[Route('/me', name: 'api_me_delete', methods: ['DELETE'])]
     #[IsGranted('ROLE_USER')]
@@ -214,7 +216,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * UC14 — étape 2 : lien reçu par email (public : la session peut avoir expiré entre-temps).
+     * Suppression, étape 2 : lien reçu par email (public : la session peut avoir expiré entre-temps).
      */
     #[Route('/account-deletion/confirm', name: 'api_account_deletion_confirm', methods: ['POST'])]
     public function confirmDeletion(Request $request, GdprService $gdpr): JsonResponse
@@ -229,22 +231,6 @@ class UserController extends AbstractController
     }
 
     /**
-     * UC8 — Mes vidéos favorites
-     */
-    #[Route('/me/favorites', name: 'api_me_favorites', methods: ['GET'])]
-    #[IsGranted('ROLE_USER')]
-    public function favorites(#[CurrentUser] User $user, VideoFavoriteRepository $favorites): JsonResponse
-    {
-        $videos = $favorites->findPublishedVideosOf($user);
-        $viewerIsPremium = $this->isGranted('ROLE_PREMIUM');
-        foreach ($videos as $video) {
-            $video->applyAccess($viewerIsPremium);
-        }
-
-        return $this->json($videos, context: ['groups' => ['video:list']]);
-    }
-
-    /**
      * @return array<string, mixed>
      */
     private function meData(User $user): array
@@ -252,15 +238,18 @@ class UserController extends AbstractController
         return [
             'id' => $user->getId(),
             'email' => $user->getEmail(),
-            'pseudo' => $user->getPseudo(),
+            'firstName' => $user->getFirstName(),
+            'lastName' => $user->getLastName(),
+            'phone' => $user->getPhone(),
+            'birthDate' => $user->getBirthDate()?->format('Y-m-d'),
             'roles' => $user->getRoles(),
-            'isVerified' => $user->isVerified(),
             'createdAt' => $user->getCreatedAt()?->format(\DATE_ATOM),
-            'lastLoginAt' => $user->getLastLoginAt()?->format(\DATE_ATOM),
-            'consentVersion' => $user->getConsentVersion(),
-            'premium' => $user->isPremium(),
-            'premiumUntil' => $user->getPremiumUntil()?->format(\DATE_ATOM),
         ];
+    }
+
+    private static function date(?string $value): ?\DateTimeImmutable
+    {
+        return $value ? (\DateTimeImmutable::createFromFormat('!Y-m-d', $value) ?: null) : null;
     }
 
     /**

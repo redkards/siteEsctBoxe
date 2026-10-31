@@ -1,0 +1,9 @@
+{% extends 'emails/_layout.html.twig' %}
+
+{% block content %}
+    <h1 style="margin:0 0 16px;font-size:20px;color:#c8102e;">Nouveau message de contact</h1>
+    <p style="margin:0 0 8px;"><strong>{{ contact.name }}</strong> &lt;{{ contact.email }}&gt;</p>
+    <p style="margin:0 0 16px;color:#555;">Sujet : {{ contact.subject }}</p>
+    <p style="margin:0;padding:12px;background:#f4f4f4;border-radius:6px;white-space:pre-line;">{{ contact.message }}</p>
+    <p style="margin:16px 0 0;font-size:13px;color:#555;">Répondez directement à cet email pour écrire à l'expéditeur.</p>
+{% endblock %}

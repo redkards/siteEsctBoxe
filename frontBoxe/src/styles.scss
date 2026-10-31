@@ -746,3 +746,28 @@ select.bx-input {
     font-weight: 600;
   }
 }
+
+/* Couleur du texte des boutons : prioritaire sur les règles `a { color }` des thèmes */
+.bx-btn.bx-btn--primary {
+  color: var(--bx-primary-ink);
+}
+
+.bx-btn.bx-btn--outline:not(:hover) {
+  color: var(--bx-ink);
+}
+
+.bx-btn.bx-btn--light:not(:hover) {
+  color: var(--bx-dark-ink);
+}
+
+.bx-btn.bx-btn--ghost {
+  color: var(--bx-ink);
+}
+
+.bx-btn.bx-btn--dark {
+  color: var(--bx-bg);
+}
+
+.bx-badge.bx-badge--primary {
+  color: var(--bx-primary-ink);
+}

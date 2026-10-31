@@ -57,7 +57,7 @@
                             "outputHashing": "all",
                             "optimization": {
                                 "scripts": true,
-                                "fonts": true,
+                                "fonts": false,
                                 "styles": {
                                     "minify": true,
                                     "inlineCritical": false
@@ -91,7 +91,7 @@
                             "outputHashing": "all",
                             "optimization": {
                                 "scripts": true,
-                                "fonts": true,
+                                "fonts": false,
                                 "styles": {
                                     "minify": true,
                                     "inlineCritical": false

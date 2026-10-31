@@ -1,0 +1,18 @@
+Nouvelle demande d'inscription
+
+Nom : {{ membership.firstName }} {{ membership.lastName }}
+Né(e) le : {{ membership.birthDate|date('d/m/Y') }}{% if membership.minor %} (mineur — représentant légal : {{ membership.legalGuardian }}){% endif %}
+
+Email : {{ membership.email }}
+Téléphone : {{ membership.phone ?? '—' }}
+Discipline : {{ membership.discipline.name }}
+Formule : {{ membership.pricing ? membership.pricing.label : '—' }}
+Saison : {{ membership.season }}
+Certificat médical déclaré : {{ membership.medicalCertificate ? 'oui' : 'non' }}
+{% if membership.message %}
+
+Message :
+{{ membership.message }}
+{% endif %}
+
+Traiter la demande dans le back-office : {{ adminUrl }}

@@ -7,22 +7,22 @@
 html[data-theme='club'] {
   color-scheme: light;
 
-  --bx-bg: #f6f4ef;
-  --bx-surface: #ece9e2; // gris béton clair
+  --bx-bg: #f7f7f5;
+  --bx-surface: #e9e9e7; // gris béton clair
   --bx-card: #ffffff;
-  --bx-card-border: #e2dfd7;
+  --bx-card-border: #dededb;
   --bx-ink: #111111;
   --bx-ink-soft: #2b2b2b;
-  --bx-muted: #5c5a55;
-  --bx-line: #d9d5cb;
+  --bx-muted: #595959;
+  --bx-line: #d4d4d1;
 
   // Le jaune ne porte jamais de texte sur fond clair : bouton principal noir,
   // le jaune or sert d'accent (soulignés, pastilles, blocs, survols).
   --bx-primary: #111111;
   --bx-primary-hover: #2e2e2e;
   --bx-primary-ink: #ffffff;
-  --bx-primary-soft: #fff3cc;
-  --bx-accent: #f5b700;
+  --bx-primary-soft: #fff7cc;
+  --bx-accent: #ffd700;
   --bx-dark: #111111;
   --bx-dark-ink: #ffffff;
   --bx-hero-overlay: linear-gradient(180deg, rgb(17 17 17 / 0) 30%, rgb(17 17 17 / 0.82) 100%);
@@ -42,28 +42,28 @@ html[data-theme='club'] {
   --bx-btn-radius: 6px;
   --bx-shadow: 0 18px 40px -24px rgb(17 17 17 / 0.35);
   --bx-shadow-sm: 0 4px 12px -6px rgb(17 17 17 / 0.25);
-  --bx-focus: 0 0 0 3px #f5b700;
+  --bx-focus: 0 0 0 3px #ffd700;
 
   --bx-header-bg: #ffffff;
   --bx-header-ink: #111111;
   --bx-footer-bg: #111111;
-  --bx-footer-ink: #c9c6bf;
-  --bx-glass: rgb(246 244 239 / 0.88);
+  --bx-footer-ink: #c8c8c8;
+  --bx-glass: rgb(247 247 245 / 0.88);
 
   // Tokens complémentaires (_tokens.scss)
   --bx-accent-ink: #111111;
   --bx-dark-2: #1e1e1e;
-  --bx-dark-muted: #b3b0a8;
+  --bx-dark-muted: #b3b3b3;
   --bx-dark-line: rgb(255 255 255 / 0.16);
   --bx-hero-ink: #ffffff;
   --bx-success-soft: #e3f1e9;
-  --bx-warning-soft: #fff3cc;
+  --bx-warning-soft: #fff7cc;
   --bx-danger-soft: #fbe6e9;
   --bx-info: #1d4f91;
   --bx-info-soft: #e6edf6;
   --bx-display-weight: 800; // Archivo variable, largeur 112-125 % (cf. surcharges)
-  --bx-header-muted: #5c5a55;
-  --bx-footer-muted: #9d9a92;
+  --bx-header-muted: #595959;
+  --bx-footer-muted: #9e9e9e;
   --bx-link: #111111;
 }
 
@@ -224,5 +224,46 @@ html[data-theme='club'] {
   // Photos : rendu presse, légèrement plus de punch
   main img:not([src*='logo']) {
     filter: contrast(1.08) saturate(1.08);
+  }
+}
+
+// Contextes sombres (hero, gala, bandeaux, vignettes photo, pied de page) :
+// le « primaire » devient l'or de la charte (texte noir dessus, 13,5:1).
+html[data-theme='club'] {
+  .hero,
+  .gala,
+  .disc,
+  .bx-section--dark,
+  .bx-page-head,
+  .footer {
+    --bx-primary: var(--bx-accent);
+    --bx-primary-hover: #ffffff;
+    --bx-primary-ink: #111111;
+    --bx-link: var(--bx-accent);
+
+    a:not(.bx-btn):not(.bx-card) {
+      color: inherit;
+    }
+  }
+
+  // En-tête clair : filets en gris charte, logo imprimé (négatif du logo noir)
+  .header {
+    --bx-dark-line: var(--bx-line);
+    border-bottom: 3px solid #111;
+  }
+
+  .header .logo__mark {
+    filter: invert(1) grayscale(1) contrast(1.1);
+    box-shadow: 0 0 0 1px var(--bx-line);
+  }
+
+  .logo__city {
+    color: var(--bx-ink);
+    box-shadow: inset 0 -0.35em 0 var(--bx-accent);
+  }
+
+  .footer .logo__city {
+    color: var(--bx-accent);
+    box-shadow: none;
   }
 }

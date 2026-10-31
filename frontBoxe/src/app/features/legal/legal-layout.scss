@@ -2,27 +2,22 @@
 
 :host {
   display: block;
-  margin-top: 1rem;
-}
-
-.page-head {
-  max-width: 860px;
-  margin-inline: auto;
 }
 
 .legal__updated {
-  margin: 0;
-  color: var(--pv-muted);
-  font-size: 0.88rem;
+  color: var(--bx-dark-muted);
+  font-size: 0.9rem;
 }
 
 .legal {
   max-width: 860px;
   margin: 0 auto;
   padding: clamp(1.5rem, 4vw, 3.25rem);
-  border-radius: var(--pv-radius-lg);
-  background: var(--pv-card);
-  box-shadow: var(--pv-shadow);
+  border: 1px solid var(--bx-card-border);
+  border-radius: var(--bx-radius-lg);
+  background: var(--bx-card);
+  box-shadow: var(--bx-shadow-sm);
+  color: var(--bx-ink-soft);
   font-size: 1rem;
   line-height: 1.7;
 
@@ -39,12 +34,17 @@
     margin-top: 0.3rem;
   }
 
+  strong {
+    color: var(--bx-ink);
+  }
+
   h2 {
     margin: 2.5rem 0 1rem;
     padding-top: 1.5rem;
-    border-top: 1px solid var(--pv-line);
+    border-top: 1px solid var(--bx-line);
+    color: var(--bx-ink);
     font-size: clamp(1.4rem, 3vw, 1.8rem);
-    scroll-margin-top: 6rem;
+    scroll-margin-top: calc(var(--bx-header-h) + 1.5rem);
 
     &:focus {
       box-shadow: none;
@@ -53,7 +53,12 @@
 
   h3 {
     margin: 1.6rem 0 0.6rem;
+    color: var(--bx-ink);
     font-size: 1.15rem;
+  }
+
+  a {
+    overflow-wrap: anywhere;
   }
 }
 
@@ -61,8 +66,8 @@
 .toc {
   margin-bottom: 2rem;
   padding: 1.2rem 1.4rem;
-  border-radius: var(--pv-radius);
-  background: var(--pv-surface);
+  border-radius: var(--bx-radius);
+  background: var(--bx-surface);
 
   h2 {
     margin: 0 0 0.6rem;
@@ -83,12 +88,12 @@
   }
 
   a {
-    color: var(--pv-ink-soft);
+    color: var(--bx-ink-soft);
     font-size: 0.93rem;
     text-decoration: none;
 
     &:hover {
-      color: var(--pv-red);
+      color: var(--bx-primary);
       text-decoration: underline;
     }
   }
@@ -98,9 +103,10 @@
 .brief {
   margin-bottom: 2rem;
   padding: 1.2rem 1.4rem;
-  border-left: 4px solid var(--pv-red);
-  border-radius: var(--pv-radius-sm);
-  background: var(--pv-red-soft);
+  border-left: 4px solid var(--bx-primary);
+  border-radius: var(--bx-radius-sm);
+  background: var(--bx-primary-soft);
+  color: var(--bx-ink);
 
   h2 {
     margin: 0 0 0.6rem;
@@ -118,41 +124,63 @@
 .table-wrap {
   margin: 0 0 1.2rem;
   overflow-x: auto;
+  border: 1px solid var(--bx-line);
+  border-radius: var(--bx-radius-sm);
 }
 
 table {
   width: 100%;
-  min-width: 640px;
+  min-width: 680px;
   border-collapse: collapse;
   font-size: 0.9rem;
   line-height: 1.5;
 }
 
+caption {
+  padding: 0.6rem 0.75rem;
+  color: var(--bx-muted);
+  font-size: 0.85rem;
+  text-align: left;
+}
+
 th,
 td {
   padding: 0.6rem 0.75rem;
-  border-bottom: 1px solid var(--pv-line);
+  border-bottom: 1px solid var(--bx-line);
   text-align: left;
   vertical-align: top;
 }
 
-th {
-  background: var(--pv-surface);
+thead th {
+  background: var(--bx-surface);
+  color: var(--bx-ink);
   font-weight: 700;
+}
+
+tbody th {
+  color: var(--bx-ink);
+  font-weight: 600;
+}
+
+tr:last-child td,
+tr:last-child th {
+  border-bottom: 0;
 }
 
 dl {
   display: grid;
-  grid-template-columns: minmax(140px, max-content) 1fr;
+  grid-template-columns: minmax(150px, max-content) 1fr;
   gap: 0.4rem 1.2rem;
   margin: 0 0 1rem;
 
   dt {
+    color: var(--bx-ink);
     font-weight: 600;
   }
 
   dd {
     margin: 0;
+    overflow-wrap: anywhere;
   }
 
   @media (max-width: 560px) {
@@ -167,16 +195,16 @@ dl {
 // Valeur de legal.config.ts restant à renseigner
 .todo {
   padding: 0 0.25rem;
-  border-radius: 4px;
-  background: var(--pv-warning-soft);
-  color: #7a5200;
+  border-radius: var(--bx-radius-sm);
+  background: var(--bx-warning-soft);
+  color: var(--bx-warning);
   font-weight: 600;
 }
 
 .legal__see {
   margin-top: 2.5rem;
   padding-top: 1.5rem;
-  border-top: 1px solid var(--pv-line);
-  color: var(--pv-muted);
+  border-top: 1px solid var(--bx-line);
+  color: var(--bx-muted);
   font-size: 0.92rem;
 }

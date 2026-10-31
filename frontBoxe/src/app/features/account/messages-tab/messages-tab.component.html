@@ -1,0 +1,139 @@
+<div class="tab-head">
+  <div>
+    <h2 class="tab-title" id="messages-title">Messagerie avec le club</h2>
+    <p class="bx-hint">
+      Une question sur un cours, un certificat, une compétition ? Écrivez aux coachs : la réponse arrive ici.
+      @if (unreadCount()) {
+        <strong class="unread-count">{{ unreadCount() }} non lu{{ unreadCount() > 1 ? 's' : '' }}</strong>
+      }
+    </p>
+  </div>
+  @if (!composing()) {
+    <button #composeButton type="button" class="bx-btn bx-btn--primary bx-btn--sm" (click)="openCompose()">
+      Nouveau message
+    </button>
+  }
+</div>
+
+<div aria-live="polite">
+  @if (notice(); as n) {
+    <div class="bx-alert bx-alert--success" role="status">{{ n }}</div>
+  }
+</div>
+
+@if (composing()) {
+  <section class="bx-panel compose" aria-labelledby="compose-title">
+    <h3 id="compose-title" class="compose__title">Écrire au club</h3>
+    <form [formGroup]="form" (ngSubmit)="send()" novalidate aria-labelledby="compose-title">
+      <div class="bx-field">
+        <label for="msg-subject">Objet <span class="bx-req" aria-hidden="true">*</span></label>
+        <input
+          #subjectInput
+          id="msg-subject"
+          class="bx-input"
+          formControlName="subject"
+          [attr.maxlength]="subjectMax"
+          required
+          [attr.aria-invalid]="!!fieldError('subject')"
+          [attr.aria-describedby]="fieldError('subject') ? 'msg-subject-error' : null"
+        />
+        @if (fieldError('subject'); as e) {
+          <p class="bx-error" id="msg-subject-error">{{ e }}</p>
+        }
+      </div>
+      <div class="bx-field">
+        <label for="msg-body">Message <span class="bx-req" aria-hidden="true">*</span></label>
+        <textarea
+          id="msg-body"
+          class="bx-input"
+          formControlName="body"
+          rows="6"
+          [attr.maxlength]="bodyMax"
+          required
+          [attr.aria-invalid]="!!fieldError('body')"
+          aria-describedby="msg-body-help"
+        ></textarea>
+        <div class="compose__meta" id="msg-body-help">
+          @if (fieldError('body'); as e) {
+            <p class="bx-error">{{ e }}</p>
+          } @else {
+            <p class="bx-hint">Ne transmettez pas de données de santé détaillées : le certificat médical se remet à la salle.</p>
+          }
+          <span class="bx-hint counter">{{ bodyLength() }} / {{ bodyMax }}</span>
+        </div>
+      </div>
+
+      @if (sendError(); as e) {
+        <div class="bx-alert bx-alert--error" role="alert">{{ e }}</div>
+      }
+
+      <div class="actions">
+        <button type="submit" class="bx-btn bx-btn--primary" [disabled]="sending()" [attr.aria-busy]="sending()">
+          {{ sending() ? 'Envoi…' : 'Envoyer' }}
+          @if (!sending()) {
+            <span class="bx-arrow" aria-hidden="true">→</span>
+          }
+        </button>
+        <button type="button" class="bx-btn bx-btn--ghost" (click)="cancelCompose()" [disabled]="sending()">Annuler</button>
+      </div>
+    </form>
+  </section>
+}
+
+@if (list.loading() && !list.data()) {
+  <div class="messages" role="status" aria-live="polite">
+    <span class="bx-sr-only">Chargement des messages…</span>
+    @for (i of [1, 2, 3]; track i) {
+      <span class="bx-skeleton sk" aria-hidden="true"></span>
+    }
+  </div>
+} @else if (list.error()) {
+  <app-load-error [message]="list.error()!" (retry)="list.retry()" />
+} @else if (list.data()?.items?.length) {
+  <ul class="messages" aria-labelledby="messages-title" [attr.aria-busy]="list.loading()">
+    @for (m of list.data()!.items; track m.id) {
+      <li class="message" [class.message--unread]="isUnread(m)" [class.message--open]="openId() === m.id">
+        <button
+          type="button"
+          class="message__head"
+          [id]="'msg-head-' + m.id"
+          [attr.aria-expanded]="openId() === m.id"
+          [attr.aria-controls]="'msg-body-' + m.id"
+          (click)="toggle(m)"
+        >
+          <span class="message__dir" [class.message__dir--in]="isReceived(m)" aria-hidden="true">{{ isReceived(m) ? '↓' : '↑' }}</span>
+          <span class="message__summary">
+            <span class="message__who">
+              <span class="bx-sr-only">{{ isReceived(m) ? 'Reçu de' : 'Envoyé à' }} </span>
+              <span aria-hidden="true">{{ isReceived(m) ? 'De' : 'À' }} : </span>{{ correspondent(m) }}
+            </span>
+            <span class="message__subject">{{ m.subject }}</span>
+          </span>
+          <span class="message__aside">
+            @if (isUnread(m)) {
+              <span class="bx-badge bx-badge--primary">Non lu</span>
+            } @else if (!isReceived(m)) {
+              <span class="bx-badge bx-badge--outline">Envoyé</span>
+            }
+            <time class="message__date" [attr.datetime]="m.createdAt">{{ m.createdAt | date: "d MMM y 'à' HH:mm" }}</time>
+          </span>
+        </button>
+        @if (openId() === m.id) {
+          <div class="message__body" [id]="'msg-body-' + m.id" role="region" [attr.aria-labelledby]="'msg-head-' + m.id">
+            <p class="message__text">{{ m.body }}</p>
+            @if (isReceived(m)) {
+              <button type="button" class="bx-btn bx-btn--outline bx-btn--sm" (click)="reply(m)">Répondre</button>
+            }
+          </div>
+        }
+      </li>
+    }
+  </ul>
+  <app-pagination [page]="list.data()!.page" [pages]="list.data()!.pages" (change)="load($event)" />
+} @else {
+  <app-empty title="Aucun message" text="Vous n'avez encore échangé aucun message avec le club.">
+    @if (!composing()) {
+      <button type="button" class="bx-btn bx-btn--primary" (click)="openCompose()">Écrire au club</button>
+    }
+  </app-empty>
+}

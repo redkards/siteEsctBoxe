@@ -3,22 +3,23 @@
 namespace App\Controller\Admin;
 
 use App\Entity\User;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 /**
- * UC12 — Gérer les utilisateurs.
+ * Gestion des comptes : rôles et activation.
  * Pas de création (inscription publique avec consentement) ni de suppression directe
- * (anonymisation RGPD au Sprint 4) : l'admin gère seulement les rôles et l'activation.
+ * (anonymisation RGPD depuis l'espace membre ou la purge automatique).
  */
 #[IsGranted('ROLE_ADMIN')]
 class UserCrudController extends AbstractCrudController
@@ -34,7 +35,7 @@ class UserCrudController extends AbstractCrudController
             ->setEntityLabelInSingular('Utilisateur')
             ->setEntityLabelInPlural('Utilisateurs')
             ->setDefaultSort(['createdAt' => 'DESC'])
-            ->setSearchFields(['email', 'pseudo']);
+            ->setSearchFields(['email', 'firstName', 'lastName']);
     }
 
     public function configureActions(Actions $actions): Actions
@@ -47,20 +48,21 @@ class UserCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         yield IdField::new('id')->onlyOnIndex();
-        yield TextField::new('pseudo', 'Pseudo')->setFormTypeOption('disabled', true);
+        yield TextField::new('firstName', 'Prénom');
+        yield TextField::new('lastName', 'Nom');
         yield EmailField::new('email', 'Email')->setFormTypeOption('disabled', true);
+        yield TelephoneField::new('phone', 'Téléphone')->hideOnIndex();
+        yield DateField::new('birthDate', 'Naissance')->hideOnIndex();
         yield ChoiceField::new('roles', 'Rôles')
             ->setChoices([
-                'Modérateur' => 'ROLE_MODERATOR',
+                'Coach' => 'ROLE_COACH',
                 'Administrateur' => 'ROLE_ADMIN',
             ])
             ->allowMultipleChoices()
             ->renderExpanded()
             ->renderAsBadges();
-        yield BooleanField::new('isVerified', 'Email vérifié')->renderAsSwitch(false);
-        yield DateTimeField::new('premiumUntil', 'Premium jusqu\'au')
-            ->setHelp('Activation manuelle (bêta). Vide = pas d\'accès Premium.');
-        yield TextField::new('consentVersion', 'CGU acceptées')->hideOnForm();
+        yield DateTimeField::new('emailVerifiedAt', 'Email vérifié le')->setHelp('Vide = compte non activé.');
+        yield TextField::new('consentVersion', 'CGU acceptées')->hideOnForm()->hideOnIndex();
         yield DateTimeField::new('createdAt', 'Inscription')->hideOnForm();
         yield DateTimeField::new('lastLoginAt', 'Dernière connexion')->hideOnForm();
     }

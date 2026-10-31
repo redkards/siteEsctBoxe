@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, computed, inject, input, signal, ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -7,10 +7,13 @@ import { apiErrorMessage, apiViolations } from '../../../core/api/api.service';
 import { AuthService } from '../../../core/auth/auth.service';
 import { AuthShellComponent } from '../auth-shell/auth-shell.component';
 
-type Field = 'pseudo' | 'email' | 'password' | 'acceptCgu';
+type Field = 'firstName' | 'lastName' | 'email' | 'password' | 'acceptCgu';
+
+/** Prénom / nom : lettres (accents compris), espaces, apostrophes et tirets */
+const NAME_PATTERN = /^[\p{L}][\p{L}' \-.]*$/u;
 
 /** Indication visuelle seulement : la vraie règle est appliquée par le serveur */
-function passwordScore(value: string): number {
+export function passwordScore(value: string): number {
   let score = 0;
   if (value.length >= 8) score++;
   if (value.length >= 12) score++;
@@ -30,9 +33,13 @@ function passwordScore(value: string): number {
 export class RegisterComponent {
   private readonly auth = inject(AuthService);
 
+  /** Transmis à la connexion après activation (?returnUrl=) */
+  readonly returnUrl = input<string>();
+
   protected readonly form = inject(NonNullableFormBuilder).group({
-    pseudo: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), Validators.pattern(/^[\w\-.]+$/)]],
-    email: ['', [Validators.required, Validators.email]],
+    firstName: ['', [Validators.required, Validators.maxLength(80), Validators.pattern(NAME_PATTERN)]],
+    lastName: ['', [Validators.required, Validators.maxLength(80), Validators.pattern(NAME_PATTERN)]],
+    email: ['', [Validators.required, Validators.email, Validators.maxLength(180)]],
     password: ['', [Validators.required, Validators.minLength(8)]],
     // RGPD : case non pré-cochée
     acceptCgu: [false, Validators.requiredTrue],
@@ -44,6 +51,7 @@ export class RegisterComponent {
   protected readonly showPassword = signal(false);
   /** Email du compte créé : affiche l'écran « vérifiez votre boîte mail » */
   protected readonly registeredEmail = signal<string | null>(null);
+  protected readonly resending = signal(false);
   protected readonly resendMessage = signal<string | null>(null);
 
   private readonly passwordValue = toSignal(this.form.controls.password.valueChanges, { initialValue: '' });
@@ -51,22 +59,25 @@ export class RegisterComponent {
   protected readonly strengthLabel = computed(() => ['Très faible', 'Faible', 'Moyen', 'Bon', 'Excellent'][this.strength()]);
 
   protected fieldError(field: Field): string | null {
-    const control = this.form.controls[field];
     const server = this.serverErrors()[field];
     if (server) return server;
+    const control = this.form.controls[field];
     if (!control.touched || control.valid) return null;
 
     switch (field) {
-      case 'pseudo':
-        return control.hasError('pattern')
-          ? 'Lettres, chiffres, tirets, points et underscores uniquement.'
-          : 'Le pseudo doit contenir entre 3 et 50 caractères.';
+      case 'firstName':
+      case 'lastName': {
+        const label = field === 'firstName' ? 'prénom' : 'nom';
+        if (control.hasError('required')) return `Le ${label} est obligatoire.`;
+        if (control.hasError('maxlength')) return `Le ${label} ne doit pas dépasser 80 caractères.`;
+        return `Le ${label} ne peut contenir que des lettres, espaces, apostrophes et tirets.`;
+      }
       case 'email':
-        return 'Saisissez une adresse email valide.';
+        return control.hasError('required') ? "L'email est obligatoire." : 'Saisissez une adresse email valide.';
       case 'password':
         return 'Le mot de passe doit contenir au moins 8 caractères.';
       case 'acceptCgu':
-        return 'Vous devez accepter les CGU et la Politique de Confidentialité.';
+        return 'Vous devez accepter les CGU et la politique de confidentialité.';
     }
   }
 
@@ -80,7 +91,8 @@ export class RegisterComponent {
     this.loading.set(true);
     this.error.set(null);
 
-    const payload = this.form.getRawValue();
+    const raw = this.form.getRawValue();
+    const payload = { ...raw, firstName: raw.firstName.trim(), lastName: raw.lastName.trim(), email: raw.email.trim() };
     this.auth.register(payload).subscribe({
       next: () => {
         this.loading.set(false);
@@ -94,8 +106,7 @@ export class RegisterComponent {
           return;
         }
         if (err instanceof HttpErrorResponse && err.status === 409) {
-          const message = apiErrorMessage(err);
-          this.serverErrors.set(message.includes('pseudo') ? { pseudo: message } : { email: message });
+          this.serverErrors.set({ email: apiErrorMessage(err, 'Un compte existe déjà avec cette adresse email.') });
           return;
         }
         this.error.set(apiErrorMessage(err));
@@ -106,9 +117,16 @@ export class RegisterComponent {
   protected resend(): void {
     const email = this.registeredEmail();
     if (!email) return;
+    this.resending.set(true);
     this.auth.resendVerification(email).subscribe({
-      next: (res) => this.resendMessage.set(res.message),
-      error: (err: unknown) => this.resendMessage.set(apiErrorMessage(err)),
+      next: (res) => {
+        this.resending.set(false);
+        this.resendMessage.set(res.message || 'Un nouveau lien vous a été envoyé.');
+      },
+      error: (err: unknown) => {
+        this.resending.set(false);
+        this.resendMessage.set(apiErrorMessage(err));
+      },
     });
   }
 }

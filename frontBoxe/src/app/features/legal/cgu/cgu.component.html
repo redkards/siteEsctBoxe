@@ -1,198 +1,162 @@
-<!-- Modèle à faire relire par un professionnel du droit avant mise en ligne -->
-<div class="pv-container">
-  <header class="page-head">
-    <span class="pv-eyebrow">Informations légales</span>
+<!-- Modèle à faire relire par le bureau de l'association avant mise en ligne -->
+<section class="bx-page-head">
+  <div class="bx-container">
+    <nav class="bx-breadcrumb" aria-label="Fil d'Ariane"><a routerLink="/">Accueil</a><span aria-hidden="true">/</span><span aria-current="page">CGU</span></nav>
     <h1>Conditions générales d'utilisation</h1>
-    <p class="legal__updated">Version {{ legal.cguVersion }} · Dernière mise à jour : {{ legal.lastUpdate }}</p>
-  </header>
+    <p class="legal__updated">Version {{ legal.cguVersion }} · dernière mise à jour : {{ legal.lastUpdate }}</p>
+  </div>
+</section>
 
-  <article class="legal">
-    <nav class="toc" aria-labelledby="toc-title">
-      <h2 id="toc-title">Sommaire</h2>
-      <ol>
-        @for (s of sections; track s.id) {
-          <li><a [attr.href]="'/cgu#' + s.id" (click)="scrollTo($event, s.id)">{{ s.label }}</a></li>
-        }
-      </ol>
-    </nav>
+<div class="bx-section bx-section--tight">
+  <div class="bx-container">
+    <article class="legal" aria-labelledby="cgu-title">
+      <h2 id="cgu-title" class="bx-sr-only">Conditions générales d'utilisation du site de {{ legal.association.name }}</h2>
+      <nav class="toc" aria-labelledby="toc-title">
+        <h2 id="toc-title">Sommaire</h2>
+        <ol>
+          @for (s of sections; track s.id) {
+            <li><a [attr.href]="'/cgu#' + s.id" (click)="scrollTo($event, s.id)">{{ s.label }}</a></li>
+          }
+        </ol>
+      </nav>
 
-    <h2 id="objet" tabindex="-1">1. Objet</h2>
-    <p>
-      Les présentes conditions générales d'utilisation (« CGU ») définissent les règles d'accès et d'utilisation du
-      site Poker Winners, plateforme communautaire francophone consacrée au poker, qui propose des actualités, un
-      forum d'entraide, des vidéos pédagogiques et un espace membre. Le site est édité par
-      <span [class.todo]="pending(legal.editor.name)">{{ legal.editor.name }}</span> (voir les
-      <a routerLink="/mentions-legales">mentions légales</a>).
-    </p>
-    <p>
-      Poker Winners ne propose aucun jeu d'argent, aucune mise, aucun pari et aucune vente. L'utilisation du site
-      implique l'acceptation pleine et entière des présentes CGU.
-    </p>
+      <h2 id="objet" tabindex="-1">1. Objet et acceptation</h2>
+      <p>
+        Les présentes conditions générales d'utilisation (CGU) encadrent l'utilisation du site de l'association
+        <strong>{{ legal.association.name }}</strong> ({{ legal.association.legalForm }}, siège :
+        <span [class.todo]="pending(legal.association.address)">{{ legal.association.address }}</span>), ci-après
+        « le club », et de son espace membre.
+      </p>
+      <p>
+        La consultation du site vaut acceptation des CGU. La création d'un compte nécessite leur acceptation expresse
+        (case à cocher). Elles complètent les <strong>statuts et le règlement intérieur</strong> de l'association, qui
+        s'appliquent à tout adhérent et prévalent en cas de contradiction pour ce qui concerne la vie du club.
+      </p>
 
-    <h2 id="acces" tabindex="-1">2. Accès au site</h2>
-    <p>
-      Le site traitant du poker, jeu d'argent, il est <strong>réservé aux personnes majeures</strong> (18 ans
-      révolus). En créant un compte, vous certifiez être majeur.
-    </p>
-    <p>
-      L'accès au site et l'inscription sont <strong>gratuits</strong>. La consultation des actualités, des vidéos et
-      du forum est libre ; la publication sur le forum, l'abonnement aux sujets et la gestion de vidéos favorites
-      nécessitent un compte. Les frais d'accès à Internet restent à la charge de l'utilisateur. L'éditeur peut
-      suspendre l'accès au site, notamment pour maintenance, sans que sa responsabilité puisse être engagée.
-    </p>
+      <h2 id="acces" tabindex="-1">2. Accès au site</h2>
+      <p>
+        Le site est accessible gratuitement. Les pages publiques (club, disciplines, planning, tarifs, boxeurs,
+        événements, actualités) sont consultables sans compte. Le club peut interrompre le site pour maintenance ou en
+        cas de force majeure, sans que sa responsabilité puisse être engagée. Les frais de connexion restent à la charge
+        de l'utilisateur.
+      </p>
 
-    <h2 id="compte" tabindex="-1">3. Inscription et compte</h2>
-    <ul>
-      <li>
-        L'inscription requiert un pseudo, une adresse email et un mot de passe. Vous vous engagez à fournir une
-        adresse email exacte dont vous êtes titulaire.
-      </li>
-      <li>
-        Le pseudo est public : il ne doit pas porter atteinte aux droits de tiers, usurper l'identité d'une autre
-        personne ni être injurieux ou trompeur.
-      </li>
-      <li>
-        La vérification de l'adresse email est obligatoire : un lien, valable 24 heures, vous est envoyé pour activer
-        votre compte.
-      </li>
-      <li>
-        Vous êtes responsable de la confidentialité de votre mot de passe et de toute activité réalisée depuis votre
-        compte. Choisissez un mot de passe robuste, que vous n'utilisez pas ailleurs, et prévenez-nous sans délai en
-        cas d'utilisation non autorisée.
-      </li>
-      <li>Un compte est personnel : il ne peut être ni vendu, ni échangé, ni prêté, ni cédé.</li>
-      <li>
-        L'acceptation des présentes CGU est obligatoire pour créer un compte. La version acceptée et sa date sont
-        enregistrées (voir la <a routerLink="/confidentialite">politique de confidentialité</a>).
-      </li>
-    </ul>
+      <h2 id="compte" tabindex="-1">3. Compte membre</h2>
+      <ul>
+        <li>
+          Le compte est personnel. Il est créé avec un prénom, un nom, une adresse email valide et un mot de passe, puis
+          activé par un lien envoyé par email.
+        </li>
+        <li>
+          Un mineur de moins de 15 ans ne peut pas créer seul un compte : il est créé par son représentant légal, qui
+          l'utilise au nom de l'enfant. Entre 15 et 18 ans, le compte peut être créé par le mineur, sous la
+          responsabilité de son représentant légal.
+        </li>
+        <li>
+          Vous vous engagez à fournir des informations exactes et à les tenir à jour depuis l'onglet « Profil ». Vous
+          êtes responsable de la confidentialité de votre mot de passe et de l'usage de votre compte ; signalez sans
+          délai au club toute utilisation non autorisée.
+        </li>
+        <li>Le compte ne vaut pas adhésion au club et n'ouvre aucun droit d'accès aux entraînements.</li>
+      </ul>
 
-    <h2 id="forum" tabindex="-1">4. Règles du forum</h2>
-    <p>Le forum est un espace d'entraide. En y publiant, vous vous engagez à :</p>
-    <ul>
-      <li>respecter les autres membres, rester courtois et bienveillant, y compris en cas de désaccord ;</li>
-      <li>
-        ne publier aucun contenu illicite, haineux, discriminatoire, violent, pornographique, harcelant, injurieux
-        ou diffamatoire, ni aucun contenu portant atteinte à la vie privée ou aux droits de tiers (droit d'auteur,
-        droit à l'image, marques) ;
-      </li>
-      <li>
-        ne publier aucune publicité, aucun message commercial ou de parrainage, aucun spam, ni aucun lien vers des
-        sites de jeux d'argent non agréés par l'Autorité nationale des jeux (ANJ) ;
-      </li>
-      <li>ne pas proposer la vente, l'achat ou l'échange de comptes, que ce soit sur ce site ou sur des sites de jeu ;</li>
-      <li>ne pas inciter au jeu excessif ni présenter le poker comme un moyen de gagner sa vie sans risque ;</li>
-      <li>publier dans la catégorie appropriée et éviter les messages hors sujet ou répétés.</li>
-    </ul>
-    <p>
-      Vous pouvez suivre un sujet pour être prévenu par email des nouvelles réponses, et vous en désabonner à tout
-      moment depuis ce sujet.
-    </p>
+      <h2 id="adhesion" tabindex="-1">4. Inscription en ligne au club</h2>
+      <p>
+        Le formulaire d'inscription permet de transmettre une <strong>demande d'adhésion</strong> pour une saison, une
+        discipline et une formule. La demande apparaît dans l'onglet « Mes inscriptions » avec son statut :
+        <em>en attente</em>, <em>validée</em> ou <em>refusée</em>.
+      </p>
+      <ul>
+        <li>
+          L'adhésion n'est définitive qu'après <strong>validation par le club</strong> et remise du dossier complet :
+          certificat médical ou questionnaire de santé selon la réglementation fédérale, autorisation parentale pour
+          les mineurs, règlement de la cotisation et de la licence aux tarifs en vigueur affichés sur la page
+          <a routerLink="/tarifs">Tarifs</a>.
+        </li>
+        <li>
+          La case « certificat médical » est une déclaration : le document lui-même est remis en main propre au club,
+          jamais déposé sur le site. Aucun entraînement n'est possible sans dossier médical conforme, hors séance d'essai
+          dans les conditions fixées par le club.
+        </li>
+        <li>
+          Le paiement n'est pas réalisé sur le site. Le club peut refuser une demande, notamment en cas de dossier
+          incomplet, de capacité d'accueil atteinte ou de motif prévu par le règlement intérieur.
+        </li>
+      </ul>
 
-    <h2 id="moderation" tabindex="-1">5. Modération</h2>
-    <p>
-      L'équipe de modération veille au respect des présentes règles. Sans préavis et selon la gravité du
-      manquement, elle peut :
-    </p>
-    <ul>
-      <li>masquer un message ;</li>
-      <li>verrouiller un sujet pour empêcher de nouvelles réponses ;</li>
-      <li>suspendre, temporairement ou définitivement, le compte d'un membre.</li>
-    </ul>
-    <p>
-      Tout contenu manifestement illicite peut être signalé à l'adresse de contact indiquée à la fin de ces CGU ; il
-      sera retiré promptement.
-    </p>
+      <h2 id="messagerie" tabindex="-1">5. Messagerie avec le club</h2>
+      <p>
+        L'espace membre propose une messagerie privée entre le membre et le club (bureau et entraîneurs). Elle est
+        réservée aux échanges liés à la pratique et à la vie du club. Les messages sont lus par les personnes habilitées
+        du club ; leur date de lecture est enregistrée. N'y transmettez ni données de santé détaillées, ni coordonnées
+        bancaires, ni document d'identité.
+      </p>
 
-    <h2 id="contenus" tabindex="-1">6. Propriété des contenus publiés</h2>
-    <p>
-      Vous restez l'auteur et le titulaire des droits sur les sujets et messages que vous publiez. En les publiant,
-      vous accordez à l'éditeur une licence <strong>non exclusive</strong> et gratuite d'afficher, de reproduire et
-      de conserver ces contenus sur le site, pour les besoins de son fonctionnement, pour le monde entier et pour la
-      durée de protection des droits. Cette licence permet notamment de maintenir vos messages visibles, sous un nom
-      anonyme, après la suppression de votre compte, afin de préserver la cohérence des discussions.
-    </p>
-    <p>
-      Vous garantissez disposer des droits nécessaires sur ce que vous publiez. Les éléments propres au site et les
-      vidéos intégrées sont protégés dans les conditions décrites dans les
-      <a routerLink="/mentions-legales">mentions légales</a>.
-    </p>
+      <h2 id="commentaires" tabindex="-1">6. Commentaires et contenus publiés</h2>
+      <p>
+        Lorsque la fonction est ouverte, les membres connectés peuvent commenter les actualités. Les commentaires sont
+        <strong>publiés après modération</strong> par le club, qui peut refuser ou retirer, sans justification, tout
+        contenu contraire aux présentes CGU. L'auteur reste responsable de ses propos et garantit détenir les droits sur
+        les contenus qu'il publie. Il autorise le club à les afficher sur le site pendant leur durée de publication.
+      </p>
 
-    <h2 id="responsabilite" tabindex="-1">7. Responsabilité</h2>
-    <p>
-      Chaque membre est seul responsable des contenus qu'il publie et de l'usage qu'il fait du site. Les conseils,
-      analyses et vidéos présentés sur Poker Winners ont une vocation exclusivement pédagogique : ils ne garantissent
-      aucun résultat et ne constituent pas une incitation à jouer.
-    </p>
-    <p>
-      L'éditeur met tout en œuvre pour assurer le bon fonctionnement du site mais ne peut garantir qu'il sera exempt
-      d'erreurs ou d'interruptions. Il ne saurait être tenu responsable des contenus des sites tiers vers lesquels
-      renvoient des liens, ni des pertes subies par un utilisateur à l'occasion de parties jouées hors du site.
-    </p>
+      <h2 id="comportement" tabindex="-1">7. Règles de conduite</h2>
+      <p>Les valeurs du club (respect, discipline, fair-play) s'appliquent aussi en ligne. Il est interdit notamment :</p>
+      <ul>
+        <li>de tenir des propos injurieux, diffamatoires, discriminatoires, violents ou harcelants ;</li>
+        <li>de publier des contenus illicites, à caractère sexuel, ou portant atteinte à la vie privée ou au droit à l'image d'autrui, en particulier de mineurs ;</li>
+        <li>d'usurper l'identité d'un tiers, de créer plusieurs comptes ou de partager son compte ;</li>
+        <li>de faire de la publicité ou de la prospection commerciale ;</li>
+        <li>de tenter d'accéder sans droit au site, au back-office ou aux données d'autres membres, ou d'en perturber le fonctionnement.</li>
+      </ul>
 
-    <h2 id="jeu-responsable" tabindex="-1">8. Jeu responsable</h2>
-    <p>
-      Le jeu comporte des risques : endettement, dépendance, isolement… Fixez-vous des limites de temps et
-      d'argent, ne cherchez pas à « vous refaire » et ne jouez que sur des sites agréés par l'ANJ. Si vous ou l'un de
-      vos proches rencontrez des difficultés, contactez <strong>Joueurs Info Service : 09 74 75 13 13</strong>
-      (appel non surtaxé).
-    </p>
+      <h2 id="propriete" tabindex="-1">8. Propriété intellectuelle</h2>
+      <p>
+        Le nom, le logo, les textes, photographies et la mise en page du site appartiennent au club ou à leurs auteurs.
+        Toute reproduction sans autorisation est interdite. Le partage d'un lien vers une page du site est libre.
+        Voir les <a routerLink="/mentions-legales">mentions légales</a>.
+      </p>
 
-    <h2 id="donnees" tabindex="-1">9. Données personnelles</h2>
-    <p>
-      Les traitements de données personnelles réalisés dans le cadre du site, leurs finalités, leurs durées de
-      conservation et vos droits sont détaillés dans la
-      <a routerLink="/confidentialite">politique de confidentialité</a>.
-    </p>
+      <h2 id="responsabilite" tabindex="-1">9. Responsabilité</h2>
+      <p>
+        Les informations du site (horaires, tarifs, événements, palmarès) sont fournies à titre indicatif et peuvent
+        évoluer ; les annonces faites à la salle et les résultats officiels de la fédération font foi. Le club n'est pas
+        responsable des dommages résultant d'une indisponibilité du site, d'une utilisation non conforme aux CGU ou du
+        contenu des sites tiers vers lesquels il renvoie.
+      </p>
 
-    <h2 id="suppression" tabindex="-1">10. Suppression du compte</h2>
-    <p>
-      Vous pouvez supprimer votre compte à tout moment depuis « Mon espace », avec le bouton « Supprimer mon
-      compte ». La suppression est confirmée par email. Vos données personnelles sont alors anonymisées
-      immédiatement : votre pseudo est remplacé par « Utilisateur supprimé » et votre email est effacé. Vos messages
-      du forum restent visibles sous ce nom anonyme.
-    </p>
-    <p>
-      Un compte inactif depuis 3 ans est anonymisé automatiquement. L'éditeur peut également supprimer le compte d'un
-      membre qui enfreint gravement ou de manière répétée les présentes CGU.
-    </p>
+      <h2 id="suspension" tabindex="-1">10. Suspension et suppression du compte</h2>
+      <p>
+        Vous pouvez supprimer votre compte à tout moment depuis l'onglet « Mes données » de votre espace (confirmation
+        par email). En cas de manquement aux CGU, le club peut, après avertissement sauf urgence, suspendre ou supprimer
+        un compte et retirer les contenus concernés, sans préjudice des sanctions prévues par le règlement intérieur.
+      </p>
 
-    <h2 id="premium" tabindex="-1">11. Abonnement Premium</h2>
-    <p>
-      Certaines vidéos sont réservées aux membres disposant d'un abonnement Premium actif. Le reste du site reste
-      accessible gratuitement.
-    </p>
-    <ul>
-      <li><strong>Prix :</strong> <span [class.todo]="pending(legal.premium.prices)">{{ legal.premium.prices }}</span></li>
-      <li><strong>Durée et renouvellement :</strong> <span [class.todo]="pending(legal.premium.renewal)">{{ legal.premium.renewal }}</span></li>
-      <li><strong>Résiliation :</strong> <span [class.todo]="pending(legal.premium.cancellation)">{{ legal.premium.cancellation }}</span></li>
-      <li><strong>Droit de rétractation :</strong> <span [class.todo]="pending(legal.premium.withdrawal)">{{ legal.premium.withdrawal }}</span></li>
-    </ul>
+      <h2 id="donnees" tabindex="-1">11. Données personnelles</h2>
+      <p>
+        Les traitements de données, leurs durées de conservation et vos droits sont détaillés dans la
+        <a routerLink="/confidentialite">politique de confidentialité</a>.
+      </p>
 
-    <h2 id="evolution" tabindex="-1">12. Évolution des CGU</h2>
-    <p>
-      Les présentes CGU (version {{ legal.cguVersion }}) peuvent être modifiées pour tenir compte de l'évolution du
-      site ou de la réglementation. Toute nouvelle version porte un nouveau numéro et une nouvelle date, et votre
-      accord vous sera de nouveau demandé pour continuer à utiliser votre compte. Si vous ne l'acceptez pas, vous
-      pouvez supprimer votre compte à tout moment.
-    </p>
+      <h2 id="evolution" tabindex="-1">12. Modification des CGU</h2>
+      <p>
+        Le club peut modifier les CGU (nouvelle fonctionnalité, évolution légale). Les membres sont informés de toute
+        modification importante ; la poursuite de l'utilisation de l'espace membre après information vaut acceptation de
+        la nouvelle version.
+      </p>
 
-    <h2 id="droit" tabindex="-1">13. Droit applicable</h2>
-    <p>
-      Les présentes CGU sont régies par le droit français. En cas de litige, une solution amiable sera recherchée en
-      priorité avant toute action judiciaire. À défaut, les tribunaux français seront compétents, dans les
-      conditions prévues par la loi.
-    </p>
+      <h2 id="droit" tabindex="-1">13. Droit applicable et litiges</h2>
+      <p>
+        Les CGU sont régies par le droit français. En cas de difficulté, contactez d'abord le club
+        (<span [class.todo]="pending(legal.association.email)">{{ legal.association.email }}</span> ou la
+        <a routerLink="/contact">page Contact</a>) afin de rechercher une solution amiable. À défaut, le litige est porté
+        devant les juridictions françaises compétentes.
+      </p>
 
-    <h2 id="contact" tabindex="-1">14. Contact</h2>
-    <p>
-      Pour toute question relative aux présentes CGU ou pour signaler un contenu :
-      <span [class.todo]="pending(legal.editor.email)">{{ legal.editor.email }}</span>.
-    </p>
-
-    <p class="legal__see">
-      Voir aussi : <a routerLink="/mentions-legales">Mentions légales</a> ·
-      <a routerLink="/confidentialite">Politique de confidentialité</a>
-    </p>
-  </article>
+      <p class="legal__see">
+        Voir aussi : <a routerLink="/mentions-legales">mentions légales</a> ·
+        <a routerLink="/confidentialite">politique de confidentialité</a>
+      </p>
+    </article>
+  </div>
 </div>

@@ -21,9 +21,9 @@ export class MentionsLegalesComponent {
     { id: 'editeur', label: 'Éditeur du site' },
     { id: 'directeur', label: 'Directeur de la publication' },
     { id: 'hebergeur', label: 'Hébergeur' },
-    { id: 'propriete', label: 'Propriété intellectuelle' },
-    { id: 'responsabilite', label: 'Responsabilité' },
-    { id: 'jeu-responsable', label: 'Jeu responsable' },
+    { id: 'propriete', label: 'Propriété intellectuelle et photos' },
+    { id: 'responsabilite', label: 'Responsabilité et liens' },
+    { id: 'signalement', label: 'Signaler un contenu' },
     { id: 'autres', label: 'Données personnelles et CGU' },
   ];
 }

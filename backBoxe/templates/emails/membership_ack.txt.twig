@@ -1,0 +1,14 @@
+Bonjour {{ membership.firstName }},
+
+Merci pour votre demande d'inscription à l'{{ club }} pour la saison {{ membership.season }}.
+Un coach va l'examiner et reviendra vers vous rapidement.
+
+Discipline : {{ membership.discipline.name }}
+{% if membership.pricing %}Formule : {{ membership.pricing.label }} — {{ (membership.pricing.priceCents / 100)|number_format(2, ',', ' ') }} €
+{% endif %}Statut : {{ membership.status.label }}
+
+Pour finaliser l'adhésion, pensez à apporter au club {% if not membership.medicalCertificate %}un certificat médical de non contre-indication à la pratique de la boxe, {% endif %}une photo d'identité{% if membership.minor %} et l'autorisation parentale signée par {{ membership.legalGuardian }}{% endif %}.
+
+Vous avez un compte ? Suivez votre demande depuis votre espace membre : {{ accountLink }}
+
+ESC Boxe Tergnier

@@ -4,7 +4,7 @@ import { Injectable, signal } from '@angular/core';
 export const THEMES = [
   { id: 'ring', label: 'Fight Night', swatch: ['#0b0b0c', '#d81424'] },
   { id: 'azur', label: 'Azur', swatch: ['#eef4fb', '#1976d2'] },
-  { id: 'club', label: 'Éditorial', swatch: ['#f6f4ef', '#f5b700'] },
+  { id: 'club', label: 'Éditorial', swatch: ['#111111', '#ffd700'] },
 ] as const;
 
 export type ThemeId = (typeof THEMES)[number]['id'];

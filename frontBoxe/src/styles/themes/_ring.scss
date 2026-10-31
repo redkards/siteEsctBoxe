@@ -243,3 +243,13 @@ html[data-theme='ring'] {
     filter: grayscale(0.4) contrast(1.15) brightness(1) sepia(0.2) saturate(1.6) hue-rotate(-12deg);
   }
 }
+
+html[data-theme='ring'] {
+  .logo__city {
+    color: var(--bx-link);
+  }
+
+  .logo__mark {
+    border-radius: 0;
+  }
+}

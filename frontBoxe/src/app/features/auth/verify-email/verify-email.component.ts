@@ -1,5 +1,5 @@
 import { Component, OnInit, inject, input, signal, ChangeDetectionStrategy } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { apiErrorMessage } from '../../../core/api/api.service';
@@ -9,36 +9,48 @@ import { AuthShellComponent } from '../auth-shell/auth-shell.component';
 type State = 'loading' | 'success' | 'expired' | 'invalid';
 
 /**
- * Cible du lien reçu par email : /verify-email?token=...
+ * Cible du lien reçu par email : /verifier-email?token=…
  */
 @Component({
   selector: 'app-verify-email',
-  imports: [FormsModule, RouterLink, AuthShellComponent],
+  imports: [ReactiveFormsModule, RouterLink, AuthShellComponent],
   changeDetection: ChangeDetectionStrategy.Eager,
   template: `
-    <app-auth-shell eyebrow="Activation du compte" [heading]="headings[state()]">
+    <app-auth-shell eyebrow="Activation du compte" [heading]="headings[state()]" quote="Le gong a sonné : bienvenue au club.">
       @switch (state()) {
         @case ('loading') {
-          <p class="pv-hint" role="status">Vérification de votre lien en cours…</p>
+          <p class="bx-hint" role="status" aria-live="polite">Vérification de votre lien en cours…</p>
         }
         @case ('success') {
-          <div class="pv-alert pv-alert--success" role="status">{{ message() }}</div>
-          <a routerLink="/connexion" class="pv-btn pv-btn--primary pv-btn--lg">
-            Se connecter <span class="pv-arrow" aria-hidden="true">→</span>
+          <div class="bx-alert bx-alert--success" role="status">{{ message() }}</div>
+          <a routerLink="/connexion" class="bx-btn bx-btn--primary bx-btn--lg">
+            Se connecter <span class="bx-arrow" aria-hidden="true">→</span>
           </a>
         }
         @default {
-          <div class="pv-alert pv-alert--error" role="alert">{{ message() }}</div>
-          <form (ngSubmit)="resend()">
-            <div class="pv-field">
-              <label for="resend-email">Recevoir un nouveau lien</label>
-              <input id="resend-email" name="email" class="pv-input" type="email" required [(ngModel)]="email" autocomplete="email" />
+          <div class="bx-alert bx-alert--error" role="alert">{{ message() }}</div>
+          <form [formGroup]="form" (ngSubmit)="resend()" novalidate aria-label="Recevoir un nouveau lien d'activation">
+            <div class="bx-field">
+              <label for="resend-email">Recevoir un nouveau lien à cette adresse</label>
+              <input
+                id="resend-email"
+                class="bx-input"
+                type="email"
+                formControlName="email"
+                autocomplete="email"
+                required
+                [attr.aria-invalid]="form.controls.email.touched && form.controls.email.invalid"
+                [attr.aria-describedby]="form.controls.email.touched && form.controls.email.invalid ? 'resend-email-error' : null"
+              />
+              @if (form.controls.email.touched && form.controls.email.invalid) {
+                <p class="bx-error" id="resend-email-error">Saisissez une adresse email valide.</p>
+              }
             </div>
             @if (resendMessage(); as m) {
-              <div class="pv-alert pv-alert--info" role="status">{{ m }}</div>
+              <div class="bx-alert bx-alert--info" role="status">{{ m }}</div>
             }
-            <button type="submit" class="pv-btn pv-btn--primary" [disabled]="!email">
-              Renvoyer le lien <span class="pv-arrow" aria-hidden="true">→</span>
+            <button type="submit" class="bx-btn bx-btn--primary" [disabled]="sending()">
+              {{ sending() ? 'Envoi…' : 'Renvoyer le lien' }} <span class="bx-arrow" aria-hidden="true">→</span>
             </button>
           </form>
         }
@@ -53,8 +65,11 @@ export class VerifyEmailComponent implements OnInit {
 
   protected readonly state = signal<State>('loading');
   protected readonly message = signal('');
+  protected readonly sending = signal(false);
   protected readonly resendMessage = signal<string | null>(null);
-  protected email = '';
+  protected readonly form = inject(NonNullableFormBuilder).group({
+    email: ['', [Validators.required, Validators.email]],
+  });
 
   protected readonly headings: Record<State, string> = {
     loading: 'Un instant…',
@@ -66,26 +81,38 @@ export class VerifyEmailComponent implements OnInit {
   ngOnInit(): void {
     if (!this.token()) {
       this.state.set('invalid');
-      this.message.set('Aucun jeton de vérification dans le lien.');
+      this.message.set('Ce lien ne contient pas de jeton de vérification.');
       return;
     }
 
     this.auth.verifyEmail(this.token()).subscribe({
       next: (res) => {
         this.state.set('success');
-        this.message.set(res.message);
+        this.message.set(res.message || 'Votre adresse email est confirmée. Vous pouvez vous connecter.');
       },
       error: (err: unknown) => {
-        this.state.set(err instanceof HttpErrorResponse && err.status === 410 ? 'expired' : 'invalid');
-        this.message.set(apiErrorMessage(err));
+        const expired = err instanceof HttpErrorResponse && err.status === 410;
+        this.state.set(expired ? 'expired' : 'invalid');
+        this.message.set(apiErrorMessage(err, expired ? 'Ce lien a expiré.' : 'Ce lien est invalide ou a déjà été utilisé.'));
       },
     });
   }
 
   protected resend(): void {
-    this.auth.resendVerification(this.email).subscribe({
-      next: (res) => this.resendMessage.set(res.message),
-      error: (err: unknown) => this.resendMessage.set(apiErrorMessage(err)),
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+    this.sending.set(true);
+    this.auth.resendVerification(this.form.getRawValue().email.trim()).subscribe({
+      next: (res) => {
+        this.sending.set(false);
+        this.resendMessage.set(res.message || 'Si un compte existe à cette adresse, un nouveau lien vient de partir.');
+      },
+      error: (err: unknown) => {
+        this.sending.set(false);
+        this.resendMessage.set(apiErrorMessage(err));
+      },
     });
   }
 }

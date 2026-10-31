@@ -1,0 +1,141 @@
+@if (boxer.loading() && !boxer.data()) {
+  <section class="head" aria-busy="true">
+    <div class="bx-container head__inner">
+      <span class="bx-skeleton sk-photo"></span>
+      <div class="sk-col"><span class="bx-skeleton sk-t"></span><span class="bx-skeleton sk-l"></span><span class="bx-skeleton sk-l"></span></div>
+    </div>
+  </section>
+} @else if (boxer.notFound()) {
+  <section class="bx-section">
+    <div class="bx-container bx-empty">
+      <strong>Boxeur introuvable</strong>
+      <p>Cette fiche n'existe pas ou n'est plus publiée.</p>
+      <a routerLink="/boxeurs" class="bx-btn bx-btn--primary">Tous les boxeurs</a>
+    </div>
+  </section>
+} @else if (boxer.error()) {
+  <section class="bx-section"><div class="bx-container"><app-load-error [message]="boxer.error()!" (retry)="boxer.retry()" /></div></section>
+} @else if (boxer.data(); as b) {
+  <section class="head">
+    <div class="head__name-bg" aria-hidden="true">{{ b.lastName }}</div>
+    <div class="bx-container head__inner">
+      <div class="photo">
+        @if (b.photo | media; as src) {
+          <img [src]="src" [alt]="'Photo de ' + b.firstName + ' ' + b.lastName" />
+        } @else {
+          <span class="photo__init" aria-hidden="true">{{ b.firstName.charAt(0) }}{{ b.lastName.charAt(0) }}</span>
+        }
+      </div>
+      <div class="id">
+        <nav class="bx-breadcrumb" aria-label="Fil d'Ariane">
+          <a routerLink="/">Accueil</a><span aria-hidden="true">/</span><a routerLink="/boxeurs">Boxeurs</a><span aria-hidden="true">/</span><span>{{ b.firstName }} {{ b.lastName }}</span>
+        </nav>
+        <div class="id__tags">
+          <span class="bx-badge bx-badge--primary">{{ level() }}</span>
+          @if (b.discipline) {
+            <a class="bx-badge bx-badge--outline" [routerLink]="['/disciplines', b.discipline.slug]">{{ b.discipline.name }}</a>
+          }
+          @if (!b.active) {
+            <span class="bx-badge bx-badge--outline">Ancien boxeur</span>
+          }
+        </div>
+        <h1>
+          <span class="id__first">{{ b.firstName }}</span>
+          @if (b.nickname) {
+            <span class="id__nick">« {{ b.nickname }} »</span>
+          }
+          <span class="id__last">{{ b.lastName }}</span>
+        </h1>
+        <dl class="facts">
+          @if (b.weightClass) {
+            <div><dt>Catégorie</dt><dd>{{ b.weightClass }}</dd></div>
+          }
+          @if (b.weightKg) {
+            <div><dt>Poids</dt><dd>{{ b.weightKg }} kg</dd></div>
+          }
+          <div><dt>Combats</dt><dd>{{ shares()?.total ?? 0 }}</dd></div>
+          <div><dt>Club</dt><dd>ESC Tergnier</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="record-band" aria-labelledby="record-title">
+    <div class="bx-container">
+      <h2 id="record-title" class="bx-sr-only">Palmarès</h2>
+      @if (record(); as r) {
+        <div class="record">
+          <div class="record__item record__item--win"><span class="record__value">{{ r.wins }}</span><span class="record__label">Victoires</span></div>
+          <div class="record__item record__item--loss"><span class="record__value">{{ r.losses }}</span><span class="record__label">Défaites</span></div>
+          <div class="record__item"><span class="record__value">{{ r.draws }}</span><span class="record__label">Nuls</span></div>
+          <div class="record__item record__item--ko"><span class="record__value">{{ r.kos }}</span><span class="record__label">KO · {{ koRate() }}&nbsp;% des victoires</span></div>
+        </div>
+        @if (shares(); as s) {
+          @if (s.total) {
+            <div class="bar" role="img" [attr.aria-label]="s.wins + ' % de victoires, ' + s.draws + ' % de nuls, ' + s.losses + ' % de défaites'">
+              <span class="bar__win" [style.width.%]="s.wins"></span>
+              <span class="bar__draw" [style.width.%]="s.draws"></span>
+              <span class="bar__loss" [style.width.%]="s.losses"></span>
+            </div>
+          }
+        }
+      }
+    </div>
+  </section>
+
+  <section class="bx-section">
+    <div class="bx-container body">
+      @if (b.bio) {
+        <div class="bio">
+          <span class="bx-eyebrow">Portrait</span>
+          <p>{{ b.bio }}</p>
+        </div>
+      }
+
+      <div class="fights">
+        <h2>Combats</h2>
+        @if (b.fights.length) {
+          <div class="bx-table-wrap">
+            <table class="bx-table">
+              <caption class="bx-sr-only">Combats de {{ b.firstName }} {{ b.lastName }}, du plus récent au plus ancien</caption>
+              <thead>
+                <tr><th scope="col">Date</th><th scope="col">Adversaire</th><th scope="col">Résultat</th><th scope="col">Méthode</th><th scope="col">Lieu / événement</th></tr>
+              </thead>
+              <tbody>
+                @for (f of b.fights; track f.id) {
+                  <tr>
+                    <td class="nowrap">{{ f.date | date: 'dd/MM/y' }}</td>
+                    <td>
+                      <strong>{{ f.opponent }}</strong>
+                      @if (f.opponentClub) {
+                        <br /><small class="bx-muted">{{ f.opponentClub }}</small>
+                      }
+                    </td>
+                    <td><span class="result" [attr.data-result]="f.result">{{ results[f.result] }}</span></td>
+                    <td>
+                      {{ methods[f.method] }}
+                      @if (f.rounds) {
+                        <small class="bx-muted">({{ f.rounds }} rd{{ f.rounds > 1 ? 's' : '' }})</small>
+                      }
+                    </td>
+                    <td>
+                      @if (f.event) {
+                        <a [routerLink]="['/evenements', f.event.slug]">{{ f.event.title }}</a>
+                      } @else {
+                        {{ f.location ?? '—' }}
+                      }
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        } @else {
+          <p class="bx-muted">Aucun combat enregistré pour le moment.</p>
+        }
+      </div>
+
+      <a routerLink="/boxeurs" class="back-link"><span aria-hidden="true">←</span> Tous les boxeurs</a>
+    </div>
+  </section>
+}

@@ -1,0 +1,149 @@
+<div class="tab-grid">
+  <section class="bx-panel" aria-labelledby="profile-title">
+    <h2 id="profile-title" class="tab-title">Mes informations</h2>
+    <p class="bx-hint tab-intro">
+      Ces informations pré-remplissent vos demandes d'inscription au club. L'email de connexion
+      (<strong>{{ auth.user()?.email }}</strong>) ne peut pas être modifié ici : écrivez au club si besoin.
+    </p>
+
+    <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" novalidate aria-labelledby="profile-title">
+      <div class="bx-row">
+        <div class="bx-field">
+          <label for="p-firstName">Prénom <span class="bx-req" aria-hidden="true">*</span></label>
+          <input
+            id="p-firstName"
+            class="bx-input"
+            formControlName="firstName"
+            autocomplete="given-name"
+            required
+            [attr.aria-invalid]="!!profileError('firstName')"
+            [attr.aria-describedby]="profileError('firstName') ? 'p-firstName-error' : null"
+          />
+          @if (profileError('firstName'); as e) {
+            <p class="bx-error" id="p-firstName-error">{{ e }}</p>
+          }
+        </div>
+        <div class="bx-field">
+          <label for="p-lastName">Nom <span class="bx-req" aria-hidden="true">*</span></label>
+          <input
+            id="p-lastName"
+            class="bx-input"
+            formControlName="lastName"
+            autocomplete="family-name"
+            required
+            [attr.aria-invalid]="!!profileError('lastName')"
+            [attr.aria-describedby]="profileError('lastName') ? 'p-lastName-error' : null"
+          />
+          @if (profileError('lastName'); as e) {
+            <p class="bx-error" id="p-lastName-error">{{ e }}</p>
+          }
+        </div>
+      </div>
+
+      <div class="bx-row">
+        <div class="bx-field">
+          <label for="p-phone">Téléphone</label>
+          <input
+            id="p-phone"
+            class="bx-input"
+            type="tel"
+            formControlName="phone"
+            autocomplete="tel"
+            inputmode="tel"
+            [attr.aria-invalid]="!!profileError('phone')"
+            [attr.aria-describedby]="profileError('phone') ? 'p-phone-error' : 'p-phone-hint'"
+          />
+          @if (profileError('phone'); as e) {
+            <p class="bx-error" id="p-phone-error">{{ e }}</p>
+          } @else {
+            <p class="bx-hint" id="p-phone-hint">Facultatif. Utilisé par les coachs en cas d'imprévu.</p>
+          }
+        </div>
+        <div class="bx-field">
+          <label for="p-birthDate">Date de naissance</label>
+          <input
+            id="p-birthDate"
+            class="bx-input"
+            type="date"
+            formControlName="birthDate"
+            autocomplete="bday"
+            [max]="today"
+            [attr.aria-invalid]="!!profileError('birthDate')"
+            [attr.aria-describedby]="profileError('birthDate') ? 'p-birthDate-error' : 'p-birthDate-hint'"
+          />
+          @if (profileError('birthDate'); as e) {
+            <p class="bx-error" id="p-birthDate-error">{{ e }}</p>
+          } @else {
+            <p class="bx-hint" id="p-birthDate-hint">Facultatif. Sert à déterminer la catégorie d'âge.</p>
+          }
+        </div>
+      </div>
+
+      <div aria-live="polite">
+        @if (profileFeedback(); as f) {
+          <div class="bx-alert" [class.bx-alert--success]="f.type === 'success'" [class.bx-alert--error]="f.type === 'error'" [attr.role]="f.type === 'error' ? 'alert' : 'status'">
+            {{ f.text }}
+          </div>
+        }
+      </div>
+      <button type="submit" class="bx-btn bx-btn--primary" [disabled]="busy() === 'profile'" [attr.aria-busy]="busy() === 'profile'">
+        {{ busy() === 'profile' ? 'Enregistrement…' : 'Enregistrer' }}
+      </button>
+    </form>
+  </section>
+
+  <section class="bx-panel" aria-labelledby="password-title">
+    <h2 id="password-title" class="tab-title">Mot de passe</h2>
+    <form [formGroup]="passwordForm" (ngSubmit)="savePassword()" novalidate aria-labelledby="password-title">
+      <div class="bx-field">
+        <label for="p-currentPassword">Mot de passe actuel <span class="bx-req" aria-hidden="true">*</span></label>
+        <input
+          id="p-currentPassword"
+          class="bx-input"
+          [type]="showPasswords() ? 'text' : 'password'"
+          formControlName="currentPassword"
+          autocomplete="current-password"
+          required
+          [attr.aria-invalid]="!!passwordError('currentPassword')"
+          [attr.aria-describedby]="passwordError('currentPassword') ? 'p-currentPassword-error' : null"
+        />
+        @if (passwordError('currentPassword'); as e) {
+          <p class="bx-error" id="p-currentPassword-error">{{ e }}</p>
+        }
+      </div>
+      <div class="bx-field">
+        <label for="p-newPassword">Nouveau mot de passe <span class="bx-req" aria-hidden="true">*</span></label>
+        <input
+          id="p-newPassword"
+          class="bx-input"
+          [type]="showPasswords() ? 'text' : 'password'"
+          formControlName="newPassword"
+          autocomplete="new-password"
+          required
+          [attr.aria-invalid]="!!passwordError('newPassword')"
+          aria-describedby="p-newPassword-help"
+        />
+        @if (passwordError('newPassword'); as e) {
+          <p class="bx-error" id="p-newPassword-help">{{ e }}</p>
+        } @else {
+          <p class="bx-hint" id="p-newPassword-help">Au moins 8 caractères. Vos autres appareils seront déconnectés.</p>
+        }
+      </div>
+      <label class="bx-check">
+        <input type="checkbox" [checked]="showPasswords()" (change)="showPasswords.set(!showPasswords())" />
+        <span>Afficher les mots de passe</span>
+      </label>
+
+      <div aria-live="polite">
+        @if (passwordFeedback(); as f) {
+          <div class="bx-alert" [class.bx-alert--success]="f.type === 'success'" [class.bx-alert--error]="f.type === 'error'" [attr.role]="f.type === 'error' ? 'alert' : 'status'">
+            {{ f.text }}
+          </div>
+        }
+      </div>
+      <button type="submit" class="bx-btn bx-btn--dark" [disabled]="busy() === 'password'" [attr.aria-busy]="busy() === 'password'">
+        {{ busy() === 'password' ? 'Modification…' : 'Changer le mot de passe' }}
+      </button>
+    </form>
+  </section>
+</div>

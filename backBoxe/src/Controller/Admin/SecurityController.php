@@ -15,14 +15,14 @@ class SecurityController extends AbstractController
     #[Route('/admin/login', name: 'admin_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        if ($this->isGranted('ROLE_MODERATOR')) {
+        if ($this->isGranted('ROLE_COACH')) {
             return $this->redirectToRoute('admin');
         }
 
         return $this->render('@EasyAdmin/page/login.html.twig', [
             'error' => $authenticationUtils->getLastAuthenticationError(),
             'last_username' => $authenticationUtils->getLastUsername(),
-            'page_title' => '♠ Poker Winners — Administration',
+            'page_title' => DashboardController::TITLE,
             'csrf_token_intention' => 'authenticate',
             'target_path' => $this->generateUrl('admin'),
             'username_label' => 'Email',

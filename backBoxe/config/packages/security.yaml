@@ -12,11 +12,10 @@ security:
                 class: App\Entity\User
                 property: email
 
-    # Acteurs du dossier de conception : Membre < Moderateur < Administrateur
+    # Acteurs : Membre < Coach (back-office) < Administrateur (comptes, tarifs, partenaires)
     role_hierarchy:
-        ROLE_MODERATOR: ROLE_USER
-        # L'admin voit aussi les vidéos Premium (contrôle du contenu)
-        ROLE_ADMIN: [ROLE_MODERATOR, ROLE_PREMIUM]
+        ROLE_COACH: ROLE_USER
+        ROLE_ADMIN: ROLE_COACH
 
     firewalls:
         dev:
@@ -76,14 +75,11 @@ security:
         - { path: ^/api/token/refresh$, roles: PUBLIC_ACCESS }
         - { path: ^/api/register, roles: PUBLIC_ACCESS }
         - { path: ^/api/verify-email, roles: PUBLIC_ACCESS }
-        - { path: ^/api/stripe/webhook, roles: PUBLIC_ACCESS }
-        # (/|$) : ne pas capturer /api/members (profils publics)
         - { path: ^/api/me(/|$), roles: ROLE_USER }
-        - { path: ^/api/gdpr, roles: ROLE_USER }
         - { path: ^/admin/login$, roles: PUBLIC_ACCESS }
-        # Moderateurs : forum uniquement (les autres ecrans exigent ROLE_ADMIN dans leurs controleurs)
-        - { path: ^/admin, roles: ROLE_MODERATOR }
-        # Les lectures publiques (articles, videos, forum, catalogue) restent ouvertes ;
+        # Back-office : coachs et administrateurs (Utilisateurs, Tarifs, Partenaires : ROLE_ADMIN dans leurs controleurs)
+        - { path: ^/admin, roles: ROLE_COACH }
+        # Les lectures publiques (club, actualites, boxeurs, galas, planning...) restent ouvertes ;
         # les ecritures sont protegees au niveau des controleurs (#[IsGranted]).
 
 when@test:

@@ -3,7 +3,7 @@ import { RouterLink } from '@angular/router';
 import { LEGAL, LegalSection, isPending, scrollToSection } from '../legal.config';
 
 /**
- * Conditions générales d'utilisation (version LEGAL.cguVersion) : /cgu
+ * Conditions générales d'utilisation du site et de l'espace membre : /cgu
  */
 @Component({
   selector: 'app-cgu',
@@ -18,19 +18,18 @@ export class CguComponent {
   protected readonly scrollTo = scrollToSection;
 
   protected readonly sections: LegalSection[] = [
-    { id: 'objet', label: 'Objet' },
+    { id: 'objet', label: 'Objet et acceptation' },
     { id: 'acces', label: 'Accès au site' },
-    { id: 'compte', label: 'Inscription et compte' },
-    { id: 'forum', label: 'Règles du forum' },
-    { id: 'moderation', label: 'Modération' },
-    { id: 'contenus', label: 'Propriété des contenus publiés' },
+    { id: 'compte', label: 'Compte membre' },
+    { id: 'adhesion', label: 'Inscription en ligne au club' },
+    { id: 'messagerie', label: 'Messagerie avec le club' },
+    { id: 'commentaires', label: 'Commentaires et contenus' },
+    { id: 'comportement', label: 'Règles de conduite' },
+    { id: 'propriete', label: 'Propriété intellectuelle' },
     { id: 'responsabilite', label: 'Responsabilité' },
-    { id: 'jeu-responsable', label: 'Jeu responsable' },
+    { id: 'suspension', label: 'Suspension et suppression' },
     { id: 'donnees', label: 'Données personnelles' },
-    { id: 'suppression', label: 'Suppression du compte' },
-    { id: 'premium', label: 'Abonnement Premium' },
-    { id: 'evolution', label: 'Évolution des CGU' },
-    { id: 'droit', label: 'Droit applicable' },
-    { id: 'contact', label: 'Contact' },
+    { id: 'evolution', label: 'Modification des CGU' },
+    { id: 'droit', label: 'Droit applicable et litiges' },
   ];
 }

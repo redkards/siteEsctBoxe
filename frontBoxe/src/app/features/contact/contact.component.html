@@ -1,0 +1,97 @@
+<section class="bx-page-head">
+  <div class="bx-container">
+    <nav class="bx-breadcrumb" aria-label="Fil d'Ariane"><a routerLink="/">Accueil</a><span aria-hidden="true">/</span><span>Contact</span></nav>
+    <h1>Contact</h1>
+    <p>Une question sur les cours, une séance d'essai ou un partenariat ? Écrivez-nous, un membre du bureau vous répond.</p>
+  </div>
+</section>
+
+<section class="bx-section">
+  <div class="bx-container layout">
+    <div class="bx-panel">
+      @if (sent()) {
+        <div class="sent" role="status">
+          <span class="sent__icon" aria-hidden="true">✓</span>
+          <h2>Message envoyé</h2>
+          <p>Merci ! Nous vous répondons au plus vite par email.</p>
+          <button type="button" class="bx-btn bx-btn--outline" (click)="sent.set(false)">Écrire un autre message</button>
+        </div>
+      } @else {
+        <h2 class="form-title">Écrivez-nous</h2>
+        @if (error(); as e) {
+          <div class="bx-alert bx-alert--error" role="alert">{{ e }}</div>
+        }
+        <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+          <div class="bx-row">
+            <div class="bx-field">
+              <label for="name">Nom et prénom <span class="bx-req" aria-hidden="true">*</span></label>
+              <input id="name" class="bx-input" formControlName="name" autocomplete="name" required [attr.aria-invalid]="!!fieldError('name')" />
+              @if (fieldError('name'); as e) { <p class="bx-error">{{ e }}</p> }
+            </div>
+            <div class="bx-field">
+              <label for="email">Email <span class="bx-req" aria-hidden="true">*</span></label>
+              <input id="email" type="email" class="bx-input" formControlName="email" autocomplete="email" required [attr.aria-invalid]="!!fieldError('email')" />
+              @if (fieldError('email'); as e) { <p class="bx-error">{{ e }}</p> }
+            </div>
+          </div>
+          <div class="bx-field">
+            <label for="subject">Sujet</label>
+            <select id="subject" class="bx-input" formControlName="subject">
+              @for (s of subjects; track s) {
+                <option [value]="s">{{ s }}</option>
+              }
+            </select>
+          </div>
+          <div class="bx-field">
+            <label for="message">Message <span class="bx-req" aria-hidden="true">*</span></label>
+            <textarea id="message" class="bx-input" formControlName="message" maxlength="3000" required [attr.aria-invalid]="!!fieldError('message')"></textarea>
+            @if (fieldError('message'); as e) { <p class="bx-error">{{ e }}</p> }
+          </div>
+          <p class="bx-hint gdpr">
+            Vos données servent uniquement à vous répondre. <a routerLink="/confidentialite">Politique de confidentialité</a>
+          </p>
+          <button type="submit" class="bx-btn bx-btn--primary bx-btn--lg" [disabled]="sending()">{{ sending() ? 'Envoi…' : 'Envoyer' }}</button>
+        </form>
+      }
+    </div>
+
+    <aside class="aside">
+      <div class="coords">
+        <h2>Coordonnées</h2>
+        @if (club.loading() && !club.data()) {
+          <span class="bx-skeleton sk"></span>
+        } @else {
+          <dl>
+            <div><dt>Adresse</dt><dd>{{ club.data()?.address ?? '02700 Tergnier' }}</dd></div>
+            @if (club.data()?.phone; as phone) {
+              <div><dt>Téléphone</dt><dd><a [href]="tel(phone)">{{ phone }}</a></dd></div>
+            }
+            @if (club.data()?.email; as email) {
+              <div><dt>Email</dt><dd><a [href]="'mailto:' + email">{{ email }}</a></dd></div>
+            }
+            @if (hours().length) {
+              <div>
+                <dt>Horaires</dt>
+                <dd>
+                  @for (h of hours(); track $index) {
+                    <span class="hour">@if (h.label) {<strong>{{ h.label }} :</strong> }{{ h.hours }}</span>
+                  }
+                </dd>
+              </div>
+            }
+          </dl>
+        }
+      </div>
+      <div class="map">
+        @if (map(); as url) {
+          <iframe [src]="url" [title]="'Plan d’accès : ' + (mainVenue()?.name ?? 'salle du club')" loading="lazy"></iframe>
+        } @else {
+          <img src="img/roosevelt1.jpg" alt="" loading="lazy" />
+        }
+        <a [href]="mapLink()" target="_blank" rel="noopener" class="bx-link map__link">
+          Itinéraire sur OpenStreetMap <span class="bx-arrow" aria-hidden="true">→</span><span class="bx-sr-only"> (nouvel onglet)</span>
+        </a>
+      </div>
+    </aside>
+  </div>
+</section>

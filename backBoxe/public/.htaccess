@@ -1,4 +1,4 @@
-# Poker Winners — API Symfony (api.redkards-dev.fr), Apache / o2switch
+# ESCT Boxe — API Symfony (esct-api.redkards-dev.fr), Apache / o2switch
 # Front controller (equivalent de symfony/apache-pack) + en-tetes de securite.
 
 DirectoryIndex index.php

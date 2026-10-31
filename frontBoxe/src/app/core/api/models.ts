@@ -35,7 +35,11 @@ export interface ClubInfo {
   phone: string;
   email: string;
   socials: { facebook: string | null; instagram: string | null; youtube: string | null };
+  /** Horaires d'ouverture : texte libre ou liste (« Lundi : 18h-20h » ou { day, hours }) */
+  openingHours?: OpeningHours | null;
 }
+
+export type OpeningHours = string | (string | { day?: string; label?: string; hours: string })[];
 
 // Actualités ------------------------------------------------------------------
 export type ArticleCategory = 'club' | 'competition' | 'gala' | 'stage' | 'vie-du-club';
@@ -161,7 +165,6 @@ export interface BoxerSummary extends BoxerRecord {
   lastName: string;
   slug: string;
   nickname: string | null;
-  birthDate: string | null;
   sex: Sex;
   weightKg: number | null;
   weightClass: string | null;
@@ -328,4 +331,16 @@ export interface MemberMessage {
   sender: PersonRef | null;
   /** Destinataire (null = le club) */
   recipient: PersonRef | null;
+}
+
+// Commentaires des actualités -------------------------------------------------------
+export type CommentStatus = 'en_attente' | 'publie' | 'refuse';
+
+export interface ArticleComment {
+  id: number;
+  body: string;
+  createdAt: string;
+  /** Prénom + initiale du nom */
+  author: { firstName: string; lastName: string } | null;
+  status?: CommentStatus;
 }

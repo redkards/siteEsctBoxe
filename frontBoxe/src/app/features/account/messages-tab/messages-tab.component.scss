@@ -1,0 +1,155 @@
+.unread-count {
+  margin-left: 0.4rem;
+  color: var(--bx-primary);
+}
+
+.compose {
+  margin-bottom: 1.5rem;
+}
+
+.compose__title {
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+}
+
+.compose__meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.counter {
+  flex: none;
+  font-variant-numeric: tabular-nums;
+}
+
+.messages {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sk {
+  height: 76px;
+}
+
+.message {
+  overflow: hidden;
+  border: 1px solid var(--bx-card-border);
+  border-left: 4px solid transparent;
+  border-radius: var(--bx-radius);
+  background: var(--bx-card);
+  transition: border-color 0.15s, box-shadow 0.15s;
+
+  &--unread {
+    border-left-color: var(--bx-primary);
+
+    .message__subject {
+      font-weight: 800;
+      color: var(--bx-ink);
+    }
+  }
+
+  &--open {
+    box-shadow: var(--bx-shadow-sm);
+  }
+}
+
+.message__head {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  width: 100%;
+  min-height: 64px;
+  padding: 0.75rem 1.1rem;
+  border: 0;
+  background: none;
+  color: var(--bx-ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--bx-surface);
+  }
+}
+
+.message__dir {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--bx-surface);
+  color: var(--bx-muted);
+  font-weight: 700;
+
+  &--in {
+    background: var(--bx-primary-soft);
+    color: var(--bx-primary);
+  }
+}
+
+.message__summary {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+}
+
+.message__who {
+  color: var(--bx-muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.message__subject {
+  overflow: hidden;
+  color: var(--bx-ink-soft);
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.message__aside {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.3rem;
+}
+
+.message__date {
+  color: var(--bx-muted);
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.message__body {
+  padding: 0.25rem 1.1rem 1.1rem calc(1.1rem + 34px + 0.9rem);
+}
+
+.message__text {
+  color: var(--bx-ink-soft);
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 560px) {
+  .message__head {
+    flex-wrap: wrap;
+  }
+
+  .message__aside {
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    padding-left: calc(34px + 0.9rem);
+  }
+
+  .message__body {
+    padding-left: 1.1rem;
+  }
+}

@@ -1,3 +1,5 @@
+import { OpeningHours } from '../../core/api/models';
+
 /** Montant en centimes → « 150 € » / « 12,50 € » */
 export function formatEuros(cents: number | null | undefined): string {
   if (cents === null || cents === undefined) return '';
@@ -26,4 +28,17 @@ export function osmLink(lat: number | null | undefined, lon: number | null | und
 export function osmEmbed(lat: number, lon: number, delta = 0.006): string {
   const bbox = [lon - delta, lat - delta / 2, lon + delta, lat + delta / 2].join(',');
   return `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat},${lon}`;
+}
+
+/** Horaires d'ouverture normalisés en lignes { label, hours } (accepte texte, liste de textes ou d'objets) */
+export function openingLines(value: OpeningHours | null | undefined): { label: string; hours: string }[] {
+  if (!value) return [];
+  const items = typeof value === 'string' ? value.split(/\n|;/) : value;
+  return items
+    .map((item) => {
+      if (typeof item !== 'string') return { label: item.day ?? item.label ?? '', hours: item.hours };
+      const [label, ...rest] = item.split(/\s*:\s*/);
+      return rest.length ? { label: label.trim(), hours: rest.join(' : ').trim() } : { label: '', hours: item.trim() };
+    })
+    .filter((line) => line.hours || line.label);
 }

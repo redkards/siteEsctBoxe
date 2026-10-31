@@ -1,0 +1,23 @@
+{% extends 'emails/_layout.html.twig' %}
+
+{% block content %}
+    <h1 style="margin:0 0 16px;font-size:22px;color:#c8102e;">Demande d'inscription bien reçue</h1>
+    <p style="margin:0 0 16px;line-height:1.5;">Bonjour {{ membership.firstName }},</p>
+    <p style="margin:0 0 16px;line-height:1.5;">
+        Merci pour votre demande d'inscription à l'{{ club }} pour la saison {{ membership.season }}.
+        Un coach va l'examiner et reviendra vers vous rapidement.
+    </p>
+    <table role="presentation" style="width:100%;border-collapse:collapse;font-size:14px;margin:0 0 16px;">
+        <tr><td style="padding:6px 0;color:#555;">Discipline</td><td style="padding:6px 0;font-weight:bold;">{{ membership.discipline.name }}</td></tr>
+        {% if membership.pricing %}
+        <tr><td style="padding:6px 0;color:#555;">Formule</td><td style="padding:6px 0;font-weight:bold;">{{ membership.pricing.label }} — {{ (membership.pricing.priceCents / 100)|number_format(2, ',', ' ') }} €</td></tr>
+        {% endif %}
+        <tr><td style="padding:6px 0;color:#555;">Statut</td><td style="padding:6px 0;font-weight:bold;">{{ membership.status.label }}</td></tr>
+    </table>
+    <p style="margin:0 0 16px;line-height:1.5;">
+        Pour finaliser l'adhésion, pensez à apporter au club {% if not membership.medicalCertificate %}un <strong>certificat médical</strong> de non contre-indication à la pratique de la boxe, {% endif %}une photo d'identité{% if membership.minor %} et l'<strong>autorisation parentale</strong> signée par {{ membership.legalGuardian }}{% endif %}.
+    </p>
+    <p style="margin:0;line-height:1.5;font-size:14px;color:#555;">
+        Vous avez un compte ? Suivez votre demande depuis votre <a href="{{ accountLink }}" style="color:#c8102e;">espace membre</a>.
+    </p>
+{% endblock %}

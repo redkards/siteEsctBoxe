@@ -1,124 +1,125 @@
-<!-- Modèle à faire relire par un professionnel du droit avant mise en ligne -->
-<div class="pv-container">
-  <header class="page-head">
-    <span class="pv-eyebrow">Informations légales</span>
+<!-- Modèle à faire relire par le bureau de l'association avant mise en ligne -->
+<section class="bx-page-head">
+  <div class="bx-container">
+    <nav class="bx-breadcrumb" aria-label="Fil d'Ariane"><a routerLink="/">Accueil</a><span aria-hidden="true">/</span><span aria-current="page">Mentions légales</span></nav>
     <h1>Mentions légales</h1>
     <p class="legal__updated">Dernière mise à jour : {{ legal.lastUpdate }}</p>
-  </header>
+  </div>
+</section>
 
-  <article class="legal">
-    <nav class="toc" aria-labelledby="toc-title">
-      <h2 id="toc-title">Sommaire</h2>
-      <ol>
-        @for (s of sections; track s.id) {
-          <li><a [attr.href]="'/mentions-legales#' + s.id" (click)="scrollTo($event, s.id)">{{ s.label }}</a></li>
-        }
-      </ol>
-    </nav>
+<div class="bx-section bx-section--tight">
+  <div class="bx-container">
+    <article class="legal" aria-labelledby="legal-title">
+      <h2 id="legal-title" class="bx-sr-only">Mentions légales du site de {{ legal.association.name }}</h2>
+      <nav class="toc" aria-labelledby="toc-title">
+        <h2 id="toc-title">Sommaire</h2>
+        <ol>
+          @for (s of sections; track s.id) {
+            <li><a [attr.href]="'/mentions-legales#' + s.id" (click)="scrollTo($event, s.id)">{{ s.label }}</a></li>
+          }
+        </ol>
+      </nav>
 
-    <p>
-      Conformément à l'article 6 de la loi n° 2004-575 du 21 juin 2004 pour la confiance dans l'économie numérique
-      (LCEN), les utilisateurs du site Poker Winners sont informés de l'identité des différents intervenants dans le
-      cadre de sa réalisation et de son suivi.
-    </p>
+      <p>
+        Conformément à l'article 6 de la loi n° 2004-575 du 21 juin 2004 pour la confiance dans l'économie numérique
+        (LCEN), les utilisateurs du site de l'{{ legal.association.name }} sont informés de l'identité des différents
+        intervenants dans le cadre de sa réalisation et de son suivi.
+      </p>
 
-    <h2 id="editeur" tabindex="-1">1. Éditeur du site</h2>
-    <p>Le site Poker Winners est édité par :</p>
-    <dl>
-      <dt>Nom ou raison sociale</dt>
-      <dd [class.todo]="pending(legal.editor.name)">{{ legal.editor.name }}</dd>
-      <dt>Statut</dt>
-      <dd [class.todo]="pending(legal.editor.status)">{{ legal.editor.status }}</dd>
-      <dt>Adresse</dt>
-      <dd [class.todo]="pending(legal.editor.address)">{{ legal.editor.address }}</dd>
-      <dt>Email</dt>
-      <dd [class.todo]="pending(legal.editor.email)">{{ legal.editor.email }}</dd>
-      <dt>Téléphone</dt>
-      <dd [class.todo]="pending(legal.editor.phone)">{{ legal.editor.phone }}</dd>
-      <dt>SIRET</dt>
-      <dd [class.todo]="pending(legal.editor.siret)">{{ legal.editor.siret }}</dd>
-    </dl>
+      <h2 id="editeur" tabindex="-1">1. Éditeur du site</h2>
+      <p>Le site est édité par l'association sportive :</p>
+      <dl>
+        <dt>Dénomination</dt>
+        <dd>{{ legal.association.name }}</dd>
+        <dt>Forme juridique</dt>
+        <dd>{{ legal.association.legalForm }}, déclarée en préfecture de l'Aisne</dd>
+        <dt>Numéro RNA</dt>
+        <dd [class.todo]="pending(legal.association.rna)">{{ legal.association.rna }}</dd>
+        <dt>SIRET</dt>
+        <dd [class.todo]="pending(legal.association.siret)">{{ legal.association.siret }}</dd>
+        <dt>Siège social</dt>
+        <dd [class.todo]="pending(legal.association.address)">{{ legal.association.address }}</dd>
+        <dt>Affiliation</dt>
+        <dd>
+          {{ legal.association.federation }} — n°
+          <span [class.todo]="pending(legal.association.affiliation)">{{ legal.association.affiliation }}</span>
+        </dd>
+        <dt>Email</dt>
+        <dd [class.todo]="pending(legal.association.email)">{{ legal.association.email }}</dd>
+        <dt>Téléphone</dt>
+        <dd [class.todo]="pending(legal.association.phone)">{{ legal.association.phone }}</dd>
+      </dl>
+      <p>Vous pouvez aussi écrire au club depuis la <a routerLink="/contact">page Contact</a>.</p>
 
-    <h2 id="directeur" tabindex="-1">2. Directeur de la publication</h2>
-    <p>
-      Le directeur de la publication est
-      <span [class.todo]="pending(legal.publicationDirector)">{{ legal.publicationDirector }}</span>.
-    </p>
+      <h2 id="directeur" tabindex="-1">2. Directeur de la publication</h2>
+      <p>
+        Le directeur de la publication est
+        <span [class.todo]="pending(legal.publicationDirector)">{{ legal.publicationDirector }}</span>,
+        en sa qualité de représentant légal de l'association. Les actualités sont rédigées par les membres du bureau et
+        les entraîneurs du club, sous sa responsabilité.
+      </p>
 
-    <h2 id="hebergeur" tabindex="-1">3. Hébergeur</h2>
-    <p>Le site, sa base de données et l'envoi des emails sont hébergés par :</p>
-    <dl>
-      <dt>Hébergeur</dt>
-      <dd>{{ legal.host.name }}</dd>
-      <dt>Adresse</dt>
-      <dd [class.todo]="pending(legal.host.address)">{{ legal.host.address }}</dd>
-      <dt>Téléphone</dt>
-      <dd [class.todo]="pending(legal.host.phone)">{{ legal.host.phone }}</dd>
-      <dt>SIREN</dt>
-      <dd [class.todo]="pending(legal.host.siren)">{{ legal.host.siren }}</dd>
-    </dl>
+      <h2 id="hebergeur" tabindex="-1">3. Hébergeur</h2>
+      <p>Le site, sa base de données et l'envoi des emails sont hébergés en France par :</p>
+      <dl>
+        <dt>Hébergeur</dt>
+        <dd>{{ legal.host.name }}, {{ legal.host.legalForm }}</dd>
+        <dt>Adresse</dt>
+        <dd>{{ legal.host.address }}</dd>
+        <dt>Téléphone</dt>
+        <dd>{{ legal.host.phone }}</dd>
+        <dt>SIREN</dt>
+        <dd>{{ legal.host.siren }}</dd>
+        <dt>Site web</dt>
+        <dd><a [href]="legal.host.website" target="_blank" rel="noopener">{{ legal.host.website }}<span class="bx-sr-only"> (nouvel onglet)</span></a></dd>
+      </dl>
 
-    <h2 id="propriete" tabindex="-1">4. Propriété intellectuelle</h2>
-    <p>
-      La structure du site, sa charte graphique, son logo, ses textes (notamment les actualités) et l'ensemble des
-      éléments qui le composent, hors contenus mentionnés ci-dessous, sont la propriété de l'éditeur ou font l'objet
-      d'une autorisation d'utilisation. Toute reproduction, représentation, modification ou exploitation, totale ou
-      partielle, sans autorisation écrite préalable de l'éditeur est interdite et peut constituer une contrefaçon
-      sanctionnée par le Code de la propriété intellectuelle.
-    </p>
-    <h3>Vidéos YouTube</h3>
-    <p>
-      Les vidéos pédagogiques présentées sur le site sont hébergées par YouTube et intégrées au moyen du lecteur
-      officiel de la plateforme. Elles restent la propriété de leurs auteurs, crédités sur la page de chaque vidéo.
-      Les vidéos diffusées sous licence Creative Commons le sont dans le respect de cette licence (mention de
-      l'auteur et de la licence). Poker Winners ne revendique aucun droit sur ces vidéos et se borne à les
-      référencer ; tout ayant droit souhaitant le retrait d'une vidéo peut écrire à l'adresse de contact
-      indiquée ci-dessus.
-    </p>
-    <h3>Contenus publiés par les membres</h3>
-    <p>
-      Les sujets et messages publiés sur le forum restent la propriété de leurs auteurs, dans les conditions prévues
-      par les <a routerLink="/cgu">conditions générales d'utilisation</a>.
-    </p>
+      <h2 id="propriete" tabindex="-1">4. Propriété intellectuelle et photos</h2>
+      <p>
+        Le nom, le logo, les textes et la mise en page du site sont la propriété de l'{{ legal.association.name }}. Toute
+        reproduction, totale ou partielle, sans autorisation écrite de l'association est interdite (articles L. 335-2 et
+        suivants du Code de la propriété intellectuelle).
+      </p>
+      <p>
+        Les photographies sont celles du club (entraînements, galas, compétitions). Les personnes reconnaissables, et
+        pour les mineurs leurs représentants légaux, ont donné leur accord à leur diffusion. Toute personne peut demander
+        le retrait d'une photo la représentant en écrivant à
+        <span [class.todo]="pending(legal.association.email)">{{ legal.association.email }}</span> ; le retrait est
+        effectué dans les meilleurs délais.
+      </p>
+      <p>
+        Les logos des partenaires restent la propriété de leurs titulaires respectifs et sont reproduits avec leur accord.
+      </p>
 
-    <h2 id="responsabilite" tabindex="-1">5. Responsabilité</h2>
-    <p>
-      L'éditeur s'efforce de fournir des informations exactes et à jour, mais ne peut garantir l'exactitude,
-      l'exhaustivité ni l'actualité des contenus diffusés. Les conseils et analyses présentés sur le site, y compris
-      dans les vidéos et sur le forum, ont une vocation exclusivement pédagogique et ne constituent en aucun cas une
-      incitation à jouer.
-    </p>
-    <p>
-      Les messages du forum sont publiés sous la seule responsabilité de leurs auteurs. En sa qualité d'hébergeur de
-      ces contenus, l'éditeur s'engage à retirer promptement tout contenu manifestement illicite qui lui serait
-      signalé à l'adresse de contact.
-    </p>
-    <p>
-      Le site peut contenir des liens vers des sites tiers (dont YouTube). L'éditeur n'exerce aucun contrôle sur ces
-      sites et décline toute responsabilité quant à leur contenu et à leurs pratiques. L'éditeur ne saurait non plus
-      être tenu responsable d'une interruption momentanée du service, notamment pour maintenance.
-    </p>
+      <h2 id="responsabilite" tabindex="-1">5. Responsabilité et liens</h2>
+      <p>
+        L'association s'efforce de publier des informations exactes et à jour (planning, tarifs, événements), mais ne
+        peut garantir l'absence d'erreur ou d'omission : en cas de doute, notamment sur un horaire ou un changement de
+        salle, renseignez-vous auprès des entraîneurs. Les résultats et palmarès sont donnés à titre indicatif ; seuls
+        les résultats officiels de la fédération font foi.
+      </p>
+      <p>
+        Le site peut contenir des liens vers des sites tiers (fédération, billetterie, partenaires, réseaux sociaux).
+        L'association n'exerce aucun contrôle sur leur contenu et décline toute responsabilité à leur égard.
+      </p>
 
-    <h2 id="jeu-responsable" tabindex="-1">6. Jeu responsable</h2>
-    <p>
-      Poker Winners est un site communautaire et pédagogique consacré au poker. Il ne propose aucun jeu d'argent,
-      aucune mise ni aucun pari. Le site est réservé aux personnes majeures.
-    </p>
-    <p>
-      Le jeu comporte des risques : endettement, dépendance… Si vous ou l'un de vos proches rencontrez des
-      difficultés, contactez <strong>Joueurs Info Service : 09 74 75 13 13</strong> (appel non surtaxé).
-    </p>
+      <h2 id="signalement" tabindex="-1">6. Signaler un contenu</h2>
+      <p>
+        Si vous constatez un contenu illicite ou portant atteinte à vos droits (commentaire, photo, message), signalez-le
+        à <span [class.todo]="pending(legal.association.email)">{{ legal.association.email }}</span> en précisant
+        l'adresse de la page et le motif. L'association le retire promptement s'il est manifestement illicite.
+      </p>
 
-    <h2 id="autres" tabindex="-1">7. Données personnelles et CGU</h2>
-    <p>
-      Le traitement de vos données personnelles est décrit dans la
-      <a routerLink="/confidentialite">politique de confidentialité</a>. L'utilisation du site et de l'espace membre
-      est régie par les <a routerLink="/cgu">conditions générales d'utilisation</a>.
-    </p>
+      <h2 id="autres" tabindex="-1">7. Données personnelles et conditions d'utilisation</h2>
+      <p>
+        Le traitement de vos données personnelles est décrit dans la
+        <a routerLink="/confidentialite">politique de confidentialité</a>. L'utilisation de l'espace membre est régie
+        par les <a routerLink="/cgu">conditions générales d'utilisation</a>.
+      </p>
 
-    <p class="legal__see">
-      Voir aussi : <a routerLink="/confidentialite">Politique de confidentialité</a> ·
-      <a routerLink="/cgu">Conditions générales d'utilisation</a>
-    </p>
-  </article>
+      <p class="legal__see">
+        Ces mentions sont régies par le droit français. Pour toute question : <a routerLink="/contact">contactez le club</a>.
+      </p>
+    </article>
+  </div>
 </div>

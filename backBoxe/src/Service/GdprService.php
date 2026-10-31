@@ -2,16 +2,12 @@
 
 namespace App\Service;
 
+use App\Entity\Comment;
 use App\Entity\ConsentLog;
-use App\Entity\ForumPost;
-use App\Entity\ForumSubscription;
-use App\Entity\ForumTopic;
-use App\Entity\PremiumSubscription;
-use App\Entity\Order;
-use App\Entity\OrderItem;
+use App\Entity\Membership;
+use App\Entity\Message;
 use App\Entity\RefreshToken;
 use App\Entity\User;
-use App\Entity\VideoFavorite;
 use App\Repository\ConsentLogRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -69,80 +65,65 @@ class GdprService
     public function export(User $user): array
     {
         $date = static fn (?\DateTimeInterface $d) => $d?->format(\DATE_ATOM);
+        $day = static fn (?\DateTimeInterface $d) => $d?->format('Y-m-d');
 
-        $topics = $this->em->getRepository(ForumTopic::class)->findBy(['author' => $user], ['createdAt' => 'ASC']);
-        $posts = $this->em->getRepository(ForumPost::class)->findBy(['author' => $user], ['createdAt' => 'ASC']);
-        $subscriptions = $this->em->getRepository(ForumSubscription::class)->findBy(['user' => $user]);
-        $favorites = $this->em->getRepository(VideoFavorite::class)->findBy(['user' => $user], ['createdAt' => 'ASC']);
-        $premiumSubscriptions = $this->em->getRepository(PremiumSubscription::class)->findBy(['user' => $user], ['createdAt' => 'ASC']);
-        $orders = $this->em->getRepository(Order::class)->findBy(['user' => $user], ['createdAt' => 'ASC']);
+        $memberships = $this->em->getRepository(Membership::class)->findBy(['user' => $user], ['createdAt' => 'ASC']);
+        $messages = $this->em->createQueryBuilder()
+            ->select('m')->from(Message::class, 'm')
+            ->where('m.sender = :user OR m.recipient = :user')
+            ->setParameter('user', $user)
+            ->orderBy('m.createdAt', 'ASC')
+            ->getQuery()->getResult();
+        $comments = $this->em->getRepository(Comment::class)->findBy(['author' => $user], ['createdAt' => 'ASC']);
 
         return [
             'exportedAt' => $date(new \DateTimeImmutable()),
             'account' => [
                 'id' => $user->getId(),
                 'email' => $user->getEmail(),
-                'pseudo' => $user->getPseudo(),
+                'firstName' => $user->getFirstName(),
+                'lastName' => $user->getLastName(),
+                'phone' => $user->getPhone(),
+                'birthDate' => $day($user->getBirthDate()),
                 'roles' => $user->getRoles(),
-                'isVerified' => $user->isVerified(),
+                'emailVerifiedAt' => $date($user->getEmailVerifiedAt()),
                 'createdAt' => $date($user->getCreatedAt()),
                 'lastLoginAt' => $date($user->getLastLoginAt()),
-                'premiumUntil' => $date($user->getPremiumUntil()),
             ],
-            'premiumSubscriptions' => array_map(static fn (PremiumSubscription $s) => [
-                'plan' => $s->getPlan()->value,
-                'status' => $s->getStatus()->value,
-                'priceCents' => $s->getPriceCents(),
-                'startedAt' => $date($s->getStartedAt()),
-                'endsAt' => $date($s->getEndsAt()),
-                'providerReference' => $s->getProviderReference(),
-                'createdAt' => $date($s->getCreatedAt()),
-            ], $premiumSubscriptions),
             'consents' => array_map(static fn (ConsentLog $c) => [
                 'cguVersion' => $c->getCguVersion(),
                 'acceptedAt' => $date($c->getCreatedAt()),
                 'ipAddress' => $c->getIpAddress(),
             ], $user->getConsentLogs()->toArray()),
-            'forum' => [
-                'topics' => array_map(static fn (ForumTopic $t) => [
-                    'id' => $t->getId(),
-                    'title' => $t->getTitle(),
-                    'createdAt' => $date($t->getCreatedAt()),
-                ], $topics),
-                'posts' => array_map(static fn (ForumPost $p) => [
-                    'id' => $p->getId(),
-                    'topic' => $p->getTopic()?->getTitle(),
-                    'content' => $p->getContent(),
-                    'isModerated' => $p->isModerated(),
-                    'createdAt' => $date($p->getCreatedAt()),
-                ], $posts),
-                'subscriptions' => array_map(static fn (ForumSubscription $s) => [
-                    'topic' => $s->getTopic()?->getTitle(),
-                    'since' => $date($s->getCreatedAt()),
-                ], $subscriptions),
-            ],
-            'videoFavorites' => array_map(static fn (VideoFavorite $f) => [
-                'video' => $f->getVideo()?->getTitle(),
-                'youtubeUrl' => $f->getVideo()?->getYoutubeUrl(),
-                'addedAt' => $date($f->getCreatedAt()),
-            ], $favorites),
-            // Boutique (v2.0)
-            'orders' => array_map(static fn (Order $o) => [
-                'reference' => $o->getReference(),
-                'status' => $o->getStatus()->label(),
-                'createdAt' => $date($o->getCreatedAt()),
-                'paidAt' => $date($o->getPaidAt()),
-                'shippedAt' => $date($o->getShippedAt()),
-                'shippingAddress' => $o->getShippingAddress(),
-                'shippingPhone' => $o->getShippingPhone(),
-                'totalInclTaxCents' => $o->getTotalInclTaxCents(),
-                'items' => array_map(static fn (OrderItem $i) => [
-                    'product' => $i->getProductName(),
-                    'quantity' => $i->getQuantity(),
-                    'unitPriceInclTaxCents' => $i->getUnitPriceInclTaxCents(),
-                    'vatRate' => $i->getVatRate()->value,
-                ], $o->getItems()->toArray()),
-            ], $orders),
+            'memberships' => array_map(static fn (Membership $m) => [
+                'season' => $m->getSeason(),
+                'discipline' => $m->getDiscipline()?->getName(),
+                'pricing' => $m->getPricing()?->getLabel(),
+                'firstName' => $m->getFirstName(),
+                'lastName' => $m->getLastName(),
+                'email' => $m->getEmail(),
+                'phone' => $m->getPhone(),
+                'birthDate' => $day($m->getBirthDate()),
+                'legalGuardian' => $m->getLegalGuardian(),
+                'medicalCertificate' => $m->isMedicalCertificate(),
+                'message' => $m->getMessage(),
+                'status' => $m->getStatus()->value,
+                'consentAt' => $date($m->getConsentAt()),
+                'createdAt' => $date($m->getCreatedAt()),
+            ], $memberships),
+            'messages' => array_map(static fn (Message $m) => [
+                'direction' => $m->getSender() === $user ? 'sent' : 'received',
+                'subject' => $m->getSubject(),
+                'body' => $m->getBody(),
+                'createdAt' => $date($m->getCreatedAt()),
+                'readAt' => $date($m->getReadAt()),
+            ], $messages),
+            'comments' => array_map(static fn (Comment $c) => [
+                'article' => $c->getArticle()?->getTitle(),
+                'body' => $c->getBody(),
+                'status' => $c->getStatus()->value,
+                'createdAt' => $date($c->getCreatedAt()),
+            ], $comments),
         ];
     }
 
@@ -184,7 +165,8 @@ class GdprService
 
     /**
      * Effacement : le compte n'est plus rattachable à une personne.
-     * Les messages du forum restent visibles sous « Utilisateur supprimé » (cohérence des discussions).
+     * Messagerie et commentaires sont supprimés. Les demandes d'inscription sont des pièces
+     * administratives du club (licence, assurance) : elles sont conservées mais détachées du compte.
      */
     public function anonymize(User $user): void
     {
@@ -204,25 +186,21 @@ class GdprService
                 ->execute();
         }
 
-        $this->em->createQueryBuilder()->delete(ForumSubscription::class, 's')->where('s.user = :user')
+        $messageIds = array_column($this->em->createQueryBuilder()->select('m.id')->from(Message::class, 'm')
+            ->where('m.sender = :user OR m.recipient = :user')
+            ->setParameter('user', $user)->getQuery()->getScalarResult(), 'id');
+        if ($messageIds) {
+            $this->em->createQueryBuilder()->update(Message::class, 'm')->set('m.replyTo', ':none')
+                ->where('m.replyTo IN (:ids)')
+                ->setParameter('none', null)->setParameter('ids', $messageIds)->getQuery()->execute();
+            $this->em->createQueryBuilder()->delete(Message::class, 'm')->where('m.id IN (:ids)')
+                ->setParameter('ids', $messageIds)->getQuery()->execute();
+        }
+        $this->em->createQueryBuilder()->delete(Comment::class, 'c')->where('c.author = :user')
             ->setParameter('user', $user)->getQuery()->execute();
-        $this->em->createQueryBuilder()->delete(VideoFavorite::class, 'f')->where('f.user = :user')
-            ->setParameter('user', $user)->getQuery()->execute();
-
-        // Abonnements Premium : conservés (obligation comptable : pièces justificatives 10 ans).
-        // Ils restent rattachés à ce compte désormais anonyme (plus d'email ni de pseudo) :
-        // seule la référence du prestataire de paiement permet, si besoin, de retrouver la facture.
-        // L'accès Premium restant est en revanche supprimé.
-        $user->setPremiumUntil(null);
-        // Boutique : les commandes sont des pièces comptables, conservées 10 ans (Code de commerce,
-        // art. L123-22 ; 6 ans au titre du CGI, art. L102 B). Elles ne sont donc pas supprimées :
-        // le lien vers le compte est rompu et le téléphone (inutile à la facture) effacé. Seuls le nom
-        // et l'adresse de livraison/facturation restent, car une facture doit les mentionner (CGI art. 242 nonies A).
-        $this->em->createQueryBuilder()->update(Order::class, 'o')
-            ->set('o.user', ':none')->set('o.shippingPhone', ':none')
-            ->where('o.user = :user')
-            ->setParameter('none', null)->setParameter('user', $user)
-            ->getQuery()->execute();
+        $this->em->createQueryBuilder()->update(Membership::class, 'ms')->set('ms.user', ':none')
+            ->where('ms.user = :user')
+            ->setParameter('none', null)->setParameter('user', $user)->getQuery()->execute();
 
         // La preuve de consentement est conservée, sans l'adresse IP
         foreach ($user->getConsentLogs() as $log) {
@@ -230,7 +208,10 @@ class GdprService
         }
 
         $user->setEmail(null)
-            ->setPseudo(sprintf('utilisateur-supprime-%d', $user->getId()))
+            ->setFirstName('Utilisateur')
+            ->setLastName('supprimé')
+            ->setPhone(null)
+            ->setBirthDate(null)
             // Hash invalide : aucune connexion possible
             ->setPassword('!anonymized')
             ->setRoles([])

@@ -1,0 +1,51 @@
+@if (auth.user(); as user) {
+  <section class="bx-page-head">
+    <div class="bx-container head">
+      <span class="head__avatar" aria-hidden="true">{{ initials() }}</span>
+      <div class="head__text">
+        <span class="bx-eyebrow">Mon espace</span>
+        <h1>Bonjour, {{ user.firstName }}</h1>
+        <p>Membre depuis le {{ user.createdAt | date: 'd MMMM y' }} · {{ user.email }}</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="bx-section bx-section--tight">
+    <div class="bx-container">
+      <div class="tabs" role="tablist" aria-label="Rubriques de mon espace" (keydown)="onKeydown($event)">
+        @for (tab of tabs; track tab.id) {
+          <button
+            #tabButton
+            type="button"
+            role="tab"
+            class="tabs__tab"
+            [id]="'tab-' + tab.id"
+            [attr.aria-selected]="active() === tab.id"
+            [attr.aria-controls]="'panel-' + tab.id"
+            [attr.tabindex]="active() === tab.id ? 0 : -1"
+            (click)="select(tab.id)"
+          >
+            {{ tab.label }}
+          </button>
+        }
+      </div>
+
+      <div class="panel" role="tabpanel" [id]="'panel-' + active()" [attr.aria-labelledby]="'tab-' + active()" tabindex="0">
+        @switch (active()) {
+          @case ('profil') {
+            <app-profile-tab />
+          }
+          @case ('inscriptions') {
+            <app-memberships-tab />
+          }
+          @case ('messagerie') {
+            <app-messages-tab />
+          }
+          @case ('donnees') {
+            <app-data-tab />
+          }
+        }
+      </div>
+    </div>
+  </div>
+}

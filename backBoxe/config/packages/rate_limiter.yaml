@@ -10,28 +10,23 @@ framework:
             policy: sliding_window
             limit: 3
             interval: '15 minutes'
-        # Forum : anti-spam, 5 messages (sujets + reponses) / minute / membre
-        forum_post:
+        # POST /api/memberships : 5 demandes d'inscription / 10 minutes / IP
+        membership:
             policy: sliding_window
             limit: 5
-            interval: '1 minute'
-        # Signalements du forum : 10 / heure / membre (evite d'inonder la file de moderation)
-        forum_report:
+            interval: '10 minutes'
+        # POST /api/contact : 5 messages / 10 minutes / IP
+        contact:
+            policy: sliding_window
+            limit: 5
+            interval: '10 minutes'
+        # POST /api/articles/{slug}/comments : 5 commentaires / 10 minutes / membre
+        comment:
+            policy: sliding_window
+            limit: 5
+            interval: '10 minutes'
+        # POST /api/me/messages : 10 messages / heure / membre (anti-spam de la messagerie du club)
+        member_message:
             policy: sliding_window
             limit: 10
             interval: '1 hour'
-        # GET /api/search : 30 recherches / minute / IP (requetes LIKE couteuses)
-        search:
-            policy: sliding_window
-            limit: 30
-            interval: '1 minute'
-        # POST /api/premium/subscribe : 5 tentatives / 10 minutes / membre
-        premium_subscribe:
-            policy: sliding_window
-            limit: 5
-            interval: '10 minutes'
-        # Boutique (v2.0) : 5 commandes / 10 minutes / membre
-        shop_order:
-            policy: sliding_window
-            limit: 5
-            interval: '10 minutes'

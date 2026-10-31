@@ -1,0 +1,19 @@
+{% extends 'emails/_layout.html.twig' %}
+
+{% block content %}
+    <h1 style="margin:0 0 16px;font-size:20px;color:#c8102e;">Nouvelle demande d'inscription</h1>
+    <table role="presentation" style="width:100%;border-collapse:collapse;font-size:14px;">
+        <tr><td style="padding:4px 0;color:#555;width:40%;">Nom</td><td>{{ membership.firstName }} {{ membership.lastName }}</td></tr>
+        <tr><td style="padding:4px 0;color:#555;">Né(e) le</td><td>{{ membership.birthDate|date('d/m/Y') }}{% if membership.minor %} (mineur — représentant légal : {{ membership.legalGuardian }}){% endif %}</td></tr>
+        <tr><td style="padding:4px 0;color:#555;">Email</td><td>{{ membership.email }}</td></tr>
+        <tr><td style="padding:4px 0;color:#555;">Téléphone</td><td>{{ membership.phone ?? '—' }}</td></tr>
+        <tr><td style="padding:4px 0;color:#555;">Discipline</td><td>{{ membership.discipline.name }}</td></tr>
+        <tr><td style="padding:4px 0;color:#555;">Formule</td><td>{{ membership.pricing ? membership.pricing.label : '—' }}</td></tr>
+        <tr><td style="padding:4px 0;color:#555;">Saison</td><td>{{ membership.season }}</td></tr>
+        <tr><td style="padding:4px 0;color:#555;">Certificat médical déclaré</td><td>{{ membership.medicalCertificate ? 'oui' : 'non' }}</td></tr>
+    </table>
+    {% if membership.message %}
+        <p style="margin:16px 0 0;padding:12px;background:#f4f4f4;border-radius:6px;white-space:pre-line;">{{ membership.message }}</p>
+    {% endif %}
+    <p style="margin:24px 0 0;"><a href="{{ adminUrl }}" style="color:#c8102e;font-weight:bold;">Traiter la demande dans le back-office</a></p>
+{% endblock %}

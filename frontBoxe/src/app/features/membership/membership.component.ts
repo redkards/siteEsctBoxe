@@ -1,6 +1,6 @@
 import { Component, OnInit, computed, effect, inject, input, signal, ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { apiErrorMessage, apiViolations } from '../../core/api/api.service';
 import { ClubService } from '../../core/api/club.service';
@@ -143,7 +143,7 @@ export class MembershipComponent implements OnInit {
   protected fieldError(group: StepId, field: string): string | null {
     const server = this.serverErrors()[field];
     if (server) return server;
-    const control = this.form.controls[group].get(field);
+    const control = this.groupOf(group).get(field);
     if (!control || !control.touched || control.valid) return null;
     switch (field) {
       case 'email':
@@ -164,7 +164,7 @@ export class MembershipComponent implements OnInit {
   }
 
   private stepValid(step: StepId): boolean {
-    const group = this.form.controls[step];
+    const group = this.groupOf(step);
     group.markAllAsTouched();
     if (step === 'identite') {
       const birth = group.get('birthDate');
@@ -234,7 +234,7 @@ export class MembershipComponent implements OnInit {
         const violations = apiViolations(err);
         if (Object.keys(violations).length) {
           this.serverErrors.set(violations);
-          const firstStep = this.steps().findIndex((s) => Object.keys(violations).some((f) => this.form.controls[s].get(f)));
+          const firstStep = this.steps().findIndex((s) => Object.keys(violations).some((f) => this.groupOf(s).get(f)));
           if (firstStep >= 0) this.index.set(firstStep);
           this.error.set('Certaines informations sont à corriger.');
           return;
@@ -242,6 +242,10 @@ export class MembershipComponent implements OnInit {
         this.error.set(apiErrorMessage(err, "L'inscription n'a pas pu être envoyée, réessayez."));
       },
     });
+  }
+
+  private groupOf(step: StepId): AbstractControl {
+    return this.form.controls[step] as AbstractControl;
   }
 
   private focusFirstError(): void {

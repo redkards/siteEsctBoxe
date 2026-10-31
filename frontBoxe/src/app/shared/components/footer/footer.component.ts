@@ -1,8 +1,9 @@
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, computed, inject, ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { catchError, of } from 'rxjs';
 import { ClubService } from '../../../core/api/club.service';
+import { openingLines } from '../../utils/format.utils';
 import { LogoComponent } from '../logo/logo.component';
 import { ThemeSwitcherComponent } from '../theme-switcher/theme-switcher.component';
 
@@ -65,6 +66,14 @@ import { ThemeSwitcherComponent } from '../theme-switcher/theme-switcher.compone
         </nav>
 
         <div>
+          @if (hours().length) {
+            <h2 class="footer__title">Horaires</h2>
+            <ul class="footer__hours">
+              @for (h of hours(); track $index) {
+                <li>@if (h.label) {<span>{{ h.label }}</span>}{{ h.hours }}</li>
+              }
+            </ul>
+          }
           <h2 class="footer__title">Nous trouver</h2>
           <address>
             @if (club(); as c) {
@@ -129,14 +138,14 @@ import { ThemeSwitcherComponent } from '../theme-switcher/theme-switcher.compone
       flex-wrap: wrap;
       gap: 0.8rem;
     }
-    .footer__cta .bx-btn--primary {
+    .footer .footer__cta .bx-btn--primary {
       background: var(--bx-dark);
       color: var(--bx-dark-ink);
     }
     .footer__cta .bx-btn--primary:hover {
       background: var(--bx-dark-2);
     }
-    .footer__cta .bx-btn--light {
+    .footer .footer__cta .bx-btn--light {
       color: var(--bx-primary-ink);
     }
     .footer__cta .bx-btn--light:hover {
@@ -172,15 +181,25 @@ import { ThemeSwitcherComponent } from '../theme-switcher/theme-switcher.compone
       flex-wrap: wrap;
       gap: 0.5rem 1rem;
     }
-    a {
+    .footer a {
       color: var(--bx-footer-ink);
       text-decoration: none;
     }
-    a:hover {
+    .footer a:hover {
       color: var(--bx-primary);
       text-decoration: underline;
     }
     .footer__socials a {
+      font-weight: 600;
+    }
+    .footer__hours {
+      margin-bottom: 1.4rem;
+      color: var(--bx-footer-muted);
+    }
+    .footer__hours span {
+      display: inline-block;
+      min-width: 6.5rem;
+      color: var(--bx-footer-ink);
       font-weight: 600;
     }
     address {
@@ -210,7 +229,7 @@ import { ThemeSwitcherComponent } from '../theme-switcher/theme-switcher.compone
       flex-wrap: wrap;
       gap: 0.4rem 1.4rem;
     }
-    .footer__legal a {
+    .footer .footer__legal a {
       color: var(--bx-footer-muted);
     }
     @media (max-width: 900px) {
@@ -234,4 +253,5 @@ export class FooterComponent {
     return `tel:${phone.replace(/[^\d+]/g, '')}`;
   }
   protected readonly club = toSignal(inject(ClubService).getClub().pipe(catchError(() => of(null))), { initialValue: null });
+  protected readonly hours = computed(() => openingLines(this.club()?.openingHours));
 }
