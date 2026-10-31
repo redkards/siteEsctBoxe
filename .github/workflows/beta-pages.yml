@@ -1,0 +1,39 @@
+# Bêta publique du front ESCT Boxe sur GitHub Pages (gratuit), reconstruite à chaque push sur v2.
+# URL : https://redkards.github.io/siteEsctBoxe/  — l'API n'est pas encore hébergée : pages dépendantes vides.
+name: beta-pages
+on:
+  push:
+    branches: [v2]
+    paths: ['frontBoxe/**', '.github/workflows/beta-pages.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: beta-pages
+  cancel-in-progress: true
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontBoxe
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontBoxe/package-lock.json
+      - run: npm ci
+      - run: npx ng build --base-href /siteEsctBoxe/
+      - run: |
+          cd dist/esct-boxe-front/browser
+          cp index.html 404.html
+          touch .nojekyll
+          printf 'User-agent: *\nDisallow: /\n' > robots.txt
+      - uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: frontBoxe/dist/esct-boxe-front/browser
+          publish_branch: gh-pages
+          force_orphan: true

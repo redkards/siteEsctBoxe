@@ -1,0 +1,148 @@
+@if (lesson(); as l) {
+  <section class="bx-page-head lx-noprint-bg">
+    <div class="bx-container">
+      <nav class="bx-breadcrumb lx-noprint" aria-label="Fil d'Ariane">
+        <a routerLink="/">Accueil</a><span aria-hidden="true">/</span><a routerLink="/lecons">Leçons</a><span aria-hidden="true">/</span><span>{{ l.title }}</span>
+      </nav>
+      <span class="bx-eyebrow">Module {{ l.module }} · {{ module()?.title }}</span>
+      <h1>{{ l.id }}. {{ l.title }}</h1>
+      <p>{{ l.objective }}</p>
+    </div>
+  </section>
+
+  <section class="bx-section bx-section--tight">
+    <div class="bx-container lx-detail">
+      <div class="lx-detail__bar lx-noprint">
+        <span class="lx-tag lx-tag--level">{{ l.level }}</span>
+        <span class="lx-tag">{{ l.durationMin }} min</span>
+        <button type="button" class="lx-toggle" [attr.aria-pressed]="progress.isDone(l.id)" (click)="progress.toggleDone(l.id)">
+          <span aria-hidden="true">{{ progress.isDone(l.id) ? '✔' : '○' }}</span> Faite
+        </button>
+        <button type="button" class="lx-toggle" [attr.aria-pressed]="progress.isFavorite(l.id)" (click)="progress.toggleFavorite(l.id)">
+          <span aria-hidden="true">{{ progress.isFavorite(l.id) ? '★' : '☆' }}</span> Favori
+        </button>
+        <button type="button" class="bx-btn bx-btn--primary bx-btn--sm" [disabled]="progress.inSession(l.id)" (click)="progress.addToSession(l.id)">
+          {{ progress.inSession(l.id) ? 'Dans ma séance ✔' : 'Ajouter à ma séance' }}
+        </button>
+        <a routerLink="/lecons/seance" class="bx-link">Voir ma séance</a>
+        <button type="button" class="bx-btn bx-btn--outline bx-btn--sm" (click)="print()">Imprimer</button>
+      </div>
+
+      <p class="lx-print-only"><strong>Niveau :</strong> {{ l.level }} · <strong>Durée :</strong> {{ l.durationMin }} min</p>
+
+      <div class="lx-notice" role="note">
+        Atelier sans contact ni impact, à valider par un entraîneur du club ; contenu non validé par la FFBoxe.
+      </div>
+
+      <div class="lx-detail__grid">
+        <section class="lx-block bx-card" aria-labelledby="lx-pre">
+          <h2 id="lx-pre">Prérequis</h2>
+          @if (prerequisites().length) {
+            <ul>
+              @for (p of prerequisites(); track p.text) {
+                <li>
+                  @if (p.ref) {
+                    <a [routerLink]="['/lecons', p.ref.slug]">{{ p.text }}</a>
+                  } @else {
+                    {{ p.text }}
+                  }
+                </li>
+              }
+            </ul>
+          } @else {
+            <p>Aucun : leçon accessible d'entrée.</p>
+          }
+        </section>
+        <section class="lx-block bx-card" aria-labelledby="lx-org">
+          <h2 id="lx-org">Organisation</h2>
+          <dl class="lx-dl">
+            <dt>Espace</dt><dd>{{ l.organisation.space }}</dd>
+            <dt>Matériel</dt><dd>{{ l.organisation.material.join(', ') || 'Aucun' }}</dd>
+            <dt>Groupes</dt><dd>{{ l.organisation.groups }}</dd>
+          </dl>
+        </section>
+      </div>
+
+      <section class="lx-block bx-card" aria-labelledby="lx-schema">
+        <h2 id="lx-schema">Schéma de l'atelier</h2>
+        <app-lesson-schema [kind]="l.schema.kind" [phases]="l.schema.phases" />
+      </section>
+
+      <section class="lx-block bx-card" aria-labelledby="lx-steps">
+        <h2 id="lx-steps">Déroulé en 5 étapes</h2>
+        <ol class="lx-steps">
+          @for (s of l.steps; track $index) {
+            <li>{{ s }}</li>
+          }
+        </ol>
+      </section>
+
+      <div class="lx-detail__grid">
+        <section class="lx-block bx-card" aria-labelledby="lx-dec">
+          <h2 id="lx-dec">Situation de décision</h2>
+          <p>{{ l.decision }}</p>
+        </section>
+        <section class="lx-block bx-card" aria-labelledby="lx-crit">
+          <h2 id="lx-crit">Critères observables</h2>
+          <ul class="lx-criteria">
+            @for (c of l.criteria; track $index) {
+              <li><label class="lx-check"><input type="checkbox" [checked]="!!checked()[$index]" (change)="toggleCriterion($index)" /> {{ c }}</label></li>
+            }
+          </ul>
+        </section>
+      </div>
+
+      <section class="lx-block bx-card" aria-labelledby="lx-corr">
+        <h2 id="lx-corr">Corrections</h2>
+        <ul class="lx-corrections">
+          @for (c of l.corrections; track $index) {
+            <li><span class="lx-corrections__err">{{ c.error }}</span><span class="lx-corrections__arrow" aria-label="correction">→</span><span class="lx-corrections__fix">{{ c.fix }}</span></li>
+          }
+        </ul>
+      </section>
+
+      <section class="lx-block bx-card" aria-labelledby="lx-adapt">
+        <h2 id="lx-adapt">Adaptations par public</h2>
+        <div class="lx-tabs lx-noprint" role="tablist" aria-label="Public" (keydown)="onTabKey($event)">
+          @for (a of audiences; track a.value) {
+            <button type="button" role="tab" class="lx-tabs__tab" [id]="'lx-tab-' + a.value" [attr.aria-selected]="tab() === a.value"
+              [attr.aria-controls]="'lx-panel-' + a.value" [attr.tabindex]="tab() === a.value ? 0 : -1" (click)="tab.set(a.value)">
+              {{ a.label }} <small>{{ a.ages }}</small>
+            </button>
+          }
+        </div>
+        @for (a of audiences; track a.value) {
+          <div class="lx-tabs__panel" role="tabpanel" [id]="'lx-panel-' + a.value" [attr.aria-labelledby]="'lx-tab-' + a.value" [class.lx-tabs__panel--hidden]="tab() !== a.value">
+            <p><strong class="lx-print-only">{{ a.label }} ({{ a.ages }}) : </strong>{{ l.adaptations[a.value] }}</p>
+          </div>
+        }
+      </section>
+
+      <aside class="lx-safety" aria-labelledby="lx-safe">
+        <h2 id="lx-safe">Sécurité</h2>
+        <p>{{ l.safety }}</p>
+      </aside>
+
+      <nav class="lx-pager lx-noprint" aria-label="Leçons voisines">
+        @if (nav().prev; as p) {
+          <a [routerLink]="['/lecons', p.slug]" class="lx-pager__link" rel="prev"><span aria-hidden="true">←</span> {{ p.id }}. {{ p.title }}</a>
+        } @else {
+          <span></span>
+        }
+        @if (nav().next; as n) {
+          <a [routerLink]="['/lecons', n.slug]" class="lx-pager__link lx-pager__link--next" rel="next">{{ n.id }}. {{ n.title }} <span aria-hidden="true">→</span></a>
+        }
+      </nav>
+    </div>
+  </section>
+} @else {
+  <section class="bx-section">
+    <div class="bx-container">
+      <div class="bx-empty">
+        <strong>Leçon introuvable</strong>
+        <p>Cette leçon n'existe pas ou n'est pas encore publiée.</p>
+        <a routerLink="/lecons" class="bx-btn bx-btn--primary bx-btn--sm">Toutes les leçons</a>
+      </div>
+    </div>
+  </section>
+}
