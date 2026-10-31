@@ -1,0 +1,576 @@
+// Styles des pages /lecons (bibliothèque, fiche, séance) — variables --bx-* uniquement
+
+:host {
+  display: block;
+}
+
+/* Progression -------------------------------------------------------- */
+.lx-progress {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 1.25rem;
+
+  &__global {
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  &__modules {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0.5rem 1.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 0.2rem 0.5rem;
+      align-items: center;
+    }
+  }
+
+  &__label {
+    grid-column: 1 / -1;
+    color: var(--bx-muted);
+    font-size: 0.85rem;
+  }
+
+  &__count {
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    font-size: 0.85rem;
+  }
+
+  .bx-btn {
+    justify-self: start;
+  }
+}
+
+.lx-bar {
+  width: 100%;
+  height: 12px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--bx-surface);
+  appearance: none;
+  overflow: hidden;
+
+  &::-webkit-progress-bar {
+    background: var(--bx-surface);
+  }
+
+  &::-webkit-progress-value {
+    background: var(--bx-primary);
+    border-radius: 999px;
+  }
+
+  &::-moz-progress-bar {
+    background: var(--bx-primary);
+  }
+
+  &--sm {
+    height: 8px;
+  }
+}
+
+/* Filtres ------------------------------------------------------------ */
+.lx-filters {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 1rem;
+
+  &__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 1rem;
+  }
+
+  &__field {
+    display: grid;
+    gap: 0.35rem;
+    min-width: min(220px, 100%);
+  }
+
+  &__label {
+    color: var(--bx-muted);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .bx-chip small {
+    opacity: 0.75;
+    font-weight: 500;
+  }
+}
+
+.lx-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+
+  input {
+    width: 1.15rem;
+    height: 1.15rem;
+    accent-color: var(--bx-primary);
+  }
+}
+
+.lx-count {
+  margin: 0 0 1rem;
+  color: var(--bx-muted);
+}
+
+.lx-linkbtn {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+}
+
+/* Grille de cartes --------------------------------------------------- */
+.lx-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
+  gap: 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lx-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 1.25rem;
+
+  &--done {
+    border-color: var(--bx-success);
+  }
+
+  &__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 1.25rem;
+
+    a {
+      color: var(--bx-ink);
+      text-decoration: none;
+
+      &:hover,
+      &:focus-visible {
+        color: var(--bx-primary);
+        text-decoration: underline;
+      }
+    }
+  }
+
+  &__obj {
+    margin: 0;
+    color: var(--bx-ink-soft);
+  }
+
+  &__adapt {
+    margin: 0;
+    padding: 0.6rem 0.75rem;
+    border-left: 3px solid var(--bx-primary);
+    border-radius: var(--bx-radius-sm);
+    background: var(--bx-primary-soft);
+    color: var(--bx-ink-soft);
+    font-size: 0.9rem;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: auto;
+  }
+}
+
+.lx-tag {
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  background: var(--bx-surface);
+  color: var(--bx-ink-soft);
+  font-size: 0.78rem;
+  font-weight: 700;
+
+  &--level {
+    background: var(--bx-primary-soft);
+    color: var(--bx-primary);
+    text-transform: capitalize;
+  }
+}
+
+.lx-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 38px;
+  padding: 0 0.85rem;
+  border: 1.5px solid var(--bx-line);
+  border-radius: var(--bx-btn-radius);
+  background: var(--bx-card);
+  color: var(--bx-ink-soft);
+  font: 600 0.88rem var(--bx-font-body);
+  cursor: pointer;
+
+  &[aria-pressed='true'] {
+    border-color: var(--bx-primary);
+    color: var(--bx-primary);
+  }
+
+  &:focus-visible {
+    box-shadow: var(--bx-focus);
+    outline: none;
+  }
+}
+
+/* Fiche -------------------------------------------------------------- */
+.lx-detail {
+  display: grid;
+  gap: 1.25rem;
+
+  &__bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+    gap: 1.25rem;
+  }
+}
+
+.lx-block {
+  padding: 1.25rem 1.4rem;
+
+  h2 {
+    margin: 0 0 0.75rem;
+    font-size: 1.3rem;
+  }
+
+  ul,
+  p {
+    margin: 0;
+  }
+
+  ul {
+    padding-left: 1.2rem;
+  }
+}
+
+.lx-dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.4rem 1rem;
+  margin: 0;
+
+  dt {
+    font-weight: 700;
+  }
+
+  dd {
+    margin: 0;
+  }
+}
+
+.lx-notice {
+  padding: 0.75rem 1rem;
+  border: 1.5px dashed var(--bx-warning);
+  border-radius: var(--bx-radius-sm);
+  background: var(--bx-warning-soft);
+  color: var(--bx-warning);
+  font-weight: 600;
+}
+
+.lx-steps {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+
+  li {
+    position: relative;
+    padding-left: 2.6rem;
+    counter-increment: step;
+
+    &::before {
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      top: -0.1rem;
+      display: grid;
+      place-items: center;
+      width: 1.9rem;
+      height: 1.9rem;
+      border-radius: 50%;
+      background: var(--bx-primary);
+      color: var(--bx-primary-ink);
+      font: 700 1rem var(--bx-font-display);
+    }
+  }
+}
+
+.lx-criteria {
+  display: grid;
+  gap: 0.5rem;
+  padding: 0 !important;
+  list-style: none;
+}
+
+.lx-corrections {
+  display: grid;
+  gap: 0.6rem;
+  padding: 0 !important;
+  list-style: none;
+
+  li {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 0.75rem;
+    align-items: center;
+
+    @media (max-width: 600px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__err {
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--bx-radius-sm);
+    background: var(--bx-danger-soft);
+    color: var(--bx-danger);
+  }
+
+  &__fix {
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--bx-radius-sm);
+    background: var(--bx-success-soft);
+    color: var(--bx-success);
+  }
+
+  &__arrow {
+    color: var(--bx-muted);
+    font-weight: 700;
+  }
+}
+
+.lx-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-bottom: 0.75rem;
+  border-bottom: 2px solid var(--bx-line);
+
+  &__tab {
+    padding: 0.6rem 1rem;
+    border: 0;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    background: none;
+    color: var(--bx-muted);
+    font: 700 0.95rem var(--bx-font-body);
+    cursor: pointer;
+
+    &[aria-selected='true'] {
+      border-bottom-color: var(--bx-primary);
+      color: var(--bx-ink);
+    }
+
+    &:focus-visible {
+      box-shadow: var(--bx-focus);
+      outline: none;
+    }
+  }
+
+  &__panel--hidden {
+    display: none;
+  }
+}
+
+.lx-safety {
+  padding: 1rem 1.25rem;
+  border-left: 5px solid var(--bx-danger);
+  border-radius: var(--bx-radius);
+  background: var(--bx-danger-soft);
+
+  h2 {
+    margin: 0 0 0.4rem;
+    color: var(--bx-danger);
+    font-size: 1.15rem;
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+.lx-pager {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+
+  &__link {
+    color: var(--bx-ink);
+    font-weight: 700;
+    text-decoration: none;
+
+    &:hover {
+      color: var(--bx-primary);
+    }
+
+    &--next {
+      margin-left: auto;
+      text-align: right;
+    }
+  }
+}
+
+/* Séance ------------------------------------------------------------- */
+.lx-session {
+  display: grid;
+  gap: 1.25rem;
+
+  &__list {
+    display: grid;
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__item {
+    display: grid;
+    grid-template-columns: 5rem 1fr auto;
+    gap: 1rem;
+    align-items: center;
+    padding: 1rem 1.25rem;
+
+    p {
+      margin: 0.2rem 0 0;
+      color: var(--bx-ink-soft);
+      font-size: 0.92rem;
+    }
+
+    a {
+      color: var(--bx-ink);
+    }
+
+    &--fixed {
+      grid-template-columns: 5rem 1fr;
+      background: var(--bx-surface);
+    }
+
+    @media (max-width: 600px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__time {
+    font: 700 1.2rem var(--bx-font-display);
+    color: var(--bx-primary);
+  }
+
+  &__actions {
+    display: flex;
+    gap: 0.35rem;
+  }
+
+  &__footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+  }
+}
+
+.lx-iconbtn {
+  width: 38px;
+  height: 38px;
+  border: 1.5px solid var(--bx-line);
+  border-radius: var(--bx-btn-radius);
+  background: var(--bx-card);
+  color: var(--bx-ink);
+  font-size: 1rem;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+
+  &:focus-visible {
+    box-shadow: var(--bx-focus);
+    outline: none;
+  }
+}
+
+.lx-print-only {
+  display: none;
+}
+
+/* Impression --------------------------------------------------------- */
+@media print {
+  // Impression de la page seule (en-tête et pied du site masqués, sans toucher aux styles globaux)
+  :host ::ng-deep .bx-page-head {
+    padding-block: 0 1rem;
+    background: none;
+    color: #000;
+
+    p,
+    .bx-eyebrow {
+      color: #333;
+    }
+  }
+
+  ::ng-deep app-header,
+  ::ng-deep app-footer {
+    display: none !important;
+  }
+
+  .lx-noprint {
+    display: none !important;
+  }
+
+  .lx-print-only {
+    display: inline;
+  }
+
+  p.lx-print-only {
+    display: block;
+  }
+
+  .lx-tabs__panel--hidden {
+    display: block;
+  }
+
+  .lx-block,
+  .lx-session__item,
+  .lx-safety {
+    break-inside: avoid;
+    box-shadow: none !important;
+    border: 1px solid #999;
+  }
+
+  .lx-detail__grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
