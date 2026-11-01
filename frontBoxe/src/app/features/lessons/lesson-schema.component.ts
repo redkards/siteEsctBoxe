@@ -18,6 +18,8 @@ const KIND_LABELS: Record<SchemaKind, string> = {
   selector: 'app-lesson-schema',
   template: `
     <figure class="sc">
+      <p class="sc__hint" aria-hidden="true">Faites glisser le schéma pour voir les 3 phases →</p>
+      <div class="sc__scroll" tabindex="0" aria-label="Schéma de l'atelier, défilement horizontal">
       <svg class="sc__svg" viewBox="0 0 660 190" role="img" [attr.aria-labelledby]="id + '-t ' + id + '-d'">
         <title [id]="id + '-t'">Schéma de l'atelier en trois phases</title>
         <desc [id]="id + '-d'">{{ desc() }}</desc>
@@ -74,6 +76,7 @@ const KIND_LABELS: Record<SchemaKind, string> = {
           </g>
         }
       </svg>
+      </div>
       <figcaption>
         <ol class="sc__legend">
           @for (ph of phases(); track $index) {
@@ -85,9 +88,13 @@ const KIND_LABELS: Record<SchemaKind, string> = {
   `,
   styles: `
     :host { display: block; }
-    .sc { margin: 0; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .sc { margin: 0; }
+    .sc__scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 6px; }
+    .sc__scroll:focus-visible { outline: 2px solid var(--bx-primary); outline-offset: 2px; }
+    .sc__hint { display: none; margin: 0 0 .4rem; font-size: .8rem; color: var(--bx-muted); }
+    @media (max-width: 600px) { .sc__hint { display: block; } }
     .sc__svg { width: 100%; min-width: 560px; height: auto; display: block; }
-    @media print { .sc { overflow: visible; } .sc__svg { min-width: 0; } }
+    @media print { .sc__scroll { overflow: visible; } .sc__svg { min-width: 0; } .sc__hint { display: none; } }
     .sc__panel { fill: var(--bx-card); stroke: var(--bx-card-border); stroke-width: 1.5; }
     .sc__num { fill: var(--bx-primary); font: 700 18px var(--bx-font-display); }
     .sc__caption { fill: var(--bx-muted); font: 600 11px var(--bx-font-body); }

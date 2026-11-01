@@ -1,21 +1,19 @@
 # Feuille de route — ESCT Boxe
 
-## 2.0.0-beta.2 — Stabilisation technique
-- [x] Contrat d'API, squelette Poker Winners, scripts de déploiement adaptés.
-- [x] API et back-office : parcours de démonstration et tests verts sous SQLite.
-- [x] Front compilé et 75 tests verts.
-- [x] Trois thèmes implémentés ; **le propriétaire en choisit un** (ou un mélange).
+## Fait — 2.0.0-rc.1 (1er novembre 2026)
+- [x] API Symfony 7.4 + back-office, front Angular 22 : vitrine, inscriptions, espace membre, messagerie, RGPD.
+- [x] 21 propositions de design ; DA retenue : **Mix 1 · 7 · 12** (variante claire pour les pages parents).
+- [x] 50 leçons sans contact (5 modules), Ma séance, chrono de rounds, agenda régional des galas, citation du jour.
+- [x] Contrôle qualité indépendant : 8 défauts corrigés. 107 tests front, 20 tests back (153 assertions) verts.
+- [x] Bêta de démonstration sans serveur (API simulée).
 
-## 2.0.0-beta.3 — Contenus réels (avec le club)
-- [ ] Remplacer les données de démonstration : vrais boxeurs (avec accord écrit, et accord parental pour les mineurs),
-  coachs, horaires, tarifs 2026-2027, adresse exacte des salles, historique du club.
-- [ ] Mentions légales : nom de l'association, RNA/SIRET, président, hébergeur.
-- [ ] Choix du nom de domaine du club.
-
-## 2.0.0 — Mise en ligne (après GO du propriétaire)
-- [ ] `deploy/server-setup.sh` puis `deploy/update.sh` sur o2switch ; HTTPS ; crons RGPD et sauvegardes.
-- [ ] Test de restauration de la sauvegarde (standard PARADOXX).
+## 2.0.0 — Mise en ligne (bloqué par le club et le GO du propriétaire)
+- [ ] Contenus réels : voir `docs/CONTENUS-A-FOURNIR.md` (horaires, tarifs, coachs, boxeurs avec accords, mentions légales, photos, logo).
+- [ ] Relecture des 50 leçons par un entraîneur du club.
+- [ ] Hébergement : `deploy/server-setup.sh` puis `deploy/update.sh` (o2switch) ; HTTPS ; e-mails réels ; crons RGPD et sauvegardes ; test de restauration.
+- [ ] Nom de domaine ; retrait du `noindex`.
 
 ## Ensuite
 - Paiement en ligne de la cotisation (HelloAsso, gratuit pour les associations).
+- Synchronisation de la progression des leçons avec le compte membre (aujourd'hui stockée sur l'appareil).
 - Galerie photos par événement ; billetterie des galas ; notifications.

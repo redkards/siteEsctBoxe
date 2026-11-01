@@ -5,6 +5,19 @@ qui sera la **2.0.0** (après confirmation du propriétaire). Chaque version re�
 
 ## [Non publié]
 
+## [2.0.0-rc.1] — 2026-11-01 — Candidate à la mise en ligne
+
+### Corrigé (contrôle qualité indépendant, `docs/paradoxx/QA-2026-11-01.md`)
+- Défilement horizontal en 390 px sur les fiches discipline, boxeur et leçon.
+- Lien d'évitement « Aller au contenu » en routage hash ; Échap ferme le menu burger.
+- Contrastes AA en thème sombre (boutons et textes rouges).
+- Agenda : fuseau Europe/Paris dans l'export .ics et pour la date du jour.
+- Chrono : décompte recalé sur l'heure réelle en arrière-plan ; verrou d'écran libéré à la pause.
+
+### Ajouté
+- Indice « faites glisser » sur les schémas des leçons en mobile.
+- `docs/CONTENUS-A-FOURNIR.md` : liste des contenus réels à fournir par le club.
+
 ## [2.0.0-beta.4] — 2026-11-01 — DA Mix 1 · 7 · 12
 
 ### Modifié
