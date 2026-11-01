@@ -10,17 +10,17 @@
 export const LEGAL = {
   association: {
     /** Dénomination exacte figurant dans les statuts */
-    name: 'ESC Boxe Tergnier',
+    name: 'Entente Sportive des Cheminots de Tergnier – Boxe (ESC Boxe Tergnier)',
     legalForm: 'Association régie par la loi du 1er juillet 1901 et le décret du 16 août 1901',
     /** Numéro RNA (W02…) du récépissé de déclaration en préfecture de l'Aisne */
     rna: '[À COMPLÉTER : numéro RNA W02…]',
     /** Uniquement si l'association en possède un (emploi salarié, subventions…) ; sinon « Non applicable » */
-    siret: '[À COMPLÉTER : numéro SIRET, ou « Non applicable »]',
-    address: '[À COMPLÉTER : adresse du siège social], 02700 Tergnier',
-    email: '[À COMPLÉTER : email de contact du club]',
+    siret: '503 760 639 00016',
+    address: '22 chaussée Brunehaut (Vouel), 02700 Tergnier',
+    email: 'esctergnier.boxe@sfr.fr',
     /** Adresse dédiée aux demandes relatives aux données personnelles (peut être la même) */
-    privacyEmail: '[À COMPLÉTER : email pour les demandes RGPD]',
-    phone: '[À COMPLÉTER : téléphone du club]',
+    privacyEmail: 'esctergnier.boxe@sfr.fr',
+    phone: '06 23 24 69 18',
     /** Affiliation fédérale */
     federation: 'Fédération Française de Boxe (FFBoxe)',
     affiliation: '[À COMPLÉTER : numéro d’affiliation FFBoxe]',

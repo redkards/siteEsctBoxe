@@ -17,18 +17,18 @@ const day = (offset: number, hour = 19) => {
 export const DEMO_CLUB: ClubInfo = {
   name: 'ESC Boxe Tergnier',
   tagline: 'Boxe anglaise, éducative, loisir et féminine à Tergnier, dans l’Aisne.',
-  foundedYear: 1982,
+  foundedYear: 2008,
   stats: { members: 142, boxers: 8, coaches: 3, titles: 25 },
-  address: 'Complexe sportif, 02700 Tergnier',
-  phone: '03 23 00 00 00',
-  email: 'contact@esctboxe.local',
+  address: 'Complexe sportif Léo Lagrange, rue Albert Camus, 02700 Tergnier',
+  phone: '06 23 24 69 18',
+  email: 'esctergnier.boxe@sfr.fr',
   socials: { facebook: null, instagram: null, youtube: null },
   openingHours: 'Du lundi au vendredi de 17 h 30 à 21 h, le samedi de 10 h à 12 h (hors vacances scolaires).',
 };
 
 export const DEMO_VENUES: Venue[] = [
-  { id: 1, name: 'Salle de boxe — démonstration', address: 'Complexe sportif', postalCode: '02700', city: 'Tergnier',
-    latitude: 49.6553, longitude: 3.3010, description: 'Salle fictive pour la bêta : adresse à confirmer avec le club.', photo: 'img/training1.jpg' },
+  { id: 1, name: 'Complexe sportif Léo Lagrange', address: 'Rue Albert Camus', postalCode: '02700', city: 'Tergnier',
+    latitude: 49.6553, longitude: 3.3010, description: 'Complexe sportif de Tergnier où le club organise ses galas. Salle d’entraînement à confirmer avec le club.', photo: 'img/training1.jpg' },
 ];
 
 const coachRefs = [
@@ -104,16 +104,16 @@ export const DEMO_PARTNERS: Partner[] = [
 type GalaSeed = Omit<GalaDetail, 'fights'>;
 const galaSeeds: GalaSeed[] = [
   { id: 1, title: 'Gala de Noël — démonstration', slug: 'gala-noel-demo', type: 'gala', startsAt: day(41), endsAt: null,
-    venue: 'Salle de boxe — démonstration', address: 'Complexe sportif', city: 'Tergnier',
+    venue: 'Complexe sportif Léo Lagrange', address: 'Complexe sportif', city: 'Tergnier',
     description: '<p>Gala fictif : 8 combats amateurs et éducatifs. Aucune billetterie réelle.</p>', poster: 'img/galaFight.jpg', ticketUrl: null, price: 1000 },
   { id: 2, title: 'Stage vacances — démonstration', slug: 'stage-vacances-demo', type: 'stage', startsAt: day(52, 10), endsAt: day(54, 16),
-    venue: 'Salle de boxe — démonstration', address: null, city: 'Tergnier',
+    venue: 'Complexe sportif Léo Lagrange', address: null, city: 'Tergnier',
     description: '<p>Stage fictif de 3 jours, ouvert aux 8-16 ans.</p>', poster: 'img/eduTergnier2.jpg', ticketUrl: null, price: 0 },
   { id: 3, title: 'Championnat régional — démonstration', slug: 'championnat-regional-demo', type: 'competition', startsAt: day(75, 9), endsAt: null,
     venue: null, address: null, city: 'Saint-Quentin',
     description: '<p>Compétition fictive : trois boxeurs du club engagés.</p>', poster: 'img/champreg3.jpg', ticketUrl: null, price: null },
   { id: 4, title: 'Gala amateurs & pros — démonstration', slug: 'gala-amapro-demo', type: 'gala', startsAt: day(-21), endsAt: null,
-    venue: 'Salle de boxe — démonstration', address: null, city: 'Tergnier',
+    venue: 'Complexe sportif Léo Lagrange', address: null, city: 'Tergnier',
     description: '<p>Gala fictif passé : résultats de démonstration.</p>', poster: 'img/galaAmaPro1.jpg', ticketUrl: null, price: 1200 },
   { id: 5, title: 'Championnat départemental — démonstration', slug: 'championnat-dep-demo', type: 'competition', startsAt: day(-60, 9), endsAt: null,
     venue: null, address: null, city: 'Laon',
