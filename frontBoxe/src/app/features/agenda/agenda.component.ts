@@ -86,7 +86,7 @@ import { buildIcs, filterGalas, icsFileName, upcomingGalas } from './agenda.util
     .ag__count { margin: 0; color: var(--bx-muted); }
     .ag__list { display: grid; gap: 1rem; margin: 0; padding: 0; list-style: none; }
     .ag__item { display: grid; grid-template-columns: 5rem 1fr; gap: 1.25rem; align-items: start; padding: 1.25rem; }
-    .ag__date { display: grid; justify-items: center; padding: 0.6rem 0; border-radius: var(--bx-radius); background: var(--bx-primary); color: var(--bx-primary-ink); }
+    .ag__date { display: grid; justify-items: center; padding: 0.6rem 0; border-radius: var(--bx-radius); background: var(--bx-fill, var(--bx-primary)); color: var(--bx-primary-ink); }
     .ag__day { font: 700 2rem/1 var(--bx-font-display); }
     .ag__month { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; }
     .ag__body h2 { margin: 0 0 0.3rem; font-size: 1.3rem; }

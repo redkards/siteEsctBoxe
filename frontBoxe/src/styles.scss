@@ -64,7 +64,7 @@ img {
 }
 
 ::selection {
-  background: var(--bx-primary);
+  background: var(--bx-fill, var(--bx-primary));
   color: var(--bx-primary-ink);
 }
 
@@ -226,7 +226,7 @@ img {
   }
 
   &--primary {
-    background: var(--bx-primary);
+    background: var(--bx-fill, var(--bx-primary));
     color: var(--bx-primary-ink);
 
     &:not(:disabled):hover {
@@ -372,7 +372,7 @@ img {
   white-space: nowrap;
 
   &--primary {
-    background: var(--bx-primary);
+    background: var(--bx-fill, var(--bx-primary));
     color: var(--bx-primary-ink);
   }
 
@@ -597,7 +597,7 @@ select.bx-input {
 
   &[aria-pressed='true'] {
     border-color: var(--bx-primary);
-    background: var(--bx-primary);
+    background: var(--bx-fill, var(--bx-primary));
     color: var(--bx-primary-ink);
   }
 }

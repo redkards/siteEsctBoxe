@@ -1,9 +1,9 @@
 @if (demo) {
   <div class="demo-ribbon" role="note">Bêta de démonstration — données fictives. Espace membre : connectez-vous avec n’importe quel e-mail.</div>
 }
-<a class="skip-link" href="#contenu">Aller au contenu</a>
+<a class="skip-link" href="#contenu" (click)="skipToContent($event)">Aller au contenu</a>
 <app-header />
-<main id="contenu">
+<main id="contenu" tabindex="-1">
   <router-outlet />
 </main>
 <app-footer />

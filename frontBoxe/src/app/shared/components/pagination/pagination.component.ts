@@ -53,7 +53,7 @@ import { Component, computed, input, output, ChangeDetectionStrategy } from '@an
     }
     .num.is-active {
       border-color: var(--bx-primary);
-      background: var(--bx-primary);
+      background: var(--bx-fill, var(--bx-primary));
       color: var(--bx-primary-ink);
     }
   `,

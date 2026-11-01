@@ -54,11 +54,13 @@ export class ChronoComponent {
   protected readonly started = computed(() => this.state().phase !== 'idle');
 
   private timer: ReturnType<typeof setInterval> | null = null;
+  private lastTick = 0;
   private audio: AudioContext | null = null;
   private wakeLock: WakeLockLike | null = null;
 
   constructor() {
     inject(DestroyRef).onDestroy(() => {
+      this.running.set(false);
       this.stopTimer();
       void this.releaseWakeLock();
       void this.audio?.close().catch(() => undefined);
@@ -95,7 +97,10 @@ export class ChronoComponent {
     this.running.set(true);
     void this.requestWakeLock();
     this.stopTimer();
-    this.timer = setInterval(() => this.step(), 1000);
+    this.lastTick = Date.now();
+    // Cadence fine + rattrapage sur l'horloge réelle : les navigateurs ralentissent setInterval
+    // en arrière-plan (écran verrouillé, autre onglet), le décompte ne doit pas dériver.
+    this.timer = setInterval(() => this.catchUp(), 250);
   }
 
   protected pause(): void {
@@ -128,11 +133,21 @@ export class ChronoComponent {
     return sec % 60;
   }
 
-  private step(): void {
-    const { state, cue } = tick(this.state(), this.settings());
-    this.state.set(state);
-    if (cue) this.beep(cue);
-    if (state.phase === 'done') this.pause();
+  /** Applique autant de secondes que réellement écoulées depuis le dernier passage */
+  private catchUp(): void {
+    const elapsed = Math.floor((Date.now() - this.lastTick) / 1000);
+    if (elapsed <= 0) return;
+    this.lastTick += elapsed * 1000;
+    let current = this.state();
+    let lastCue: ChronoCue = null;
+    for (let i = 0; i < elapsed && current.phase !== 'done'; i++) {
+      const { state, cue } = tick(current, this.settings());
+      current = state;
+      if (cue) lastCue = cue;
+    }
+    this.state.set(current);
+    if (lastCue) this.beep(lastCue);
+    if (current.phase === 'done') this.pause();
   }
 
   private stopTimer(): void {
@@ -183,7 +198,12 @@ export class ChronoComponent {
   private async requestWakeLock(): Promise<void> {
     try {
       const nav = navigator as Navigator & { wakeLock?: { request(type: 'screen'): Promise<WakeLockLike> } };
-      if (nav.wakeLock && !this.wakeLock) this.wakeLock = await nav.wakeLock.request('screen');
+      if (nav.wakeLock && !this.wakeLock) {
+        const lock = await nav.wakeLock.request('screen');
+        // Pause ou sortie de page pendant la demande : on relâche aussitôt (sinon l'écran resterait allumé)
+        if (this.running()) this.wakeLock = lock;
+        else void lock.release().catch(() => undefined);
+      }
     } catch {
       this.wakeLock = null;
     }

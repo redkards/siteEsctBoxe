@@ -48,7 +48,7 @@ import { RouterLink } from '@angular/router';
       left: 0;
       right: 0;
       height: 4px;
-      background: var(--bx-primary);
+      background: var(--bx-fill, var(--bx-primary));
       opacity: 0.5;
     }
     .nf::before {

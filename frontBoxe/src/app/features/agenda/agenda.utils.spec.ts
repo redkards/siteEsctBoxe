@@ -1,5 +1,5 @@
 import { REGIONAL_GALAS } from './agenda.data';
-import { buildIcs, filterGalas, icsEscape, icsFileName, upcomingGalas } from './agenda.utils';
+import { buildIcs, filterGalas, icsEscape, icsFileName, parisIsoDate, upcomingGalas } from './agenda.utils';
 
 describe('agenda.utils', () => {
   const rochexpo = REGIONAL_GALAS.find((g) => g.id === 'rochexpo-2026-11-28')!;
@@ -41,5 +41,19 @@ describe('agenda.utils', () => {
   it('gère un gala tardif dont la fin passe minuit', () => {
     const ics = buildIcs({ ...rochexpo, time: '22:30' });
     expect(ics).toContain('DTEND;TZID=Europe/Paris:20261129T013000');
+  });
+
+  it('déclare le fuseau Europe/Paris référencé par TZID', () => {
+    const ics = buildIcs(rochexpo);
+    expect(ics).toContain('BEGIN:VTIMEZONE\r\nTZID:Europe/Paris\r\n');
+    expect(ics.indexOf('END:VTIMEZONE')).toBeLessThan(ics.indexOf('BEGIN:VEVENT'));
+  });
+
+  it('calcule « aujourd’hui » à l’heure de Paris, pas à celle du visiteur', () => {
+    // 13/11 à 23 h 30 UTC = 14/11 à 0 h 30 à Paris (heure d'hiver)
+    expect(parisIsoDate(new Date(Date.UTC(2026, 10, 13, 23, 30)))).toBe('2026-11-14');
+    // 14/11 à 22 h 59 UTC = toujours le 14/11 à Paris : le gala du jour reste affiché
+    expect(parisIsoDate(new Date(Date.UTC(2026, 10, 14, 22, 59)))).toBe('2026-11-14');
+    expect(upcomingGalas(REGIONAL_GALAS, new Date(Date.UTC(2026, 10, 14, 22, 59))).length).toBe(5);
   });
 });

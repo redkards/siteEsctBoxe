@@ -63,3 +63,7 @@ Le choix parmi les trois propositions est reporté, pas requis pour continuer le
 - Thème `mix` (`src/styles/themes/_mix.scss`) : Fight Night (noir, filets rouges, boutons en biais) + polices Héritage + hero photo Street.
 - Street conservé dans les sources, non chargé. Variante claire parents : mapping inchangé, rouge texte `#b30500`.
 - Accueil : chiffres clés sous le hero + bande de 4 photos. 104 tests verts, build OK. Captures `docs/recap/mix/`.
+
+## 01/11/2026 — QA indépendante (Claude)
+- Rapport `docs/paradoxx/QA-2026-11-01.md`, captures `docs/recap/qa/`. 8 défauts corrigés : débordements en 390 px (grilles `minmax(0,1fr)`), lien d'évitement en routage hash, contrastes AA (aplats `--bx-fill`), Échap sur le burger, VTIMEZONE + date de Paris dans l'agenda, dérive du chrono et Wake Lock.
+- 107 tests front, 20 tests back verts. Restants mineurs listés dans le rapport.

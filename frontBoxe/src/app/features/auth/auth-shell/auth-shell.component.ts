@@ -96,7 +96,7 @@ import { Component, input, ChangeDetectionStrategy } from '@angular/core';
     .shell__ropes span {
       height: 4px;
       border-radius: 4px;
-      background: var(--bx-primary);
+      background: var(--bx-fill, var(--bx-primary));
     }
     .shell__ropes span:nth-child(2) {
       background: var(--bx-dark-ink);

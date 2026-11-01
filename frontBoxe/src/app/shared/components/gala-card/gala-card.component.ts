@@ -53,7 +53,7 @@ import { labelOf } from '../../utils/format.utils';
       min-width: 76px;
       padding: 0.7rem 0.4rem;
       border-radius: var(--bx-radius-sm);
-      background: var(--bx-primary);
+      background: var(--bx-fill, var(--bx-primary));
       color: var(--bx-primary-ink);
       font-family: var(--bx-font-display);
       line-height: 1;

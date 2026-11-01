@@ -113,7 +113,7 @@ import { ThemeSwitcherComponent } from '../theme-switcher/theme-switcher.compone
       font-size: 0.93rem;
     }
     .footer__cta {
-      background: var(--bx-primary);
+      background: var(--bx-fill, var(--bx-primary));
       color: var(--bx-primary-ink);
     }
     .footer__cta-inner {

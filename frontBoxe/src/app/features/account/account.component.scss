@@ -71,7 +71,7 @@
     color: var(--bx-ink);
 
     &::after {
-      background: var(--bx-primary);
+      background: var(--bx-fill, var(--bx-primary));
     }
   }
 }

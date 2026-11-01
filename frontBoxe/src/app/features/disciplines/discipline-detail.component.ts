@@ -120,7 +120,7 @@ import { DAYS, compareSlots } from '../../shared/utils/planning.utils';
     .hero p { max-width: 60ch; margin: 0; font-size: 1.1rem; opacity: 0.92; }
     .hero .bx-breadcrumb { color: var(--bx-hero-ink); opacity: 0.85; }
     .hero__tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-    .layout { display: grid; grid-template-columns: 1fr 340px; gap: clamp(1.5rem, 4vw, 3rem); align-items: start; }
+    .layout { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: clamp(1.5rem, 4vw, 3rem); align-items: start; }
     .sub { margin: 2rem 0 1rem; font-size: 1.8rem; }
     .side { display: grid; gap: 1rem; position: sticky; top: calc(var(--bx-header-h) + 1rem); }
     .cta { display: grid; gap: 0.8rem; }
@@ -132,7 +132,7 @@ import { DAYS, compareSlots } from '../../shared/utils/planning.utils';
     .coaches__init { display: grid; place-items: center; background: var(--bx-dark); color: var(--bx-dark-ink); font-weight: 700; }
     .coaches small { color: var(--bx-muted); }
     @media (max-width: 900px) {
-      .layout { grid-template-columns: 1fr; }
+      .layout { grid-template-columns: minmax(0, 1fr); }
       .side { position: static; }
     }
   `,

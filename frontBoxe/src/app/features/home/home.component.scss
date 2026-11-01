@@ -123,6 +123,7 @@
 
   small {
     font-size: 0.5em;
+    color: var(--bx-primary); /* petit texte : rouge clair lisible sur noir (AA) */
   }
 }
 
@@ -219,10 +220,10 @@
   gap: 1rem;
 
   .bx-eyebrow {
-    color: var(--bx-dark-ink);
+    color: #fff;
 
     &::before {
-      background: var(--bx-primary);
+      background: var(--bx-fill, var(--bx-primary));
     }
   }
 }
@@ -338,7 +339,7 @@
   margin-top: 0.3rem;
   padding: 0.2rem 0.55rem;
   border-radius: var(--bx-radius-sm);
-  background: var(--bx-primary);
+  background: var(--bx-fill, var(--bx-primary));
   color: var(--bx-primary-ink);
   font-size: 0.72rem;
   font-weight: 700;
@@ -348,7 +349,7 @@
 
 /* BOXEURS --------------------------------------------------------------------- */
 .fighters .bx-eyebrow::before {
-  background: var(--bx-primary);
+  background: var(--bx-fill, var(--bx-primary));
 }
 
 .fighters__grid {

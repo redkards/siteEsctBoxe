@@ -1,4 +1,4 @@
-import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ElementRef, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter } from 'rxjs';
@@ -13,6 +13,7 @@ import { LogoComponent } from '../logo/logo.component';
   templateUrl: './header.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './header.component.scss',
+  host: { '(document:keydown.escape)': 'closeOnEscape()' },
 })
 export class HeaderComponent {
   protected readonly auth = inject(AuthService);
@@ -47,5 +48,14 @@ export class HeaderComponent {
 
   protected toggleMenu(): void {
     this.menuOpen.update((open) => !open);
+  }
+
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+
+  /** Échap ferme le menu mobile et rend le focus au bouton burger. */
+  protected closeOnEscape(): void {
+    if (!this.menuOpen()) return;
+    this.menuOpen.set(false);
+    this.host.nativeElement.querySelector<HTMLButtonElement>('.header__burger')?.focus();
   }
 }

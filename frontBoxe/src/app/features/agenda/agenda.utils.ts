@@ -1,8 +1,8 @@
 import { RegionalGala } from './agenda.data';
 
-/** Galas à venir (date du jour incluse), triés chronologiquement */
+/** Galas à venir (date du jour à Paris incluse), triés chronologiquement */
 export function upcomingGalas(list: readonly RegionalGala[], now: Date = new Date()): RegionalGala[] {
-  const today = localIsoDate(now);
+  const today = parisIsoDate(now);
   return list.filter((g) => g.date >= today).sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time));
 }
 
@@ -13,6 +13,38 @@ export function filterGalas(list: readonly RegionalGala[], region: string | null
 export function localIsoDate(d: Date): string {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 }
+
+/** Date AAAA-MM-JJ dans le fuseau Europe/Paris (les galas sont datés en heure française, quel que soit le fuseau du visiteur) */
+export function parisIsoDate(d: Date): string {
+  try {
+    const parts = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Paris', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(d);
+    const get = (t: string) => parts.find((p) => p.type === t)?.value ?? '';
+    return `${get('year')}-${get('month')}-${get('day')}`;
+  } catch {
+    return localIsoDate(d);
+  }
+}
+
+/** Définition du fuseau Europe/Paris, obligatoire dès qu'un TZID est référencé (RFC 5545 §3.6.5) */
+const VTIMEZONE_PARIS = [
+  'BEGIN:VTIMEZONE',
+  'TZID:Europe/Paris',
+  'BEGIN:DAYLIGHT',
+  'TZOFFSETFROM:+0100',
+  'TZOFFSETTO:+0200',
+  'TZNAME:CEST',
+  'DTSTART:19700329T020000',
+  'RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU',
+  'END:DAYLIGHT',
+  'BEGIN:STANDARD',
+  'TZOFFSETFROM:+0200',
+  'TZOFFSETTO:+0100',
+  'TZNAME:CET',
+  'DTSTART:19701025T030000',
+  'RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU',
+  'END:STANDARD',
+  'END:VTIMEZONE',
+];
 
 function pad(n: number): string {
   return n.toString().padStart(2, '0');
@@ -50,6 +82,7 @@ export function buildIcs(g: RegionalGala, stamp: Date = new Date(), durationH = 
     'PRODID:-//ESC Boxe Tergnier//Agenda des galas//FR',
     'CALSCALE:GREGORIAN',
     'METHOD:PUBLISH',
+    ...VTIMEZONE_PARIS,
     'BEGIN:VEVENT',
     `UID:${g.id}@esctboxe`,
     `DTSTAMP:${dtstamp}`,

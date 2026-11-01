@@ -63,12 +63,12 @@
   }
 
   &::-webkit-progress-value {
-    background: var(--bx-primary);
+    background: var(--bx-fill, var(--bx-primary));
     border-radius: 999px;
   }
 
   &::-moz-progress-bar {
-    background: var(--bx-primary);
+    background: var(--bx-fill, var(--bx-primary));
   }
 
   &--sm {
@@ -241,6 +241,7 @@
 /* Fiche -------------------------------------------------------------- */
 .lx-detail {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 1.25rem;
 
   &__bar {
@@ -322,7 +323,7 @@
       width: 1.9rem;
       height: 1.9rem;
       border-radius: 50%;
-      background: var(--bx-primary);
+      background: var(--bx-fill, var(--bx-primary));
       color: var(--bx-primary-ink);
       font: 700 1rem var(--bx-font-display);
     }

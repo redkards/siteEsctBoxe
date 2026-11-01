@@ -63,7 +63,7 @@
 }
 
 .is-current .progress__num {
-  background: var(--bx-primary);
+  background: var(--bx-fill, var(--bx-primary));
   color: var(--bx-primary-ink);
 }
 

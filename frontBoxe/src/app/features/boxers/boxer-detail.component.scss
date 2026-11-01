@@ -138,7 +138,7 @@
 /* Palmarès ------------------------------------------------------------- */
 .record-band {
   padding-block: 1.5rem;
-  background: var(--bx-primary);
+  background: var(--bx-fill, var(--bx-primary));
   color: var(--bx-primary-ink);
 }
 
@@ -201,6 +201,7 @@
 /* Corps ------------------------------------------------------------------- */
 .body {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 2.5rem;
 }
 

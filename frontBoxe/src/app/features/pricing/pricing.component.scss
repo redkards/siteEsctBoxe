@@ -35,7 +35,7 @@
   right: 1.2rem;
   padding: 0.3rem 0.7rem;
   border-radius: var(--bx-radius-sm);
-  background: var(--bx-primary);
+  background: var(--bx-fill, var(--bx-primary));
   color: var(--bx-primary-ink);
   font-size: 0.72rem;
   font-weight: 700;

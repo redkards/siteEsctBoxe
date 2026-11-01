@@ -6,6 +6,11 @@
 
 main {
   flex: 1;
+
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
 }
 
 .skip-link {
@@ -15,7 +20,7 @@ main {
   z-index: 100;
   padding: 0.6rem 1rem;
   border-radius: var(--bx-btn-radius);
-  background: var(--bx-primary);
+  background: var(--bx-fill, var(--bx-primary));
   color: var(--bx-primary-ink);
   text-decoration: none;
 
@@ -25,7 +30,7 @@ main {
 }
 
 .demo-ribbon {
-  background: #e4572e;
+  background: #b93a1c;
   color: #fff;
   font: 600 0.8rem/1.3 system-ui, sans-serif;
   text-align: center;

@@ -31,4 +31,12 @@ export class AppComponent {
   constructor() {
     effect(() => this.document.body.setAttribute('data-variant', this.variant()));
   }
+
+  /** Lien d'évitement : en routage hash (démo), « #contenu » serait pris pour une route ; on déplace le focus nous-mêmes. */
+  protected skipToContent(event: Event): void {
+    event.preventDefault();
+    const main = this.document.getElementById('contenu');
+    main?.focus();
+    main?.scrollIntoView();
+  }
 }
