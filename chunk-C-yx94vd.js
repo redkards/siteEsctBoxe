@@ -1,0 +1,1 @@
+import{L as M,Ut as h}from"./chunk-CNoI8Cuz.js";import{d as p}from"./main-NBDET6VC.js";var o=class r{api=h(p);create(e){return this.api.post(`memberships`,e)}mine(){return this.api.get(`me/memberships`)}contact(e){return this.api.post(`contact`,e)}static ɵfac=function(n){return new(n||r)};static ɵprov=M({token:r,factory:r.ɵfac,providedIn:`root`})};export{o as t};

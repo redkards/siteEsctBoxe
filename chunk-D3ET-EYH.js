@@ -1,0 +1,1 @@
+import{Ft as ef}from"./chunk-CNoI8Cuz.js";import{s as u}from"./main-NBDET6VC.js";var i=class r{transform(e){return u(e)}static ɵfac=function(o){return new(o||r)};static ɵpipe=ef({name:`euros`,type:r,pure:!0})};export{i as t};

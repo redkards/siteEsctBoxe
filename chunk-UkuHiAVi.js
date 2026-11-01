@@ -1,0 +1,1 @@
+import{Ft as ef,Ut as h}from"./chunk-CNoI8Cuz.js";import{d as p$1}from"./main-NBDET6VC.js";var p=class r{api=h(p$1);transform(e,i=null){return this.api.mediaUrl(e)??i}static ɵfac=function(i){return new(i||r)};static ɵpipe=ef({name:`media`,type:r,pure:!0})};export{p as t};

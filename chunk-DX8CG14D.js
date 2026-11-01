@@ -1,0 +1,1 @@
+import{L as M,Ut as h,en as m}from"./chunk-CNoI8Cuz.js";import{d as p}from"./main-NBDET6VC.js";var l=class e{api=h(p);list(a={}){return this.api.get(`galas`,m({when:`upcoming`,page:1,limit:9},a))}get(a){return this.api.get(`galas/${encodeURIComponent(a)}`)}static ɵfac=function(o){return new(o||e)};static ɵprov=M({token:e,factory:e.ɵfac,providedIn:`root`})};export{l as t};
