@@ -8,11 +8,13 @@ on:
   workflow_dispatch:
 permissions:
   contents: write
+  pages: write
+  id-token: write
 concurrency:
   group: beta-pages
   cancel-in-progress: true
 jobs:
-  build-deploy:
+  build:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -37,3 +39,18 @@ jobs:
           publish_dir: frontBoxe/dist/esct-boxe-front/browser
           publish_branch: gh-pages
           force_orphan: true
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: frontBoxe/dist/esct-boxe-front/browser
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.d.outputs.page_url }}
+    steps:
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+      - id: d
+        uses: actions/deploy-pages@v4

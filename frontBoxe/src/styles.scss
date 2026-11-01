@@ -5,8 +5,10 @@
    ========================================================================== */
 
 @use './styles/tokens';
-// Les trois thèmes sont conservés pour la future passe graphique.
-@use './styles/simple';
+// Direction artistique retenue : « Street » (variantes gala / claire par route).
+// ring, azur, club (themes/_index.scss) et l'habillage provisoire _simple.scss restent
+// dans les sources mais ne sont plus chargés.
+@use './styles/themes/street';
 
 *,
 *::before,
@@ -773,5 +775,5 @@ select.bx-input {
   color: var(--bx-primary-ink);
 }
 
-// Appliqué en dernier pour simplifier aussi les styles des composants.
-@include simple.apply;
+// Appliqué en dernier : surcharge les règles globales ci-dessus.
+@include street.apply;

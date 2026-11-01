@@ -5,6 +5,14 @@ qui sera la **2.0.0** (après confirmation du propriétaire). Chaque version re�
 
 ## [Non publié]
 
+## [2.0.0-beta.3] — 2026-11-01 — DA Street, 50 leçons et nouvelles fonctions
+
+### Ajouté
+- Direction artistique « Street » sur tout le site (variante claire pour les pages parents, mode gala sombre).
+- 50 leçons complètes sans contact (5 modules), fiches avec schéma, adaptations par âge, progression et favoris.
+- Ma séance, chrono de rounds, agenda régional des galas (.ics), citation du jour, onglet « Mes leçons ».
+- 15 maquettes de design (docs/design/15-designs) ; bêta front publiée sur GitHub Pages.
+
 - Design provisoire simplifié à la demande du propriétaire : style clair, police système, accueil compact, sans effets décoratifs ni chargement Google Fonts. Trois thèmes conservés dans les sources pour une reprise ultérieure ; sélecteur masqué.
 
 ## [2.0.0-beta.2] — 2026-10-31 — Reprise et stabilisation

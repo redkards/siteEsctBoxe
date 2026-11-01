@@ -1,0 +1,336 @@
+/* ==========================================================================
+   Thème « street » — direction artistique retenue par le propriétaire (01/11/2026)
+   Maquette : docs/design/15-designs/ESCT-12-street.html (règles .d12).
+   Mur de brique sombre, crème, rose spray, ruban adhésif jaune. Aucun vert.
+   Deux variantes, choisies par route (body[data-variant], cf. core/layout/page-variant.ts) :
+     - « gala »  (sombre) : accueil, club, boxeurs, évènements, actualités, agenda ;
+     - « light » (crème)  : pages rassurantes pour les parents (inscription, tarifs, …).
+   Contrastes calculés : docs/design/README.md, section Street.
+   ========================================================================== */
+
+$brick: #1a1716;
+$brick-2: #24201e;
+$brick-deep: #110e0d;
+$cream: #f4efe9;
+$cream-2: #ebe3d9;
+$paper: #fffaf4;
+$spray: #ff3d8b; // rose spray : texte seulement sur brique (5.34:1 / 4.84:1)
+$spray-ink: #c41a5e; // rose foncé : texte sur crème (5.02:1)
+$tape: #ffe14d;
+
+$marker: 'Permanent Marker', 'Marker Felt', 'Comic Sans MS', cursive;
+$barlow: 'Barlow', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+/* Variante sombre « gala » ------------------------------------------------ */
+@mixin gala-tokens {
+  color-scheme: dark;
+  --bx-bg: #{$brick};
+  --bx-surface: #{$brick-2};
+  --bx-card: #{$brick-2};
+  --bx-card-border: #5c524c;
+  --bx-glass: rgb(26 23 22 / 0.94);
+  --bx-ink: #{$cream};
+  --bx-ink-soft: #e3dbd2;
+  --bx-muted: #bfb5ab;
+  --bx-line: #4a403b;
+
+  --bx-primary: #{$spray};
+  --bx-primary-hover: #ff6fa8;
+  --bx-primary-ink: #{$brick};
+  --bx-primary-soft: rgb(255 61 139 / 0.16);
+  --bx-accent: #{$tape};
+  --bx-accent-ink: #{$brick};
+
+  --bx-dark: #{$brick-deep};
+  --bx-dark-2: #{$brick};
+  --bx-dark-ink: #{$cream};
+  --bx-dark-muted: #bfb5ab;
+  --bx-dark-line: rgb(244 239 233 / 0.16);
+
+  --bx-hero-overlay: linear-gradient(90deg, rgb(26 23 22 / 0.92) 40%, rgb(26 23 22 / 0.35));
+  --bx-hero-ink: #{$cream};
+
+  // Pas de vert : succès en bleu, info en lilas
+  --bx-success: #7ab8ff;
+  --bx-success-soft: rgb(122 184 255 / 0.14);
+  --bx-warning: #{$tape};
+  --bx-warning-soft: rgb(255 225 77 / 0.12);
+  --bx-danger: #ff7a6e;
+  --bx-danger-soft: rgb(255 122 110 / 0.14);
+  --bx-info: #c9a8ff;
+  --bx-info-soft: rgb(201 168 255 / 0.14);
+
+  --bx-cta-bg: #{$cream};
+  --bx-cta-ink: #{$brick};
+  --bx-title-shadow: 4px 4px 0 #{$spray};
+  --bx-focus: 0 0 0 3px rgb(255 225 77 / 0.75);
+
+  --bx-header-bg: rgb(17 14 13 / 0.97);
+  --bx-header-ink: #{$cream};
+  --bx-header-muted: #bfb5ab;
+  --bx-footer-bg: #{$brick-deep};
+  --bx-footer-ink: #ebe4dc;
+  --bx-footer-muted: #bfb5ab;
+}
+
+/* Variante claire « parents » --------------------------------------------- */
+@mixin light-tokens {
+  color-scheme: light;
+  --bx-bg: #{$cream};
+  --bx-surface: #{$cream-2};
+  --bx-card: #{$paper};
+  --bx-card-border: #{$brick};
+  --bx-glass: rgb(255 250 244 / 0.96);
+  --bx-ink: #{$brick};
+  --bx-ink-soft: #3a322e;
+  --bx-muted: #5c524c;
+  --bx-line: #cfc4b8;
+
+  --bx-primary: #{$spray-ink};
+  --bx-primary-hover: #a3134c;
+  --bx-primary-ink: #ffffff;
+  --bx-primary-soft: #fde3ee;
+  --bx-accent: #{$tape};
+  --bx-accent-ink: #{$brick};
+
+  // Bandeaux « sombres » des pages claires : crème soutenu, texte brique
+  --bx-dark: #{$cream-2};
+  --bx-dark-2: #e3d9cd;
+  --bx-dark-ink: #{$brick};
+  --bx-dark-muted: #5c524c;
+  --bx-dark-line: rgb(26 23 22 / 0.18);
+
+  --bx-hero-overlay: linear-gradient(90deg, rgb(244 239 233 / 0.95) 40%, rgb(244 239 233 / 0.4));
+  --bx-hero-ink: #{$brick};
+
+  --bx-success: #1f4f86;
+  --bx-success-soft: #e3ebf5;
+  --bx-warning: #8a5300;
+  --bx-warning-soft: #f8ecd6;
+  --bx-danger: #a8382f;
+  --bx-danger-soft: #f7e1dc;
+  --bx-info: #5b2d8c;
+  --bx-info-soft: #ece3f6;
+
+  --bx-cta-bg: #{$brick};
+  --bx-cta-ink: #{$cream};
+  --bx-title-shadow: 3px 3px 0 #{$spray};
+  --bx-focus: 0 0 0 3px rgb(196 26 94 / 0.55);
+}
+
+@mixin apply {
+  html:root {
+    @include gala-tokens;
+    --bx-font-marker: #{$marker};
+    --bx-font-display: #{$barlow};
+    --bx-font-body: #{$barlow};
+    --bx-display-transform: uppercase;
+    --bx-display-tracking: 0.01em;
+    --bx-display-weight: 800;
+
+    --bx-radius-lg: 2px;
+    --bx-radius: 2px;
+    --bx-radius-sm: 0;
+    --bx-btn-radius: 0;
+    --bx-shadow: 6px 8px 0 #{$spray};
+    --bx-shadow-sm: 4px 6px 0 #{$spray};
+    --bx-tape: #{$tape};
+    --bx-spray: #{$spray};
+  }
+
+  body[data-variant='light'] {
+    @include light-tokens;
+  }
+
+  // En-tête et pied de page : toujours brique, quelle que soit la variante
+  app-header,
+  app-footer {
+    @include gala-tokens;
+  }
+
+  // Cartes crème sur les pages gala (comme la maquette)
+  body:not([data-variant='light']) :is(.bx-card, app-boxer-card, app-article-card, app-gala-card) {
+    @include light-tokens;
+  }
+
+  // Sélecteur de thème masqué : la direction artistique est choisie
+  app-theme-switcher {
+    display: none;
+  }
+
+  /* Typographie : feutre pour h1/h2 uniquement, Barlow partout ailleurs */
+  h1,
+  h2 {
+    font-family: var(--bx-font-marker);
+    font-weight: 400;
+    letter-spacing: 0;
+    text-transform: none;
+    line-height: 1.05;
+  }
+
+  h3,
+  h4 {
+    font-family: var(--bx-font-display);
+    font-weight: 800;
+  }
+
+  .bx-section-head h2,
+  .bx-page-head h1 {
+    display: inline-block;
+    transform: rotate(-2deg);
+    transform-origin: left center;
+    text-shadow: var(--bx-title-shadow);
+  }
+
+  /* Ruban adhésif jaune (sur-titres) */
+  .bx-eyebrow {
+    justify-self: start;
+    width: fit-content;
+    padding: 0.25rem 0.75rem;
+    background: var(--bx-tape);
+    color: $brick;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    transform: rotate(-2deg);
+
+    &::before {
+      display: none;
+    }
+  }
+
+  /* En-tête de rubrique : titre incliné + bandeau ruban incliné en bas */
+  .bx-page-head {
+    padding-bottom: clamp(3rem, 6vw, 4.5rem);
+
+    &::after {
+      top: auto;
+      right: -5%;
+      bottom: 14px;
+      left: -5%;
+      width: auto;
+      height: 16px;
+      border: 0;
+      border-radius: 0;
+      background: repeating-linear-gradient(90deg, $tape 0 180px, #f2cf2e 180px 184px);
+      opacity: 1;
+      transform: rotate(-1deg);
+    }
+  }
+
+  /* Boutons : CTA crème (gala) / brique (clair), ombre rose décalée */
+  .bx-btn {
+    font-weight: 800;
+    border-width: 2px;
+  }
+
+  .bx-btn.bx-btn--primary {
+    background: var(--bx-cta-bg);
+    border-color: var(--bx-cta-bg);
+    color: var(--bx-cta-ink);
+    box-shadow: 4px 4px 0 $spray;
+    transform: rotate(-1deg);
+
+    &:not(:disabled):hover {
+      background: $spray;
+      border-color: $spray;
+      color: $brick;
+      box-shadow: 4px 4px 0 var(--bx-cta-bg);
+    }
+  }
+
+  .bx-btn--dark {
+    box-shadow: 4px 4px 0 $spray;
+  }
+
+  /* Cartes crème légèrement tournées, ombre rose */
+  .bx-card,
+  :is(app-boxer-card, app-article-card, app-gala-card) .card:is(.card) {
+    border: 2px solid $brick;
+    background: var(--bx-card);
+    box-shadow: 4px 6px 0 $spray;
+    transform: rotate(-0.6deg);
+  }
+
+  :is(app-boxer-card, app-article-card, app-gala-card):nth-child(2n) .card:is(.card),
+  .bx-grid > .bx-card:nth-child(2n) {
+    transform: rotate(0.8deg);
+  }
+
+  :is(app-boxer-card, app-article-card, app-gala-card) .card:is(.card):hover,
+  a.bx-card:hover {
+    transform: rotate(0deg) translateY(-3px);
+    box-shadow: 6px 9px 0 $spray;
+  }
+
+  .bx-panel {
+    border: 2px dashed var(--bx-card-border);
+    box-shadow: 4px 6px 0 $spray;
+  }
+
+  /* Bordures en tirets */
+  .bx-table td {
+    border-bottom: 2px dashed var(--bx-line);
+  }
+
+  .bx-table-wrap {
+    border: 2px solid var(--bx-card-border);
+  }
+
+  .bx-empty {
+    border-color: var(--bx-card-border);
+  }
+
+  .bx-prose blockquote {
+    border-left-color: var(--bx-spray);
+    font-family: var(--bx-font-marker);
+    font-style: normal;
+  }
+
+  .bx-chip[aria-pressed='true'] {
+    border-color: var(--bx-ink);
+    background: var(--bx-ink);
+    color: var(--bx-bg);
+  }
+
+  .bx-input {
+    border-width: 2px;
+  }
+
+  /* Logo : nom au feutre (accent) */
+  app-logo .logo__name:is(.logo__name) {
+    font-family: var(--bx-font-marker);
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    text-transform: none;
+  }
+
+  app-logo .logo__city:is(.logo__city) {
+    color: var(--bx-tape);
+    font-family: var(--bx-font-body);
+    font-weight: 800;
+  }
+
+  @include header-fit;
+
+  @media (prefers-reduced-motion: reduce) {
+    :is(app-boxer-card, app-article-card, app-gala-card) .card:is(.card):hover,
+    a.bx-card:hover,
+    .bx-btn:hover {
+      transform: none;
+    }
+  }
+}
+
+/* Navigation à 12 liens : en desktop étroit, le logo perd son texte pour laisser la place au menu */
+@mixin header-fit {
+  @media (min-width: 1361px) and (max-width: 1500px) {
+    app-header .logo__text {
+      display: none;
+    }
+
+    app-header .header__nav a {
+      padding-inline: 0.42rem;
+      font-size: 0.74rem;
+    }
+  }
+}

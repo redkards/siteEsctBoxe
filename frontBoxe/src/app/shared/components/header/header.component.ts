@@ -30,6 +30,9 @@ export class HeaderComponent {
     { path: '/boxeurs', label: 'Boxeurs', exact: false },
     { path: '/evenements', label: 'Événements', exact: false },
     { path: '/actualites', label: 'Actus', exact: false },
+    { path: '/agenda', label: 'Agenda', exact: false },
+    { path: '/lecons', label: 'Leçons', exact: false },
+    { path: '/chrono', label: 'Chrono', exact: false },
     { path: '/contact', label: 'Contact', exact: false },
   ];
 

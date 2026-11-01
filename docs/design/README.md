@@ -16,6 +16,52 @@ sous `html[data-theme="<nom>"]` et ajoute des surcharges ciblées sur les classe
 | `azur` | Azur | Premium lumineux façon Poker Winners, bleu azur, verre dépoli | `frontBoxe/src/styles/themes/_azur.scss` |
 | `club` | Éditorial | Magazine sportif : blanc cassé, noir, jaune or, grandes photos | `frontBoxe/src/styles/themes/_club.scss` |
 
+## ★ Direction retenue : `street` — Street (active, 01/11/2026)
+
+Maquette : `15-designs/ESCT-12-street.html` (règles `.d12`). Fichier : `frontBoxe/src/styles/themes/_street.scss`,
+chargé seul par `styles.scss` (ring/azur/club et l'habillage provisoire `_simple.scss` restent dans les sources sans être chargés).
+Le sélecteur de thème est masqué ; `theme-init.js` et `ThemeService` ne connaissent plus que `street`.
+
+**Palette (aucun vert)** : brique `#1a1716` / `#24201e` (fond profond `#110e0d`), crème `#f4efe9` (cartes `#fffaf4`),
+rose spray `#ff3d8b`, rose foncé `#c41a5e` (texte rose sur crème), ruban jaune `#ffe14d`.
+États : succès bleu (`#7ab8ff` / `#1f4f86`), alerte jaune/ocre, erreur `#ff7a6e` / `#a8382f`, info lilas.
+
+**Contrastes calculés (WCAG 2.1, texte normal ≥ 4.5:1)**
+
+| Paire | Ratio | Usage |
+|---|---|---|
+| crème `#f4efe9` / brique `#1a1716` | 15.59 | texte courant gala |
+| crème / `#24201e` | 14.13 | texte sur surfaces gala |
+| `#bfb5ab` / `#1a1716` | 8.84 | texte secondaire gala |
+| rose `#ff3d8b` / `#1a1716` | 5.34 | liens, accents gala (AA) |
+| rose `#ff3d8b` / `#24201e` | 4.84 | AA (limite) |
+| rose `#ff3d8b` / crème | **2.92** | ✗ interdit en texte → décor (ombres) uniquement |
+| rose foncé `#c41a5e` / crème | 5.02 | liens et primaire en variante claire |
+| blanc / `#c41a5e` | 5.74 | texte des boutons primaires clairs |
+| brique / jaune `#ffe14d` | 13.69 | rubans |
+| brique / crème | 15.59 | texte courant clair, CTA crème |
+| `#5c524c` / crème | 6.64 | texte secondaire clair |
+
+**Typographie** : *Permanent Marker* seulement pour h1/h2, logo et accents (chiffres clés) ; *Barlow* 400/600/800
+pour tout le reste. Google Fonts dans `index.html` (`display=swap`) ; la CSP de `public/.htaccess` autorisait déjà
+`fonts.googleapis.com` et `fonts.gstatic.com`.
+
+**Signatures** : ruban jaune incliné (sur-titres, bas des en-têtes, bandeau défilant de l'accueil), titres inclinés
+avec ombre rose décalée, cartes crème tournées (±0,7°) à ombre rose, bordures en tirets, CTA crème (brique en clair).
+`prefers-reduced-motion` : bandeau figé, pas de rotation au survol.
+
+**Variante par route** (`frontBoxe/src/app/core/layout/page-variant.ts`, appliquée par `AppComponent` via le Router
+et un signal sur `<body data-variant>`) :
+
+| Variante | Routes |
+|---|---|
+| `gala` (sombre brique / rose) | `/`, `/club`, `/boxeurs*`, `/evenements*`, `/actualites*`, `/agenda`, et toute route non listée |
+| `light` (crème, texte brique, rose et ruban conservés) | `/inscription`, `/tarifs`, `/disciplines*`, `/planning`, `/contact`, `/lecons*`, `/chrono`, `/mentions-legales`, `/confidentialite`, `/cgu`, `/mon-espace`, `/connexion`, `/inscription-compte`, `/verifier-email`, `/suppression-compte` |
+
+En-tête et pied de page restent toujours en brique. Captures : `docs/recap/street/`.
+
+---
+
 ## Choisir un thème
 
 - **URL** (prioritaire) : `?theme=ring`, `?theme=azur`, `?theme=club`. Le choix est ensuite mémorisé.

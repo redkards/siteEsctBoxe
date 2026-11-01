@@ -1,15 +1,14 @@
 import { Injectable, signal } from '@angular/core';
 
-/** Directions artistiques disponibles (cf. docs/design/README.md). */
-export const THEMES = [
-  { id: 'ring', label: 'Fight Night', swatch: ['#0b0b0c', '#d81424'] },
-  { id: 'azur', label: 'Azur', swatch: ['#eef4fb', '#1976d2'] },
-  { id: 'club', label: 'Éditorial', swatch: ['#111111', '#ffd700'] },
-] as const;
+/**
+ * Direction artistique active (cf. docs/design/README.md). Les anciennes propositions
+ * ring (Fight Night), azur et club (Éditorial) restent dans src/styles/themes/ sans être chargées.
+ */
+export const THEMES = [{ id: 'street', label: 'Street', swatch: ['#1a1716', '#ff3d8b'] }] as const;
 
 export type ThemeId = (typeof THEMES)[number]['id'];
 
-export const DEFAULT_THEME: ThemeId = 'ring';
+export const DEFAULT_THEME: ThemeId = 'street';
 export const THEME_STORAGE_KEY = 'esct_theme';
 
 export function isThemeId(value: unknown): value is ThemeId {
@@ -52,7 +51,7 @@ function applyToDocument(theme: ThemeId): void {
   if (typeof document === 'undefined') return;
   document.documentElement.setAttribute('data-theme', theme);
   const meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
-  const color = THEMES.find((t) => t.id === theme)?.swatch[theme === 'ring' ? 0 : 1];
+  const color = THEMES.find((t) => t.id === theme)?.swatch[0];
   if (meta && color) meta.content = color;
 }
 

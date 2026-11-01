@@ -1,8 +1,8 @@
-/* HERO ------------------------------------------------------------------ */
+/* HERO — DA Street ------------------------------------------------------- */
 .hero {
   position: relative;
   display: flex;
-  min-height: min(92vh, 860px);
+  flex-direction: column;
   overflow: hidden;
   background: var(--bx-dark);
   color: var(--bx-hero-ink);
@@ -14,7 +14,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 60% 35%;
+  object-position: 50% 30%;
 }
 
 .hero__overlay {
@@ -26,58 +26,61 @@
 .hero__inner {
   position: relative;
   z-index: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 3rem;
-  padding-block: clamp(3.5rem, 10vh, 7rem) 2.5rem;
+  display: grid;
+  gap: 2.5rem;
+  padding-block: clamp(2.5rem, 8vh, 5.5rem) 2rem;
 }
 
 .hero__content {
   display: grid;
   justify-items: start;
   gap: 1.3rem;
-  max-width: 720px;
+  max-width: 680px;
 }
 
-.hero__eyebrow {
-  color: var(--bx-hero-ink);
-
-  &::before {
-    background: var(--bx-primary);
-  }
+.hero__tape {
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  background: var(--bx-tape);
+  color: #1a1716;
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transform: rotate(-2deg);
 }
 
 .hero__title {
-  font-size: clamp(2.8rem, 8vw, 6rem);
+  font-size: clamp(2.9rem, 9vw, 6rem);
   line-height: 0.95;
-
-  em {
-    color: var(--bx-primary);
-    font-style: normal;
-    text-shadow: 0 2px 18px rgb(0 0 0 / 0.65);
-  }
+  color: #fff;
+  text-shadow: 4px 4px 0 var(--bx-spray);
+  transform: rotate(-3deg);
+  transform-origin: left center;
 }
 
 .hero__club {
   display: block;
-  margin-bottom: 0.8rem;
-  font-size: clamp(1rem, 2vw, 1.25rem);
-  letter-spacing: 0.3em;
-  opacity: 0.85;
+  margin-bottom: 0.6rem;
+  font-family: var(--bx-font-body);
+  font-size: clamp(0.95rem, 1.8vw, 1.1rem);
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-shadow: none;
+  color: var(--bx-hero-ink);
 }
 
 .hero__lead {
-  max-width: 52ch;
-  margin: 0;
-  font-size: clamp(1.02rem, 1.6vw, 1.2rem);
-  opacity: 0.92;
+  max-width: 50ch;
+  margin: 0.4rem 0 0;
+  font-size: clamp(1.02rem, 1.6vw, 1.15rem);
 }
 
 .hero__actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.8rem;
+  gap: 1rem;
   margin-top: 0.4rem;
 
   .bx-btn--light {
@@ -88,25 +91,20 @@
 .hero__stats {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  border-top: 1px solid rgb(255 255 255 / 0.22);
+  border-top: 2px dashed rgb(244 239 233 / 0.35);
 }
 
 .stat {
   display: grid;
   gap: 0.2rem;
-  padding: 1.2rem 1rem 0 0;
-
-  & + & {
-    padding-left: 1.2rem;
-    border-left: 1px solid rgb(255 255 255 / 0.18);
-  }
+  padding: 1.1rem 1rem 0 0;
 }
 
 .stat__value {
-  font-family: var(--bx-font-display);
-  font-size: clamp(2rem, 4.5vw, 3.2rem);
-  font-weight: 700;
+  font-family: var(--bx-font-marker);
+  font-size: clamp(2rem, 4.5vw, 3rem);
   line-height: 1;
+  color: var(--bx-spray);
 
   small {
     font-size: 0.45em;
@@ -118,7 +116,6 @@
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  opacity: 0.82;
 }
 
 .stat__sk {
@@ -126,13 +123,45 @@
   opacity: 0.25;
 }
 
-@media (max-width: 640px) {
-  .hero {
-    min-height: auto;
-  }
+/* Bandeau ruban jaune incliné */
+.hero__ribbon {
+  position: relative;
+  z-index: 2;
+  margin: 0.5rem -2% 1.2rem;
+  padding: 0.45rem 0;
+  overflow: hidden;
+  background: var(--bx-tape);
+  color: #1a1716;
+  font-weight: 800;
+  font-size: 0.9rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transform: rotate(-1.5deg);
 
-  .hero__photo {
-    object-position: 65% 30%;
+  span {
+    display: inline-block;
+    padding-left: 100%;
+    animation: hero-ribbon 28s linear infinite;
+  }
+}
+
+@keyframes hero-ribbon {
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__ribbon span {
+    padding-left: 1rem;
+    animation: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero__overlay {
+    background: linear-gradient(180deg, rgb(26 23 22 / 0.88) 0%, rgb(26 23 22 / 0.7) 60%, rgb(26 23 22 / 0.92) 100%);
   }
 
   .hero__actions .bx-btn {
@@ -141,15 +170,6 @@
 
   .hero__stats {
     grid-template-columns: 1fr 1fr;
-  }
-
-  .stat {
-    padding: 1rem 0.5rem 0.4rem 0;
-
-    & + & {
-      padding-left: 0;
-      border-left: 0;
-    }
   }
 }
 

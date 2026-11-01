@@ -85,8 +85,9 @@ const KIND_LABELS: Record<SchemaKind, string> = {
   `,
   styles: `
     :host { display: block; }
-    .sc { margin: 0; }
-    .sc__svg { width: 100%; height: auto; display: block; }
+    .sc { margin: 0; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .sc__svg { width: 100%; min-width: 560px; height: auto; display: block; }
+    @media print { .sc { overflow: visible; } .sc__svg { min-width: 0; } }
     .sc__panel { fill: var(--bx-card); stroke: var(--bx-card-border); stroke-width: 1.5; }
     .sc__num { fill: var(--bx-primary); font: 700 18px var(--bx-font-display); }
     .sc__caption { fill: var(--bx-muted); font: 600 11px var(--bx-font-body); }
