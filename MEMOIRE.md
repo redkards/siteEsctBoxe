@@ -52,3 +52,9 @@ Le choix parmi les trois propositions est reporté, pas requis pour continuer le
 - PARADOXX DÉVELOPPEMENT : six experts par grande famille ; six revues bornées réalisées par agents.
 - Rapports EXPERT-*.md, organisation DEVELOPPEMENT.md, parcours et liens docs/design/DEMOS.md.
 - Passation avec Claude organisée dans Notion ; réception et synchronisation automatiques non établies.
+
+## 01/11/2026 — Bêta démo sans serveur (Claude)
+- Build `ng build --configuration demo` : API simulée (`frontBoxe/src/app/core/demo/`, données fictives), routage par hash, bandeau « Bêta de démonstration ».
+- Publiée en page Claude privée : https://claude.ai/artifact/HuJWrgeZZvFDiuCWvUGTVc (partage via le menu Partager).
+- npm bloqué dans l'environnement cloud : dépendances restaurées depuis la branche `deps-cache`. 104 tests front verts.
+- VPS non joignable depuis Claude (pas d'accès SSH).

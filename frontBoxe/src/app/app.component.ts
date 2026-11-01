@@ -1,3 +1,4 @@
+import { environment } from '../environments/environment';
 import { Component, ChangeDetectionStrategy, DOCUMENT, effect, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
@@ -14,6 +15,7 @@ import { variantForUrl } from './core/layout/page-variant';
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
+  readonly demo = 'demo' in environment;
   private readonly router = inject(Router);
   private readonly document = inject(DOCUMENT);
 
