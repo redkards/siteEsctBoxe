@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
-<title>ESCT Boxe — 20 designs</title>
+<title>ESCT Boxe — 21 designs</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -398,12 +398,36 @@ footer.f{padding-block:0 40px;color:var(--muted);font-size:13px}
 @keyframes blink{50%{opacity:.4}}@media (prefers-reduced-motion:reduce){.d20 .press{animation:none}}
 .d20 .body{padding:0 20px 26px}.d20 .card{border:4px solid #7ce0ff;padding:12px;background:#24164a}
 .d20 .card h4{color:#7ce0ff;font-size:11px;margin-bottom:8px}.d20 .card li{border-bottom:2px dotted #3a2a6a;font-size:9px}
+
+/* 21 Mix : structure n°1, polices n°7, photo n°12 */
+.d21{background:#0d0d0f;color:#f2ece0;font-family:"Libre Baskerville",serif;font-size:14px}
+.d21 nav.mn{padding:16px 28px;border-bottom:1px solid #26262b}
+.d21 .logo{font-family:"Alfa Slab One",serif;font-size:21px;letter-spacing:.02em}.d21 .logo em{color:#e10600;font-style:normal}
+.d21 nav.mn .links{font-family:"Barlow",sans-serif;font-weight:600}
+.d21 nav.mn .btn{margin-left:auto;background:#e10600;color:#fff;padding:8px 16px;font-family:"Barlow",sans-serif;font-weight:800;text-transform:uppercase;font-size:13px;clip-path:polygon(8px 0,100% 0,calc(100% - 8px) 100%,0 100%)}
+.d21 .hero{position:relative;min-height:380px;display:flex;align-items:center;padding:40px 28px;background-size:cover;background-position:center}
+.d21 .hero .tx{max-width:620px;display:flex;flex-direction:column;gap:14px}
+.d21 .tape{align-self:flex-start;background:#e10600;color:#fff;padding:3px 10px;font-family:"Barlow",sans-serif;font-weight:800;font-size:12px;letter-spacing:.12em;text-transform:uppercase}
+.d21 h3{font-family:"Alfa Slab One",serif;font-size:clamp(40px,7.6cqi,86px);line-height:.95;text-transform:uppercase;text-shadow:0 4px 24px rgba(0,0,0,.6)}
+.d21 h3 em{color:#e10600;font-style:normal}
+.d21 blockquote{margin:0;border-left:4px solid #e10600;padding-left:12px;font-style:italic;font-size:17px;max-width:40ch}
+.d21 .rec{display:flex;border-top:1px solid #26262b;border-bottom:1px solid #26262b;flex-wrap:wrap}
+.d21 .rec div{flex:1;min-width:120px;padding:14px 28px;border-right:1px solid #26262b}
+.d21 .rec b{font-family:"Alfa Slab One",serif;font-size:28px;display:block;color:#e10600}
+.d21 .rec span{font-family:"Barlow",sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:#a9a6a0}
+.d21 .strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
+@container (max-width:700px){.d21 .strip{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.d21 .strip i{display:block;aspect-ratio:4/5;background-size:cover;background-position:center;filter:grayscale(.35) contrast(1.1)}
+.d21 .body{padding:24px 28px}
+.d21 .card{background:#17171b;padding:18px;border-top:3px solid #e10600}
+.d21 .card h4{font-family:"Alfa Slab One",serif;font-size:20px;text-transform:uppercase;margin-bottom:8px}
+.d21 .card li{border-bottom:1px solid #26262b;font-family:"Barlow",sans-serif}
 </style>
 </head><body>
 
 <header class="top wrap">
   <div class="eyebrow">ESC Boxe Tergnier · PARADOXX SYSTÈME DESIGN · 1er novembre 2026</div>
-  <h1 class="t">Les <span>20</span> designs du site</h1>
+  <h1 class="t">Les <span>21</span> designs du site</h1>
   <p class="lead">Chaque exemple montre la page d'accueil du club dans une direction graphique différente, avec les mêmes contenus : planning, tarifs, galas à venir et la citation propre à chaque modèle. Passe d'ordinateur à téléphone avec les boutons au-dessus de chaque maquette, et marque tes favoris d'une étoile.</p>
   <p class="note">Horaires tirés de la fiche du club ; tarifs de démonstration. Galas réels relevés le 31/10/2026, à vérifier avant déplacement. Photos : celles du club. Citations : registre Édition 02 (n°1 à 10), nouvelles citations originales (n°11 à 20).</p>
 </header>
@@ -520,7 +544,13 @@ const D=[
  html:q=>`<div class="m d20"><nav class="mn"><span class="logo">ESCT BOXE</span></nav>
  <div class="hud"><span>NIVEAU 1 · GARDE</span><span>ÉNERGIE<span class="bar"><i></i></span></span><span>LEÇONS 12/50</span></div>
  <div class="hero"><h3>BOXEUR 1<br>PRÊT ?</h3><blockquote>« ${q} »</blockquote><span class="press">APPUIE SUR START</span></div>
- <div class="body">${cards(["CRÉNEAUX","TARIFS","BOSS FIGHTS"])}</div></div>`}
+ <div class="body">${cards(["CRÉNEAUX","TARIFS","BOSS FIGHTS"])}</div></div>`},
+{id:"mix",name:"Mix 1 · 7 · 12",intent:"Ta synthèse : la structure et le noir et rouge de Fight Night (n°1), les polices à empattements d'Héritage (n°7) et la grande photo assombrie de Street (n°12), complétées par une bande de photos du club.",sw:["#0d0d0f","#e10600","#f2ece0"],fonts:"Alfa Slab One · Libre Baskerville · Barlow",q:"Le respect se gagne à l'entraînement, la fierté se partage au gala.",
+ html:q=>`<div class="m d21"><nav class="mn"><span class="logo">ESC<em>T</em> BOXE</span>${links}<span class="btn">Essai gratuit</span></nav>
+ <div class="hero" style="background-image:linear-gradient(90deg,rgba(13,13,15,.94) 35%,rgba(13,13,15,.35)),url(${IMG.b})"><div class="tx"><span class="tape">Tergnier · Aisne · depuis toujours</span><h3>Monte<br>sur le <em>ring</em></h3><blockquote>« ${q} »</blockquote></div></div>
+ <div class="rec"><div><b>4</b><span>disciplines</span></div><div><b>6</b><span>jours par semaine</span></div><div><b>50</b><span>leçons</span></div><div><b>4</b><span>galas à venir</span></div></div>
+ <div class="strip" aria-label="Photos du club"><i ${bg("a")}></i><i ${bg("c")}></i><i ${bg("d")}></i><i ${bg("e")}></i></div>
+ <div class="body">${cards(["Entraînements","Cotisations","Fight card"])}</div></div>`}
 ];
 
 let favs=[];try{favs=JSON.parse(localStorage.getItem("esct10")||"[]")}catch(e){}
