@@ -5,6 +5,16 @@ qui sera la **2.0.0** (après confirmation du propriétaire). Chaque version re�
 
 ## [Non publié]
 
+## [2.0.0-beta.4] — 2026-11-01 — DA Mix 1 · 7 · 12
+
+### Modifié
+- Direction artistique « Mix 1 · 7 · 12 » à la place de « Street » : structure et couleurs Fight Night
+  (noir `#0d0d0f`, cartes à filet rouge `#e10600`, boutons coupés en biais), polices Héritage
+  (Alfa Slab One, Libre Baskerville, Barlow pour l'interface), hero photo du club façon Street.
+- Accueil : bandeau de chiffres clés sous le hero, bande de 4 photos du club, section gala recadrée.
+- Thème `src/styles/themes/_mix.scss` chargé ; `_street.scss` conservé dans les sources, non chargé.
+- Variante claire crème pour les pages parents (rouge texte `#b30500`, 6.07:1) ; Permanent Marker retirée.
+
 ## [2.0.0-beta.3] — 2026-11-01 — DA Street, 50 leçons et nouvelles fonctions
 
 ### Ajouté

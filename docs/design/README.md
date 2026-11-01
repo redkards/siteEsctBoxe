@@ -16,7 +16,52 @@ sous `html[data-theme="<nom>"]` et ajoute des surcharges ciblées sur les classe
 | `azur` | Azur | Premium lumineux façon Poker Winners, bleu azur, verre dépoli | `frontBoxe/src/styles/themes/_azur.scss` |
 | `club` | Éditorial | Magazine sportif : blanc cassé, noir, jaune or, grandes photos | `frontBoxe/src/styles/themes/_club.scss` |
 
-## ★ Direction retenue : `street` — Street (active, 01/11/2026)
+## ★ Direction retenue : `mix` — Mix 1 · 7 · 12 (active, 01/11/2026)
+
+Maquette : `ESCT-21-mix.html` (règles `.d21`, contenu `id:"mix"`). Fichier : `frontBoxe/src/styles/themes/_mix.scss`,
+seul thème chargé par `styles.scss` (street, ring, azur, club et `_simple.scss` restent dans les sources sans être chargés).
+`theme-init.js` et `ThemeService` ne connaissent plus que `mix`. Sélecteur de thème masqué.
+
+Recette : **1 Fight Night** (structure, couleurs) + **7 Héritage** (polices) + **12 Street** (hero photo, ruban, variante claire).
+
+**Palette (aucun vert)** : noir `#0d0d0f`, cartes `#17171b` à filet rouge de 3 px en haut, séparateurs `#26262b`,
+crème `#f2ece0`, gris `#a9a6a0`. Rouge d'aplat `#e10600` (boutons, rubans, filets, grands chiffres) ;
+rouge de texte `#ff4d42` sur noir ; rouge foncé `#b30500` sur crème. États : succès bleu, info lilas, erreur `#ff7a6e` / `#a8382f`.
+
+**Contrastes calculés (WCAG 2.1, texte normal ≥ 4.5:1, grand texte ≥ 3:1)**
+
+| Paire | Ratio | Usage |
+|---|---|---|
+| crème `#f2ece0` / noir `#0d0d0f` | 16.50 | texte courant gala |
+| crème / carte `#17171b` | 15.19 | texte des cartes |
+| gris `#a9a6a0` / noir | 8.00 | texte secondaire, libellés |
+| gris / carte | 7.36 | texte secondaire des cartes |
+| blanc / rouge `#e10600` | 4.97 | texte des boutons et rubans (AA) |
+| rouge `#e10600` / noir | 3.91 | ✗ texte courant → aplats et grand texte (titres, chiffres clés) seulement |
+| rouge texte `#ff4d42` / noir | 5.91 | liens, accents gala (AA) |
+| rouge texte `#ff4d42` / carte | 5.44 | AA |
+| rouge `#e10600` / crème | 4.22 | ✗ en clair → remplacé par `#b30500` |
+| rouge foncé `#b30500` / crème | 6.07 | liens, primaire, boutons en variante claire |
+| blanc / `#b30500` | 7.15 | texte des boutons clairs |
+| encre `#17171b` / crème | 15.19 | texte courant clair |
+| `#5a5650` / crème | 6.19 | texte secondaire clair |
+
+**Typographie** : *Alfa Slab One* (h1–h3, chiffres clés, logo ; majuscules) ; *Libre Baskerville* (texte courant,
+citations et accroche en italique) ; *Barlow* 600/800 (navigation, boutons, sur-titres, libellés, formulaires, tableaux,
+badges). Google Fonts dans `index.html` (`display=swap`) ; Permanent Marker retirée.
+
+**Signatures** : hero grande photo (`img/divion1.jpg`) sous `linear-gradient(90deg, rgba(13,13,15,.94) 35%, rgba(13,13,15,.35))`,
+ruban rouge au-dessus du titre, mot accentué en rouge ; bandeau de chiffres clés séparé par des filets `#26262b` ;
+bande de 4 photos du club (légère désaturation, `loading="lazy"`) ; boutons rouges coupés en biais (`clip-path`).
+
+**Variante par route** : mapping inchangé (`frontBoxe/src/app/core/layout/page-variant.ts`) — `gala` sombre pour
+`/`, `/club`, `/boxeurs*`, `/evenements*`, `/actualites*`, `/agenda` et toute route non listée ; `light` crème pour
+inscription, tarifs, disciplines, planning, contact, leçons, chrono, compte, connexion et pages légales.
+En-tête et pied de page toujours noirs. Captures : `docs/recap/mix/`.
+
+---
+
+## Ancienne direction : `street` — Street (remplacée le 01/11/2026 par Mix)
 
 Maquette : `15-designs/ESCT-12-street.html` (règles `.d12`). Fichier : `frontBoxe/src/styles/themes/_street.scss`,
 chargé seul par `styles.scss` (ring/azur/club et l'habillage provisoire `_simple.scss` restent dans les sources sans être chargés).

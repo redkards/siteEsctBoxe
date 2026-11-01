@@ -58,3 +58,8 @@ Le choix parmi les trois propositions est reporté, pas requis pour continuer le
 - Publiée en page Claude privée : https://claude.ai/artifact/HuJWrgeZZvFDiuCWvUGTVc (partage via le menu Partager).
 - npm bloqué dans l'environnement cloud : dépendances restaurées depuis la branche `deps-cache`. 104 tests front verts.
 - VPS non joignable depuis Claude (pas d'accès SSH).
+
+## 01/11/2026 — DA retenue : Mix 1·7·12 (2.0.0-beta.4)
+- Thème `mix` (`src/styles/themes/_mix.scss`) : Fight Night (noir, filets rouges, boutons en biais) + polices Héritage + hero photo Street.
+- Street conservé dans les sources, non chargé. Variante claire parents : mapping inchangé, rouge texte `#b30500`.
+- Accueil : chiffres clés sous le hero + bande de 4 photos. 104 tests verts, build OK. Captures `docs/recap/mix/`.

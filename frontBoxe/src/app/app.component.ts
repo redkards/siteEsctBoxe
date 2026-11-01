@@ -19,7 +19,7 @@ export class AppComponent {
   private readonly router = inject(Router);
   private readonly document = inject(DOCUMENT);
 
-  /** Variante Street de la page courante (gala sombre / claire), cf. core/layout/page-variant.ts */
+  /** Variante Mix de la page courante (gala sombre / claire), cf. core/layout/page-variant.ts */
   protected readonly variant = toSignal(
     this.router.events.pipe(
       filter((e): e is NavigationEnd => e instanceof NavigationEnd),

@@ -5,10 +5,10 @@
    ========================================================================== */
 
 @use './styles/tokens';
-// Direction artistique retenue : « Street » (variantes gala / claire par route).
-// ring, azur, club (themes/_index.scss) et l'habillage provisoire _simple.scss restent
+// Direction artistique retenue : « Mix 1 · 7 · 12 » (variantes gala / claire par route).
+// street, ring, azur, club (themes/_index.scss) et l'habillage provisoire _simple.scss restent
 // dans les sources mais ne sont plus chargés.
-@use './styles/themes/street';
+@use './styles/themes/mix';
 
 *,
 *::before,
@@ -776,4 +776,4 @@ select.bx-input {
 }
 
 // Appliqué en dernier : surcharge les règles globales ci-dessus.
-@include street.apply;
+@include mix.apply;

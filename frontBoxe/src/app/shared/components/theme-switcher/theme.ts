@@ -2,13 +2,13 @@ import { Injectable, signal } from '@angular/core';
 
 /**
  * Direction artistique active (cf. docs/design/README.md). Les anciennes propositions
- * ring (Fight Night), azur et club (Éditorial) restent dans src/styles/themes/ sans être chargées.
+ * street, ring (Fight Night), azur et club (Éditorial) restent dans src/styles/themes/ sans être chargées.
  */
-export const THEMES = [{ id: 'street', label: 'Street', swatch: ['#1a1716', '#ff3d8b'] }] as const;
+export const THEMES = [{ id: 'mix', label: 'Mix 1 · 7 · 12', swatch: ['#0d0d0f', '#e10600'] }] as const;
 
 export type ThemeId = (typeof THEMES)[number]['id'];
 
-export const DEFAULT_THEME: ThemeId = 'street';
+export const DEFAULT_THEME: ThemeId = 'mix';
 export const THEME_STORAGE_KEY = 'esct_theme';
 
 export function isThemeId(value: unknown): value is ThemeId {

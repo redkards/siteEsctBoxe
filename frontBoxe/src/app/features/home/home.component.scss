@@ -1,8 +1,9 @@
-/* HERO — DA Street ------------------------------------------------------- */
+/* HERO — DA Mix 1·7·12 (photo du club, ruban rouge, titre slab) --------- */
 .hero {
   position: relative;
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  min-height: clamp(420px, 68vh, 640px);
   overflow: hidden;
   background: var(--bx-dark);
   color: var(--bx-hero-ink);
@@ -26,95 +27,111 @@
 .hero__inner {
   position: relative;
   z-index: 1;
-  display: grid;
-  gap: 2.5rem;
-  padding-block: clamp(2.5rem, 8vh, 5.5rem) 2rem;
+  padding-block: clamp(2.5rem, 8vh, 5rem);
 }
 
 .hero__content {
   display: grid;
   justify-items: start;
-  gap: 1.3rem;
+  gap: 1.1rem;
   max-width: 680px;
 }
 
 .hero__tape {
   display: inline-block;
-  padding: 0.3rem 0.8rem;
-  background: var(--bx-tape);
-  color: #1a1716;
-  font-size: 0.85rem;
+  padding: 0.2rem 0.7rem;
+  background: var(--bx-red);
+  color: #fff;
+  font-family: var(--bx-font-ui);
+  font-size: 0.78rem;
   font-weight: 800;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  transform: rotate(-2deg);
 }
 
 .hero__title {
-  font-size: clamp(2.9rem, 9vw, 6rem);
+  font-size: clamp(2.6rem, 8vw, 5.4rem);
   line-height: 0.95;
-  color: #fff;
-  text-shadow: 4px 4px 0 var(--bx-spray);
-  transform: rotate(-3deg);
-  transform-origin: left center;
+  color: var(--bx-hero-ink);
+  text-shadow: 0 4px 24px rgb(0 0 0 / 0.6);
+  overflow-wrap: anywhere;
+
+  em {
+    color: var(--bx-red);
+    font-style: normal;
+  }
 }
 
 .hero__club {
   display: block;
-  margin-bottom: 0.6rem;
-  font-family: var(--bx-font-body);
-  font-size: clamp(0.95rem, 1.8vw, 1.1rem);
+  margin-bottom: 0.7rem;
+  font-family: var(--bx-font-ui);
+  font-size: clamp(0.9rem, 1.6vw, 1.05rem);
   font-weight: 800;
   letter-spacing: 0.2em;
-  text-transform: uppercase;
   text-shadow: none;
-  color: var(--bx-hero-ink);
+  color: var(--bx-dark-muted);
 }
 
 .hero__lead {
-  max-width: 50ch;
-  margin: 0.4rem 0 0;
-  font-size: clamp(1.02rem, 1.6vw, 1.15rem);
+  max-width: 44ch;
+  margin: 0.2rem 0 0;
+  padding-left: 0.9rem;
+  border-left: 4px solid var(--bx-red);
+  font-size: clamp(1rem, 1.6vw, 1.12rem);
+  font-style: italic;
 }
 
 .hero__actions {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
-  margin-top: 0.4rem;
+  margin-top: 0.5rem;
 
   .bx-btn--light {
     color: var(--bx-hero-ink);
   }
 }
 
+/* Bandeau de chiffres clés (Fight Night) */
+.keys {
+  border-block: 1px solid var(--bx-line);
+  background: var(--bx-bg);
+}
+
 .hero__stats {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  border-top: 2px dashed rgb(244 239 233 / 0.35);
 }
 
 .stat {
   display: grid;
   gap: 0.2rem;
-  padding: 1.1rem 1rem 0 0;
+  padding: 1rem 1.2rem;
+  border-right: 1px solid var(--bx-line);
+
+  &:last-child {
+    border-right: 0;
+  }
 }
 
 .stat__value {
-  font-family: var(--bx-font-marker);
-  font-size: clamp(2rem, 4.5vw, 3rem);
+  font-family: var(--bx-font-display);
+  font-size: clamp(1.7rem, 3.4vw, 2.3rem);
   line-height: 1;
-  color: var(--bx-spray);
+  color: var(--bx-red);
 
   small {
-    font-size: 0.45em;
+    font-size: 0.5em;
   }
 }
 
 .stat__label {
-  font-size: 0.8rem;
+  color: var(--bx-muted);
+  font-family: var(--bx-font-ui);
+  font-size: 0.76rem;
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
@@ -123,45 +140,24 @@
   opacity: 0.25;
 }
 
-/* Bandeau ruban jaune incliné */
-.hero__ribbon {
-  position: relative;
-  z-index: 2;
-  margin: 0.5rem -2% 1.2rem;
-  padding: 0.45rem 0;
-  overflow: hidden;
-  background: var(--bx-tape);
-  color: #1a1716;
-  font-weight: 800;
-  font-size: 0.9rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  transform: rotate(-1.5deg);
+/* Bande de 4 photos du club */
+.strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 4px;
+  background: var(--bx-bg);
 
-  span {
-    display: inline-block;
-    padding-left: 100%;
-    animation: hero-ribbon 28s linear infinite;
-  }
-}
-
-@keyframes hero-ribbon {
-  to {
-    transform: translateX(-100%);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero__ribbon span {
-    padding-left: 1rem;
-    animation: none;
+  img {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    filter: grayscale(0.35) contrast(1.1);
   }
 }
 
 @media (max-width: 640px) {
   .hero__overlay {
-    background: linear-gradient(180deg, rgb(26 23 22 / 0.88) 0%, rgb(26 23 22 / 0.7) 60%, rgb(26 23 22 / 0.92) 100%);
+    background: linear-gradient(180deg, rgb(13 13 15 / 0.82) 0%, rgb(13 13 15 / 0.7) 55%, rgb(13 13 15 / 0.94) 100%);
   }
 
   .hero__actions .bx-btn {
@@ -171,6 +167,19 @@
   .hero__stats {
     grid-template-columns: 1fr 1fr;
   }
+
+  .stat {
+    padding-inline: 0.8rem;
+    border-bottom: 1px solid var(--bx-line);
+
+    &:nth-child(2n) {
+      border-right: 0;
+    }
+  }
+
+  .strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 /* PROCHAIN GALA ----------------------------------------------------------- */
@@ -178,9 +187,8 @@
   position: relative;
   overflow: hidden;
   padding-block: clamp(3rem, 6vw, 4.5rem);
-  background:
-    linear-gradient(115deg, var(--bx-dark) 0 55%, transparent 55%),
-    linear-gradient(115deg, var(--bx-primary) 0 100%);
+  border-top: 1px solid var(--bx-line);
+  background: linear-gradient(115deg, var(--bx-dark) 0 72%, var(--bx-red) 72% 73.2%, var(--bx-dark-2) 73.2%);
   color: var(--bx-dark-ink);
 }
 

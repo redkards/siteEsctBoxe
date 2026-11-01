@@ -1,6 +1,6 @@
 /**
- * Variante d'habillage « Street » par route (cf. docs/design/README.md, section Street).
- *  - `gala`  : mode sombre brique / rose (accueil, club, boxeurs, évènements, actualités, agenda) ;
+ * Variante d'habillage « Mix 1 · 7 · 12 » par route (cf. docs/design/README.md, section Mix).
+ *  - `gala`  : mode sombre noir / rouge (accueil, club, boxeurs, évènements, actualités, agenda) ;
  *  - `light` : variante claire crème, rassurante pour les parents (inscription, tarifs, disciplines,
  *              planning, contact, leçons, chrono, compte, connexion, pages légales).
  * Toute route non listée prend `gala`. Appliquée sur `<body data-variant>` par AppComponent.
